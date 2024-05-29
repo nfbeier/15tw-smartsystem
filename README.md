@@ -16,15 +16,14 @@ The Amplitude Arco X laser system is a 500 mJ, 30 fs at spec laser system firing
 laser-driven plasma acceleration experiments.
 
 # Contributing
-
 * Branches
-        * Branches must change  or implement one feature
-        * Branches created from branches must be merged in the order they are created
+	* Branches must change  or implement one feature
+	* Branches created from branches must be merged in the order they are created
 * Branch Naming
-        * Branches are named as follows: <name_of_author>/<branch_type>/<description_of_branch>
-        * Branch types may be one of the following: {hotfix,bugfix,experimental,feature}
+	* Branches are named as follows: <name_of_author>/<branch_type>/<description_of_branch>
+	* Branch types may be one of the following: {hotfix,bugfix,experimental,feature}
 * Commit Messages
-        * __Do not assume your code is self explanatory__
-        * __Do not assume everyone else knows what you are working on__
-        * Use the imperative mood in the subject line
-        * When in doubt, use the KISS method: Keep It Simple, Silly
+	* __Do not assume your code is self explanatory__
+	* __Do not assume everyone else knows what you are working on__
+	* Use the imperative mood in the subject line
+	* When in doubt, use the KISS method: Keep It Simple, Silly
