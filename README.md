@@ -25,6 +25,6 @@ laser-driven plasma acceleration experiments.
 	* Branch types may be one of the following: {hotfix,bugfix,experimental,feature} 
 * Commit Messages
 	* __Do not assume your code is self explanatory__
-	* __ Do not assume everyone else knows what you are working on.__
+	* __Do not assume everyone else knows what you are working on__
 	* Use the imperative mood in the subject line
 	* When in doubt, use the KISS method: Keep It Simple, Silly
