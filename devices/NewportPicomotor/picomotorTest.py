@@ -29,8 +29,6 @@ def runMotor(stage,axis):
     while run:
         char = getch().decode()
 
-        print(stage.get_position())
-
         if char == "f":
             print("Forward")
             stage1.move_by(axis = axis, steps = 100)
@@ -52,7 +50,7 @@ def runMotor(stage,axis):
         # to save the next key that is pressed
         char = ""
 
-        print(stage.get_position())
+        print(stage.get_position(axis = axis))
 
 getch = _find_getch()
 
