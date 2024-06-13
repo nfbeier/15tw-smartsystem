@@ -1,10 +1,13 @@
 import numpy as np
 from pylablib.devices import Newport
-import sys
+import sys, os
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-sys.path.append(r'C:\Users\HK-47\Documents\CODE\GitHub\15tw-smartsystem\devices\NewportPicomotor')
-from picoWidgetTest_GUI import Ui_Form
+cwd = os.getcwd()
+print(cwd)
+sys.path.insert(0,os.getcwd())
+
+from devices.NewportPicomotor.picoWidgetTest_GUI import Ui_Form
 
 class picoMotor_App(QtWidgets.QWidget):
     def __init__(self,axes):
@@ -13,8 +16,12 @@ class picoMotor_App(QtWidgets.QWidget):
         self.ui.setupUi(self)
         self.xAxis = axes[0]
         self.yAxis = axes[1]
+        try:
+            self.stage = Newport.Picomotor8742()
+        except Newport.base.NewportBackendError:
+            print("Newport Picomotor controller could not be initialized.")
+            self.stage = None
 
-        self.stage = Newport.Picomotor8742()
         self.ui.buttonLeft.clicked.connect(lambda: self.movePico(axis = self.xAxis,steps = self.ui.stepSize.value()))
         self.ui.buttonRight.clicked.connect(lambda: self.movePico(axis = self.xAxis,steps = -1*self.ui.stepSize.value()))
         self.ui.buttonUp.clicked.connect(lambda: self.movePico(axis = self.yAxis,steps = self.ui.stepSize.value()))
