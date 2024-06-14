@@ -63,7 +63,10 @@ class XGS600Driver:
         return pressures
     
     def list_all_gauges(self):
-        """List all installed gauge cards"""
+        """
+        List all installed gauge cards
+        The FRG720 Gauge isn't listed in the manual, but it reads out as 4C
+        """
         gauge_string = self.xgs_comm("01")
         gauges = ""
         for gauge_number in range(0, len(gauge_string), 2):
@@ -79,6 +82,16 @@ class XGS600Driver:
             if gauge == "3A":
                 gauges = gauges + str(gauge_number / 2) + ": Inverted Magnetron Board\n"
         return gauges
+
+    def read_pressure(self, gauge_id):
+        """Read the pressure from a specific gauge.
+        gauge_id is represented as Uxxxxx and xxxxx is the userlabel"""
+        pressure = self.xgs_comm('02' + gauge_id)
+        try:
+            val = float(pressure)
+        except ValueError:
+            val = -1.0
+        return val
   
     def read_pressure_unit(self):
         """Read which pressure unit is used"""
@@ -95,6 +108,4 @@ class XGS600Driver:
 if __name__ == '__main__':
     XGS = XGS600Driver()
     print(XGS)
-    print(XGS.read_all_pressures())
-    print(XGS.list_all_gauges())
-    print(XGS.read_pressure_unit())
+    print(XGS.read_pressure("UMAIN1"))

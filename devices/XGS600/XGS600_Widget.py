@@ -20,14 +20,16 @@ class XGSWidget(QtWidgets.QWidget):
         super(XGSWidget,self).__init__()
         self.ui = Ui_Form()
         self.ui.setupUi(self)
-        #self.xgs = XGS600Driver(port="COM3")
-    
+        self.xgs = XGS600Driver(port="COM3")
+        self.gauge_id = "MAIN1" #The 15 TW chamber vacuum gauge ID is MAIN1
+        self.ui.GaugeName.setText(self.gauge_id)
+
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.updatePressure)
         self.timer.start(1000)
 
     def updatePressure(self):
-        pressure = np.random.randint(0,1000)
+        pressure = self.xgs.read_pressure(f"U{self.gauge_id}")
         self.ui.lcdNumber.display(pressure)
 
 if __name__ == "__main__":
