@@ -23,6 +23,7 @@ class XGSWidget(QtWidgets.QWidget):
         self.xgs = XGS600Driver(port="COM3")
         self.gauge_id = "MAIN1" #The 15 TW chamber vacuum gauge ID is MAIN1
         self.ui.GaugeName.setText(self.gauge_id)
+        self.ui.pressureUnitsLabel.setText(self.xgs.read_pressure_unit())
 
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.updatePressure)
