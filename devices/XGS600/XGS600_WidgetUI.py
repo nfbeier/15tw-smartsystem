@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_Form(object):
     def setupUi(self, Form):
-        Form.setObjectName("Form")
+        Form.setObjectName("XGS Readout Widget")
         Form.resize(453, 337)
         self.verticalLayoutWidget = QtWidgets.QWidget(Form)
         self.verticalLayoutWidget.setGeometry(QtCore.QRect(120, 100, 160, 80))
@@ -46,7 +46,7 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "XGS Readout Widget"))
         self.GaugeName.setText(_translate("Form", "TextLabel"))
         self.pressureUnitsLabel.setText(_translate("Form", "Torr"))
 
