@@ -5,7 +5,14 @@ import numpy as np
  
 cwd = os.getcwd()
 print(cwd)
-sys.path.insert(0,os.getcwd())
+# Check if '15tw-smartsystem' is in the components
+if '15tw-smartsystem' not in cwd.split(os.path.sep):
+    raise ValueError("The directory does not contain '15tw-smartsystem' folder.")
+
+# Rebuild the directory string up to and including '15tw-smartsystem', prevent import errors
+cwd = os.path.sep.join(cwd.split(os.path.sep)[:cwd.split(os.path.sep).index('15tw-smartsystem') + 1])
+
+sys.path.insert(0,cwd)
 
 from devices.XGS600 import XGS600
 from math import floor
