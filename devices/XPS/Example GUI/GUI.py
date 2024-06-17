@@ -22,6 +22,7 @@ import time, json
 
 #GUI Design file importing here (qt design file)
 qtcreator_file  = f'{cwd}/devices/XPS/Example GUI/GUI.ui' # Enter file here.
+gui_inputs_file = f'{cwd}/devices/XPS/Example GUI/gui_inputs.json'
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
 
 class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -114,7 +115,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         '''
         Reads the .json file and auto-fills the GUI with inputs from last use.
         '''
-        with open("gui_inputs.json", "r") as read_file:
+        with open(gui_inputs_file, "r") as read_file:
             inputs = json.load(read_file)
             
         for widget in self.children():
@@ -414,7 +415,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         '''
         Writes gui inputs to .json file to load for next use.
         '''
-        with open("gui_inputs.json", "r+") as write_file:
+        with open(gui_inputs_file, "r+") as write_file:
             inputs = json.load(write_file)
             
             for widget in self.children():
