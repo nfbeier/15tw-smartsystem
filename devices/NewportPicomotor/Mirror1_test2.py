@@ -97,8 +97,6 @@ class picoMotor_App(QtWidgets.QWidget):
         self.ui.setupUi(self)
         self.xAxis = axes[0]
         self.yAxis = axes[1]
-        self.x_steps = 0
-        self.y_steps = 0
         
         try:
             self.stage = Newport.Picomotor8742()
@@ -117,25 +115,21 @@ class picoMotor_App(QtWidgets.QWidget):
             self.stage.move_by(axis=axis, steps=steps)
             self.stage.wait_move()
             if axis == self.xAxis:
-                self.x_steps += steps
-                self.ui.xStepNumber.display(self.x_steps)
+                self.ui.xStepNumber.display(self.stage.get_position(self.xAxis))
             elif axis == self.yAxis:
-                self.y_steps += steps
-                self.ui.yStepNumber.display(self.y_steps)
+                self.ui.yStepNumber.display(self.stage.get_position(self.yAxis))
 
     def moveToHome(self):
         if self.stage:
             # Move x-axis to home
-            self.stage.move_by(axis=self.xAxis, steps=-self.x_steps)
+            self.stage.move_to(axis=self.xAxis, position=0)
             self.stage.wait_move()
             # Move y-axis to home
-            self.stage.move_by(axis=self.yAxis, steps=-self.y_steps)
+            self.stage.move_to(axis=self.yAxis, position=0)
             self.stage.wait_move()
             # Reset step counters
-            self.x_steps = 0
-            self.y_steps = 0
-            self.ui.xStepNumber.display(self.x_steps)
-            self.ui.yStepNumber.display(self.y_steps)
+            self.ui.xStepNumber.display(self.stage.get_position(self.xAxis))
+            self.ui.yStepNumber.display(self.stage.get_position(self.yAxis))
 
     def closeEvent(self, event):
         if self.stage:
