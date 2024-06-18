@@ -1,0 +1,6 @@
+newportxps==0.3.0
+numpy==2.0.0
+pylablib==1.4.3
+PyQt5==5.15.10
+PyQt5_sip==12.13.0
+pyserial==3.5

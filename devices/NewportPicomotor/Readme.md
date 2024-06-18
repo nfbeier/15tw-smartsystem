@@ -1,0 +1,2 @@
+# Newport Picomotors
+The 4 inch diameter Newport mirror mounts are controlled by the Newport New Focus 8742 Piezo controller. We interface with this controller using the [PyLabLib](https://pylablib.readthedocs.io/en/stable/index.html) package. The PyUSB package that is installed alongside PyLabLib fails due to an incorrect installation of the libusb-1.0.dll file that can be found [here](/bin). This can be copied into C:/Users/Windows/System32 if the pathing can't be solved.
