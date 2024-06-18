@@ -65,6 +65,14 @@ class Ui_Form(object):
         font.setPointSize(14)
         self.xValueLabel.setFont(font)
         self.xValueLabel.setObjectName("xValueLabel")
+        self.ButtonHome = QtWidgets.QPushButton(Form)
+        self.ButtonHome.setGeometry(QtCore.QRect(320, 220, 75, 41))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.ButtonHome.setFont(font)
+        self.ButtonHome.setObjectName("ButtonHome")
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -79,53 +87,63 @@ class Ui_Form(object):
         self.Mirror1_Label.setText(_translate("Form", "Mirror 1"))
         self.yValueLabel.setText(_translate("Form", "Y value"))
         self.xValueLabel.setText(_translate("Form", "X value"))
+        self.ButtonHome.setText(_translate("Form", "Home"))
 
-
-if __name__ == "__main__":
-    #import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
-    sys.exit(app.exec_())
     
-cwd = os.getcwd()
-print(cwd)
-sys.path.insert(0,os.getcwd())
-
-from devices.NewportPicomotor.picoWidgetTest_GUI import Ui_Form
-
 class picoMotor_App(QtWidgets.QWidget):
-    def __init__(self,axes):
-        super(picoMotor_App,self).__init__()
+    def __init__(self, axes):
+        super(picoMotor_App, self).__init__()
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         self.xAxis = axes[0]
         self.yAxis = axes[1]
+        self.x_steps = 0
+        self.y_steps = 0
+        
         try:
             self.stage = Newport.Picomotor8742()
         except Newport.base.NewportBackendError:
             print("Newport Picomotor controller could not be initialized.")
             self.stage = None
-
-        self.ui.toolButtonLeft.clicked.connect(lambda: self.movePico(axis = self.xAxis,steps = self.ui.stepSize.value()))
-        self.ui.toolButtonRight.clicked.connect(lambda: self.movePico(axis = self.xAxis,steps = -1*self.ui.stepSize.value()))
-        self.ui.toolButtonUp.clicked.connect(lambda: self.movePico(axis = self.yAxis,steps = self.ui.stepSize.value()))
-        self.ui.toolButtonDown.clicked.connect(lambda: self.movePico(axis = self.yAxis,steps = -1*self.ui.stepSize.value()))
+        
+        self.ui.ButtonLeft.clicked.connect(lambda: self.movePico(axis=self.xAxis, steps=-self.ui.stepSize.value()))
+        self.ui.ButtonRight.clicked.connect(lambda: self.movePico(axis=self.xAxis, steps=self.ui.stepSize.value()))
+        self.ui.ButtonUp.clicked.connect(lambda: self.movePico(axis=self.yAxis, steps=self.ui.stepSize.value()))
+        self.ui.ButtonDown.clicked.connect(lambda: self.movePico(axis=self.yAxis, steps=-self.ui.stepSize.value()))
+        self.ui.ButtonHome.clicked.connect(self.moveToHome)  # Connecting the Home button to the moveToHome method
 
     def movePico(self, axis, steps):
-        self.stage.move_by(axis = axis, steps = steps)
-        self.stage.wait_move()
-    
-    def close(self):
-        self.stage.close()
+        if self.stage:
+            self.stage.move_by(axis=axis, steps=steps)
+            self.stage.wait_move()
+            if axis == self.xAxis:
+                self.x_steps += steps
+                self.ui.xStepNumber.display(self.x_steps)
+            elif axis == self.yAxis:
+                self.y_steps += steps
+                self.ui.yStepNumber.display(self.y_steps)
+
+    def moveToHome(self):
+        if self.stage:
+            # Move x-axis to home
+            self.stage.move_by(axis=self.xAxis, steps=-self.x_steps)
+            self.stage.wait_move()
+            # Move y-axis to home
+            self.stage.move_by(axis=self.yAxis, steps=-self.y_steps)
+            self.stage.wait_move()
+            # Reset step counters
+            self.x_steps = 0
+            self.y_steps = 0
+            self.ui.xStepNumber.display(self.x_steps)
+            self.ui.yStepNumber.display(self.y_steps)
+
+    def closeEvent(self, event):
+        if self.stage:
+            self.stage.close()
+        event.accept()
 
 if __name__ == "__main__":
-    #from ResultsWindow import Results
     app = QtWidgets.QApplication(sys.argv)
-    #qdarktheme.setup_theme()
-    application = picoMotor_App([3,4])
+    application = picoMotor_App([3, 4])
     application.show()
-    sys.exit(app.exec_())  
-
+    sys.exit(app.exec_())
