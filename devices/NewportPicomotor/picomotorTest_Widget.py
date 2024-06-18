@@ -24,7 +24,11 @@ class picoMotor_App(QtWidgets.QWidget):
         self.xAxis = axes[0]
         self.yAxis = axes[1]
 
-        self.stage = Newport.Picomotor8742()
+        try:
+            self.stage = Newport.Picomotor8742()
+        except Newport.base.NewportBackendError:
+            print("Newport Picomotor controller could not be initialized.")
+            self.stage = None
         self.ui.buttonLeft.clicked.connect(lambda: self.movePico(axis = self.xAxis,steps = self.ui.stepSize.value()))
         self.ui.buttonRight.clicked.connect(lambda: self.movePico(axis = self.xAxis,steps = -1*self.ui.stepSize.value()))
         self.ui.buttonUp.clicked.connect(lambda: self.movePico(axis = self.yAxis,steps = self.ui.stepSize.value()))
