@@ -6,7 +6,14 @@ import sys
  
 cwd = os.getcwd()
 print(cwd)
-sys.path.insert(0,os.getcwd())
+# Check if '15tw-smartsystem' is in the components
+if '15tw-smartsystem' not in cwd.split(os.path.sep):
+    raise ValueError("The directory does not contain '15tw-smartsystem' folder.")
+
+# Rebuild the directory string up to and including '15tw-smartsystem', prevent import errors
+cwd = os.path.sep.join(cwd.split(os.path.sep)[:cwd.split(os.path.sep).index('15tw-smartsystem') + 1])
+
+sys.path.insert(0,cwd)
 
 from devices.XPS import XPS
 from math import floor
@@ -15,6 +22,7 @@ import time, json
 
 #GUI Design file importing here (qt design file)
 qtcreator_file  = f'{cwd}/devices/XPS/Example GUI/GUI.ui' # Enter file here.
+gui_inputs_file = f'{cwd}/devices/XPS/Example GUI/gui_inputs.json'
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
 
 class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -107,7 +115,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         '''
         Reads the .json file and auto-fills the GUI with inputs from last use.
         '''
-        with open("gui_inputs.json", "r") as read_file:
+        with open(gui_inputs_file, "r") as read_file:
             inputs = json.load(read_file)
             
         for widget in self.children():
@@ -407,7 +415,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         '''
         Writes gui inputs to .json file to load for next use.
         '''
-        with open("gui_inputs.json", "r+") as write_file:
+        with open(gui_inputs_file, "r+") as write_file:
             inputs = json.load(write_file)
             
             for widget in self.children():
