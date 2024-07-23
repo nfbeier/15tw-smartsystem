@@ -24,6 +24,8 @@ class picoMotor_App(QtWidgets.QWidget):
         self.xAxis = axes[0]
         self.yAxis = axes[1]
 
+        print(Newport.get_usb_devices_number_picomotor())
+
         try:
             self.stage = Newport.Picomotor8742()
         except Newport.base.NewportBackendError:
@@ -45,6 +47,6 @@ if __name__ == "__main__":
     #from ResultsWindow import Results
     app = QtWidgets.QApplication(sys.argv)
     #qdarktheme.setup_theme()
-    application = picoMotor_App([3,4])
+    application = picoMotor_App([1,2])
     application.show()
     sys.exit(app.exec_())  

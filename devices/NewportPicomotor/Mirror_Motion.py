@@ -25,13 +25,17 @@ class picoMotor_App(QtWidgets.QWidget):
         self.stage1_axes = [1, 2, 3, 4]  # Axes 1, 2, 3, 4 for stage 1
         self.stage2_axes = [1, 2, 3, 4]  # Axes 1, 2, 3, 4 for stage 2
         
+
         try:
-            self.stage1 = Newport.Picomotor8742()
-            self.stage2 = Newport.Picomotor8742(1)
+            self.stage1 = Newport.Picomotor8742(conn=0,multiaddr=True,scan=True)
+            self.stage2 = Newport.Picomotor8742(conn=1,multiaddr=True,scan=True)
         except Newport.base.NewportBackendError:
             print("Newport Picomotor controller could not be initialized.")
             self.stage1 = None
             self.stage2 = None
+
+        print(Newport.get_usb_devices_number_picomotor())
+        print(Newport.Picomotor8742.get_device_info)
 
         # Connect buttons to picomotor functions for stage1 (Mirror 1 and Mirror 2)
         self.ui.ButtonLeft.clicked.connect(lambda: self.movePico(self.stage1, self.ui.xStepNumber, self.ui.yStepNumber, axis=self.stage1_axes[0], steps=-1 * self.ui.stepSize.value()))
