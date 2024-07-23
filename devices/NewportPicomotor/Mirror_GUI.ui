@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>785</width>
+    <width>973</width>
     <height>432</height>
    </rect>
   </property>
@@ -16,8 +16,8 @@
   <widget class="QSpinBox" name="stepSize">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>110</y>
+     <x>20</x>
+     <y>100</y>
      <width>101</width>
      <height>41</height>
     </rect>
@@ -29,8 +29,8 @@
   <widget class="QToolButton" name="ButtonUp">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>110</y>
+     <x>130</x>
+     <y>100</y>
      <width>41</width>
      <height>41</height>
     </rect>
@@ -45,8 +45,8 @@
   <widget class="QToolButton" name="ButtonDown">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>160</y>
+     <x>130</x>
+     <y>150</y>
      <width>41</width>
      <height>41</height>
     </rect>
@@ -61,8 +61,8 @@
   <widget class="QToolButton" name="ButtonRight">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>160</y>
+     <x>80</x>
+     <y>150</y>
      <width>41</width>
      <height>41</height>
     </rect>
@@ -77,8 +77,8 @@
   <widget class="QToolButton" name="ButtonLeft">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>160</y>
+     <x>20</x>
+     <y>150</y>
      <width>41</width>
      <height>41</height>
     </rect>
@@ -93,8 +93,8 @@
   <widget class="QLabel" name="Mirror_Label">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>60</y>
+     <x>30</x>
+     <y>50</y>
      <width>101</width>
      <height>41</height>
     </rect>
@@ -113,7 +113,7 @@
   <widget class="QLCDNumber" name="yStepNumber">
    <property name="geometry">
     <rect>
-     <x>320</x>
+     <x>180</x>
      <y>130</y>
      <width>61</width>
      <height>41</height>
@@ -126,8 +126,8 @@
   <widget class="QLCDNumber" name="xStepNumber">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>220</y>
+     <x>20</x>
+     <y>200</y>
      <width>61</width>
      <height>41</height>
     </rect>
@@ -136,10 +136,10 @@
   <widget class="QLabel" name="yValueLabel">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>80</y>
-     <width>81</width>
-     <height>41</height>
+     <x>180</x>
+     <y>100</y>
+     <width>61</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
@@ -154,9 +154,9 @@
   <widget class="QLabel" name="xValueLabel">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>220</y>
-     <width>81</width>
+     <x>90</x>
+     <y>200</y>
+     <width>71</width>
      <height>41</height>
     </rect>
    </property>
@@ -172,8 +172,8 @@
   <widget class="QPushButton" name="ButtonHome">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>220</y>
+     <x>170</x>
+     <y>200</y>
      <width>75</width>
      <height>41</height>
     </rect>
@@ -189,76 +189,356 @@
     <string>Home</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="TurningBox12">
+  <widget class="QLabel" name="Mirror_Label_2">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>130</y>
-     <width>111</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <item>
-    <property name="text">
-     <string>MIRROR 1</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>MIRROR 2</string>
-    </property>
-   </item>
-  </widget>
-  <widget class="QComboBox" name="TurningBox3">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>190</y>
-     <width>111</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <item>
-    <property name="text">
-     <string>MIRROR 3</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>MIRROR 4</string>
-    </property>
-   </item>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>80</y>
-     <width>111</width>
+     <x>390</x>
+     <y>50</y>
+     <width>101</width>
      <height>41</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>8</pointsize>
+     <pointsize>14</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
    <property name="text">
-    <string>TURNING BOXES</string>
+    <string>Mirror 2</string>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="stepSize_2">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>100</y>
+     <width>101</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="maximum">
+    <number>1000</number>
+   </property>
+  </widget>
+  <widget class="QToolButton" name="ButtonLeft_2">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>150</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>...</string>
+   </property>
+   <property name="arrowType">
+    <enum>Qt::LeftArrow</enum>
+   </property>
+  </widget>
+  <widget class="QToolButton" name="ButtonRight_2">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>150</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>...</string>
+   </property>
+   <property name="arrowType">
+    <enum>Qt::RightArrow</enum>
+   </property>
+  </widget>
+  <widget class="QLCDNumber" name="xStepNumber_2">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>200</y>
+     <width>61</width>
+     <height>41</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="xValueLabel_2">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>200</y>
+     <width>71</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>X value</string>
+   </property>
+  </widget>
+  <widget class="QToolButton" name="ButtonUp_2">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>100</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>...</string>
+   </property>
+   <property name="arrowType">
+    <enum>Qt::UpArrow</enum>
+   </property>
+  </widget>
+  <widget class="QToolButton" name="ButtonDown_2">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>150</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>...</string>
+   </property>
+   <property name="arrowType">
+    <enum>Qt::DownArrow</enum>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ButtonHome_2">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>200</y>
+     <width>75</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Home</string>
+   </property>
+  </widget>
+  <widget class="QLCDNumber" name="yStepNumber_2">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>130</y>
+     <width>61</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="digitCount">
+    <number>5</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="yValueLabel_2">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>100</y>
+     <width>61</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Y value</string>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="stepSize_3">
+   <property name="geometry">
+    <rect>
+     <x>740</x>
+     <y>100</y>
+     <width>101</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="maximum">
+    <number>1000</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="Mirror_Label_3">
+   <property name="geometry">
+    <rect>
+     <x>750</x>
+     <y>50</y>
+     <width>101</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Mirror 3</string>
+   </property>
+  </widget>
+  <widget class="QToolButton" name="ButtonLeft_3">
+   <property name="geometry">
+    <rect>
+     <x>740</x>
+     <y>150</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>...</string>
+   </property>
+   <property name="arrowType">
+    <enum>Qt::LeftArrow</enum>
+   </property>
+  </widget>
+  <widget class="QToolButton" name="ButtonRight_3">
+   <property name="geometry">
+    <rect>
+     <x>800</x>
+     <y>150</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>...</string>
+   </property>
+   <property name="arrowType">
+    <enum>Qt::RightArrow</enum>
+   </property>
+  </widget>
+  <widget class="QToolButton" name="ButtonUp_3">
+   <property name="geometry">
+    <rect>
+     <x>850</x>
+     <y>100</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>...</string>
+   </property>
+   <property name="arrowType">
+    <enum>Qt::UpArrow</enum>
+   </property>
+  </widget>
+  <widget class="QToolButton" name="ButtonDown_3">
+   <property name="geometry">
+    <rect>
+     <x>850</x>
+     <y>150</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>...</string>
+   </property>
+   <property name="arrowType">
+    <enum>Qt::DownArrow</enum>
+   </property>
+  </widget>
+  <widget class="QLCDNumber" name="yStepNumber_3">
+   <property name="geometry">
+    <rect>
+     <x>900</x>
+     <y>130</y>
+     <width>61</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="digitCount">
+    <number>5</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="yValueLabel_3">
+   <property name="geometry">
+    <rect>
+     <x>900</x>
+     <y>100</y>
+     <width>61</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Y value</string>
+   </property>
+  </widget>
+  <widget class="QLCDNumber" name="xStepNumber_3">
+   <property name="geometry">
+    <rect>
+     <x>740</x>
+     <y>200</y>
+     <width>61</width>
+     <height>41</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="xValueLabel_3">
+   <property name="geometry">
+    <rect>
+     <x>810</x>
+     <y>200</y>
+     <width>71</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>X value</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ButtonHome_3">
+   <property name="geometry">
+    <rect>
+     <x>890</x>
+     <y>200</y>
+     <width>75</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Home</string>
    </property>
   </widget>
  </widget>
