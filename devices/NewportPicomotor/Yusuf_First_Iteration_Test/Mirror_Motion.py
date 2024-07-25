@@ -39,7 +39,7 @@ class picoMotor_App(QtWidgets.QWidget):
             print(f"Stage 2 could not be initialized: {e}")
             self.stage2 = None
 
-        print(Newport.get_usb_devices_number_picomotor())
+        print(f"Number of connected devices: {Newport.get_usb_devices_number_picomotor()}")
 
         # Connect buttons to picomotor functions for stage1 (Mirror 1 and Mirror 2)
         self.ui.ButtonLeft.clicked.connect(lambda: self.movePico(self.stage1, self.ui.xStepNumber, self.ui.yStepNumber, axis=self.stage1_axes[0], steps=-1 * self.ui.stepSize.value()))
