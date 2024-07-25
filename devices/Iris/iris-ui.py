@@ -15,11 +15,18 @@ class Window(QMainWindow, Ui_MainWindow):
         self.serial_port = False
 
         # button attachments:
-        self.homeIrisButton.clicked.connect(self.onHome)
-        self.openIrisButton.clicked.connect(self.onOpen)
-        self.closeIrisButton.clicked.connect(self.onClose)
         self.comPortConnectButton.clicked.connect(self.initSerial)
-        self.goToDiameterButton.clicked.connect(self.handle_goto)
+
+
+        self.homeIrisButton.clicked.connect(lambda: self.onHome(iris=1))
+        self.openIrisButton.clicked.connect(lambda: self.onOpen(iris=1))
+        self.closeIrisButton.clicked.connect(lambda: self.onClose(iris=1))
+        self.goToDiameterButton.clicked.connect(lambda: self.handle_goto(iris=1))
+
+        self.homeIrisButton_2.clicked.connect(lambda: self.onHome(iris=2))
+        self.openIrisButton_2.clicked.connect(lambda: self.onOpen(iris=2))
+        self.closeIrisButton_2.clicked.connect(lambda: self.onClose(iris=2))
+        self.goToDiameterButton_2.clicked.connect(lambda: self.handle_goto(iris=2))
         self.closeEvent = self.closeSerial
         self.isHomed = False
 
@@ -46,20 +53,21 @@ class Window(QMainWindow, Ui_MainWindow):
             self.comPortConnectButton.setStyleSheet("background-color: red")
             QMessageBox.critical(self, "Error", "Could not connect to the Arduino")
 
-    def onHome(self):
+    def onHome(self, iris):
         if not self.serial_port:
             self.comPortConnectButton.setStyleSheet("background-color: red")
             QTimer.singleShot(1000, lambda: self.comPortConnectButton.setStyleSheet(""))
         else:
-            resp = self.send_command("HOME;")
+            command = f"HOME {iris};"
+            resp = self.send_command(command)
             if resp == "OK":
                 self.isHomed = True
-                print("Iris homed")
-                self.update_position(self.send_command("POS;"))
+                print(f"Iris {iris} homed")
+                self.update_position(self.send_command(f"POS {iris};"), iris=iris)
             print(resp)
         
 
-    def onOpen(self):
+    def onOpen(self, iris):
         if not self.isHomed:
             self.comPortConnectButton.setStyleSheet("background-color: red")
             QTimer.singleShot(1000, lambda: self.comPortConnectButton.setStyleSheet(""))
@@ -67,12 +75,12 @@ class Window(QMainWindow, Ui_MainWindow):
             self.comPortConnectButton.setStyleSheet("background-color: red")
             QTimer.singleShot(1000, lambda: self.comPortConnectButton.setStyleSheet(""))
         else:
-            resp = self.send_command("OPEN;")
+            resp = self.send_command(f"OPEN {iris};")
             print(resp)
-            self.update_position(self.send_command("POS;"))
+            self.update_position(self.send_command(f"POS {iris};"), iris=iris)
 
 
-    def onClose(self):
+    def onClose(self, iris):
         if not self.isHomed:
             self.comPortConnectButton.setStyleSheet("background-color: red")
             QTimer.singleShot(1000, lambda: self.comPortConnectButton.setStyleSheet(""))
@@ -80,20 +88,26 @@ class Window(QMainWindow, Ui_MainWindow):
             self.comPortConnectButton.setStyleSheet("background-color: red")
             QTimer.singleShot(1000, lambda: self.comPortConnectButton.setStyleSheet(""))
         else:
-            resp = self.send_command("CLOSE;")
+            resp = self.send_command(f"CLOSE {iris};")
             print(resp)
-            self.update_position(self.send_command("POS;"))
+            self.update_position(self.send_command(f"POS {iris};"), iris=iris)
 
-    def update_position(self, pos):
-        self.currentDiameterLabel.setText(f"{pos} mm")
+    def update_position(self, pos, iris):
+        if iris == 1:
+            self.currentDiameterLabel.setText(f"{pos} mm")
+        else:
+            self.currentDiameterLabel_2.setText(f"{pos} mm")
 
     def send_command(self, command):
         self.ser.write(command.encode())
         response = self.ser.readline().decode().strip()
         return response
     
-    def handle_goto(self):
-        go_to_diameter = self.goToDiameterEntry.text()
+    def handle_goto(self, iris):
+        if iris == 1:
+            go_to_diameter = self.goToDiameterEntry.text()
+        else:
+            go_to_diameter = self.goToDiameterEntry_2.text()
         try:
             diameter = float(go_to_diameter)
             if 2 <= diameter <= 41.3:
@@ -104,10 +118,11 @@ class Window(QMainWindow, Ui_MainWindow):
                     self.comPortConnectButton.setStyleSheet("background-color: red")
                     QTimer.singleShot(1000, lambda: self.comPortConnectButton.setStyleSheet(""))
                 else:
-                    command = f"GOTO {diameter};"
+                    command = f"GOTO {iris} {diameter};"
+                    print(command)
                     resp = self.send_command(command)
                     print(resp)
-                    self.update_position(self.send_command("POS;"))
+                    self.update_position(self.send_command(f"POS {iris};"), iris=iris)
 
             else:
                 QMessageBox.warning(self, "Invalid Diameter", "Please enter a diameter between 2 and 41.3")
@@ -124,5 +139,5 @@ class Window(QMainWindow, Ui_MainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     win = Window()
-    win.show()
+    win.show() 
     sys.exit(app.exec())
