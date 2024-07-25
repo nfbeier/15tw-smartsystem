@@ -17,7 +17,6 @@ sys.path.insert(0,cwd)
 
 from SingleMirror_GUI import Ui_Form  # Import the generated UI class
 
-# Single Mirror control
 class MirrorControlWidget(QtWidgets.QWidget):
     def __init__(self, stage, xAxis, yAxis, mirror_label, parent=None):
         super(MirrorControlWidget, self).__init__(parent)
