@@ -225,6 +225,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.closeIrisButton_2.setEnabled(True)
                 self.homeIrisButton_2.setEnabled(True)
                 self.goToDiameterButton.setEnabled(True)
+                self.goToDiameterButton_2.setEnabled(True)
                 self.fireButton.setStyleSheet("")
             else:
                 self.openIrisButton.setEnabled(False)
@@ -233,6 +234,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.openIrisButton_2.setEnabled(False)
                 self.closeIrisButton_2.setEnabled(False)
                 self.homeIrisButton_2.setEnabled(False)
+                self.goToDiameterButton.setEnabled(False)
                 self.goToDiameterButton_2.setEnabled(False)
                 self.fireButton.setStyleSheet("background-color: green")
 
