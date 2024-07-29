@@ -84,9 +84,15 @@ void homeIris(){
   iris_sel = SerialCommandHandler.readIntArg();
   if (select_iris(iris_sel)){
     if (iris_sel == 1){
+        int tmp = 0;
         // open first:
         while (digitalRead(openedpin) != 0){
           iris.step(-stepamount);
+          tmp += stepamount;
+          if (tmp > 1600){
+            Serial.println("NC");
+            return;
+          }
         }
         // we are fully open now
         int totalsteps = 0;
@@ -105,8 +111,14 @@ void homeIris(){
 
     else{
         // open first:
+        int tmp = 0;
         while (digitalRead(openedpin2) != 0){
           iris.step(-stepamount);
+          tmp += stepamount;
+          if (tmp > 1600){
+            Serial.println("NC");
+            return;
+          }
         }
         // we are fully open now
         int totalsteps = 0;

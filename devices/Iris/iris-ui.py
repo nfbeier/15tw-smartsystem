@@ -68,12 +68,22 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             command = f"HOME {iris};"
             resp = self.send_command(command)
-            if resp == "OK" and iris == 1:
-                self.isHomed = True
-                print(f"Iris {iris} homed")
-            elif resp == "OK" and iris == 2:
-                self.isHomed_2 = True
-                print(f"Iris {iris} homed")
+            if iris == 1:
+                if resp == "OK":
+                    self.isHomed = True
+                    print(f"Iris {iris} homed")
+                elif resp == "NC":
+                    QMessageBox.critical(self, "Error", "Failed to home iris 1. Please check the connection and try again.")
+                    return
+            
+            elif iris == 2:
+                if resp == "OK":
+                    self.isHomed_2 = True
+                    print(f"Iris {iris} homed")
+                elif resp == "NC":
+                    QMessageBox.critical(self, "Error", "Failed to home iris 2. Please check the connection and try again.")
+                    return
+
             self.update_position(self.send_command(f"POS {iris};"), iris=iris)
             print(resp)
         
