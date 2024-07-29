@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(695, 487)
+        MainWindow.resize(507, 296)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.IrisWidget = QtWidgets.QWidget(self.centralwidget)
@@ -137,9 +137,12 @@ class Ui_MainWindow(object):
         self.goToDiameterEntry_2.setText("")
         self.goToDiameterEntry_2.setObjectName("goToDiameterEntry_2")
         self.horizontalLayout_2.addWidget(self.goToDiameterEntry_2)
+        self.fireButton = QtWidgets.QPushButton(self.centralwidget)
+        self.fireButton.setGeometry(QtCore.QRect(10, 210, 461, 23))
+        self.fireButton.setObjectName("fireButton")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 695, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 507, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -151,7 +154,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Aligninator-9000"))
         self.homeIrisButton.setText(_translate("MainWindow", "Home"))
         self.openIrisButton.setText(_translate("MainWindow", "Open"))
         self.closeIrisButton.setText(_translate("MainWindow", "Close"))
@@ -168,3 +171,4 @@ class Ui_MainWindow(object):
         self.currentDiameterLabel_2.setText(_translate("MainWindow", "NaN mm"))
         self.iris2label.setText(_translate("MainWindow", "Iris 2"))
         self.goToDiameterButton_2.setText(_translate("MainWindow", "Go To Diameter"))
+        self.fireButton.setText(_translate("MainWindow", "FIRE MODE"))

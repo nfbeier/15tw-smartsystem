@@ -127,6 +127,7 @@ void homeIris(){
   else{
     Serial.println("Error: Homing Failed");
   }
+  disable_steppers();
 }
 
 void closeIris(){
@@ -177,6 +178,7 @@ void closeIris(){
   else{
     Serial.println("Error");
   }
+  disable_steppers();
 }
 
 void openIris(){
@@ -227,6 +229,7 @@ void openIris(){
   else{
     Serial.println("Error");
   }
+  disable_steppers();
 }
 
 void handle_goToPosition(){
@@ -246,6 +249,7 @@ void handle_goToPosition(){
       goToPosition(steppos, iris_sel);
   }
   }
+  disable_steppers();
 }
 
 void queryPosition(){
@@ -299,6 +303,7 @@ void goToPosition(int pos, int iris_sel){
     else{
       Serial.println("Error");
     }
+    disable_steppers();
 }
 
 void HandleLEDCommand() {
@@ -327,3 +332,7 @@ void unrecognized(const char *command) {
   Serial.println("Recognized Commands are OPEN; CLOSE; HOME; GOTO; and LED;");
 }
 
+void disable_steppers(){
+  digitalWrite(en_1, LOW);
+  digitalWrite(en_2, LOW);
+}

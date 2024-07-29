@@ -7,6 +7,10 @@ import sys
 from irisUI import Ui_MainWindow
 from PyQt5.QtCore import QTimer
 import serial.tools.list_ports
+
+# opoen irirses after shutdown 
+# add fire button (open le irises)
+
 class Window(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -16,6 +20,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         # button attachments:
         self.comPortConnectButton.clicked.connect(self.initSerial)
+        self.fireButton.clicked.connect(self.initFire)
 
 
         self.homeIrisButton.clicked.connect(lambda: self.onHome(iris=1))
@@ -29,6 +34,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.goToDiameterButton_2.clicked.connect(lambda: self.handle_goto(iris=2))
         self.closeEvent = self.closeSerial
         self.isHomed = False
+        self.isHomed_2 = False
 
     def find_arduinos(self):
         # List all available serial ports
@@ -52,6 +58,8 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             self.comPortConnectButton.setStyleSheet("background-color: red")
             QMessageBox.critical(self, "Error", "Could not connect to the Arduino")
+        self.onHome(1)
+        self.onHome(2)
 
     def onHome(self, iris):
         if not self.serial_port:
@@ -60,37 +68,76 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             command = f"HOME {iris};"
             resp = self.send_command(command)
-            if resp == "OK":
+            if resp == "OK" and iris == 1:
                 self.isHomed = True
                 print(f"Iris {iris} homed")
-                self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+            elif resp == "OK" and iris == 2:
+                self.isHomed_2 = True
+                print(f"Iris {iris} homed")
+            self.update_position(self.send_command(f"POS {iris};"), iris=iris)
             print(resp)
         
 
     def onOpen(self, iris):
-        if not self.isHomed:
-            self.comPortConnectButton.setStyleSheet("background-color: red")
-            QTimer.singleShot(1000, lambda: self.comPortConnectButton.setStyleSheet(""))
-        elif not self.serial_port:
-            self.comPortConnectButton.setStyleSheet("background-color: red")
-            QTimer.singleShot(1000, lambda: self.comPortConnectButton.setStyleSheet(""))
-        else:
-            resp = self.send_command(f"OPEN {iris};")
-            print(resp)
-            self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+        if iris == 1:
+            if not self.isHomed:
+                self.homeIrisButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(1000, lambda: self.homeIrisButton.setStyleSheet(""))
+                return False
+            elif not self.serial_port:
+                self.comPortConnectButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(1000, lambda: self.comPortConnectButton.setStyleSheet(""))
+                return False
+            else:
+                resp = self.send_command(f"OPEN {iris};")
+                print(resp)
+                self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+                if resp == "OK":
+                    return True
+                else:
+                    return False
+        elif iris == 2:
+            if not self.isHomed_2:
+                self.homeIrisButton_2.setStyleSheet("background-color: red")
+                QTimer.singleShot(1000, lambda: self.homeIrisButton_2.setStyleSheet(""))
+                return False
+            elif not self.serial_port:
+                self.comPortConnectButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(1000, lambda: self.comPortConnectButton.setStyleSheet(""))
+                return False
+            else:
+                resp = self.send_command(f"OPEN {iris};")
+                print(resp)
+                self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+                if resp == "OK":
+                    return True
+                else:
+                    return False
 
 
     def onClose(self, iris):
-        if not self.isHomed:
-            self.comPortConnectButton.setStyleSheet("background-color: red")
-            QTimer.singleShot(1000, lambda: self.comPortConnectButton.setStyleSheet(""))
-        elif not self.serial_port:
-            self.comPortConnectButton.setStyleSheet("background-color: red")
-            QTimer.singleShot(1000, lambda: self.comPortConnectButton.setStyleSheet(""))
-        else:
-            resp = self.send_command(f"CLOSE {iris};")
-            print(resp)
-            self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+        if iris == 1:
+            if not self.isHomed:
+                self.homeIrisButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(1000, lambda: self.homeIrisButton.setStyleSheet(""))
+            elif not self.serial_port:
+                self.comPortConnectButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(1000, lambda: self.comPortConnectButton.setStyleSheet(""))
+            else:
+                resp = self.send_command(f"CLOSE {iris};")
+                print(resp)
+                self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+        elif iris == 2:
+            if not self.isHomed_2:
+                self.homeIrisButton_2.setStyleSheet("background-color: red")
+                QTimer.singleShot(1000, lambda: self.homeIrisButton_2.setStyleSheet(""))
+            elif not self.serial_port:
+                self.comPortConnectButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(1000, lambda: self.comPortConnectButton.setStyleSheet(""))
+            else:
+                resp = self.send_command(f"CLOSE {iris};")
+                print(resp)
+                self.update_position(self.send_command(f"POS {iris};"), iris=iris)
 
     def update_position(self, pos, iris):
         if iris == 1:
@@ -106,14 +153,18 @@ class Window(QMainWindow, Ui_MainWindow):
     def handle_goto(self, iris):
         if iris == 1:
             go_to_diameter = self.goToDiameterEntry.text()
+            is_homed = self.isHomed
+            home_button = self.homeIrisButton
         else:
             go_to_diameter = self.goToDiameterEntry_2.text()
+            is_homed = self.isHomed_2
+            home_button = self.homeIrisButton_2
         try:
             diameter = float(go_to_diameter)
             if 2 <= diameter <= 41.3:
-                if not self.isHomed:
-                    self.comPortConnectButton.setStyleSheet("background-color: red")
-                    QTimer.singleShot(1000, lambda: self.comPortConnectButton.setStyleSheet(""))
+                if not is_homed:
+                    home_button.setStyleSheet("background-color: red")
+                    QTimer.singleShot(1000, lambda: home_button.setStyleSheet(""))
                 elif not self.serial_port:
                     self.comPortConnectButton.setStyleSheet("background-color: red")
                     QTimer.singleShot(1000, lambda: self.comPortConnectButton.setStyleSheet(""))
@@ -130,11 +181,66 @@ class Window(QMainWindow, Ui_MainWindow):
             QMessageBox.warning(self, "Invalid Input", "Please enter a valid number for the diameter")
 
 
-    
-    def closeSerial(self, event):
+    def initFire(self):
         if not self.serial_port:
+            self.comPortConnectButton.setStyleSheet("background-color: red")
+            QTimer.singleShot(1000, lambda: self.comPortConnectButton.setStyleSheet(""))
+        elif not self.isHomed and not self.isHomed_2:
+            self.homeIrisButton.setStyleSheet("background-color: red")
+            QTimer.singleShot(1000, lambda: self.homeIrisButton.setStyleSheet(""))
+            self.homeIrisButton_2.setStyleSheet("background-color: red")
+            QTimer.singleShot(1000, lambda: self.homeIrisButton_2.setStyleSheet(""))
+
+        elif not self.isHomed:
+            self.homeIrisButton.setStyleSheet("background-color: red")
+            QTimer.singleShot(1000, lambda: self.homeIrisButton.setStyleSheet(""))
+
+        elif not self.isHomed_2:
+            self.homeIrisButton_2.setStyleSheet("background-color: red")
+            QTimer.singleShot(1000, lambda: self.homeIrisButton_2.setStyleSheet(""))
+
+        else:
+            if not self.onOpen(1):
+                QMessageBox.critical(self, "Error", "Failed to open iris 1. Please check the connection and try again.")
+                return
+            if not self.onOpen(2):
+                QMessageBox.critical(self, "Error", "Failed to open iris 2. Please check the connection and try again.")
+                return
+
+            if self.fireButton.styleSheet() == "background-color: green":
+                self.openIrisButton.setEnabled(True)
+                self.closeIrisButton.setEnabled(True)
+                self.homeIrisButton.setEnabled(True)
+                self.openIrisButton_2.setEnabled(True)
+                self.closeIrisButton_2.setEnabled(True)
+                self.homeIrisButton_2.setEnabled(True)
+                self.goToDiameterButton.setEnabled(True)
+                self.fireButton.setStyleSheet("")
+            else:
+                self.openIrisButton.setEnabled(False)
+                self.closeIrisButton.setEnabled(False)
+                self.homeIrisButton.setEnabled(False)
+                self.openIrisButton_2.setEnabled(False)
+                self.closeIrisButton_2.setEnabled(False)
+                self.homeIrisButton_2.setEnabled(False)
+                self.goToDiameterButton_2.setEnabled(False)
+                self.fireButton.setStyleSheet("background-color: green")
+
+    def closeSerial(self, event):
+        if self.serial_port:
+            def open_irises():
+                if not self.onOpen(1):
+                    QMessageBox.critical(self, "Error", "Failed to open iris 1. Please check the connection and try again.")
+                    return
+                if not self.onOpen(2):
+                    QMessageBox.critical(self, "Error", "Failed to open iris 2. Please check the connection and try again.")
+                    return
+                self.ser.close()
+                QMessageBox.information(self, "Irises Opened", "Irises successfully opened.")
+
+            QTimer.singleShot(0, open_irises)
+            
             return
-        self.ser.close()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

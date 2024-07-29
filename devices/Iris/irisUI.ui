@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>695</width>
-    <height>487</height>
+    <width>507</width>
+    <height>296</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Aligninator-9000</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="IrisWidget" native="true">
@@ -280,13 +280,26 @@
      </layout>
     </widget>
    </widget>
+   <widget class="QPushButton" name="fireButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>210</y>
+      <width>461</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>FIRE MODE</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>695</width>
+     <width>507</width>
      <height>21</height>
     </rect>
    </property>
