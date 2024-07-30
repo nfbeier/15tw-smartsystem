@@ -1,16 +1,16 @@
 from PyQt5.QtWidgets import (
-    QApplication, QDialog, QMainWindow, QMessageBox, QWidget
+    QApplication, QDialog, QMainWindow, QMessageBox, QWidget, QVBoxLayout, QGridLayout
 )
 
 from PyQt5.uic import loadUi
 import sys
-from irisUI import Ui_MainWindow
+from irisWidget import Ui_Form
 from PyQt5.QtCore import QTimer
 import serial.tools.list_ports
 import json, os
 
 
-class Window(QMainWindow, Ui_MainWindow):
+class IrisGUI(QWidget, Ui_Form):
     def __init__(self, parent=None, iris1name="Iris 1", iris2name="Iris 2"):
         super().__init__(parent)
         self.setupUi(self)
@@ -261,7 +261,25 @@ class Window(QMainWindow, Ui_MainWindow):
             return
 
 if __name__ == "__main__":
+
     app = QApplication(sys.argv)
-    win = Window(iris1name="Tube1", iris2name="Tube2")
-    win.show() 
-    sys.exit(app.exec())
+
+    main_window = QWidget()
+    main_window.resize(800, 600)  # Set the default window size
+
+    layout = QVBoxLayout(main_window)
+    grid_layout = QGridLayout()
+    for i in range(2):
+        for j in range(1):
+            iris_gui = IrisGUI()
+            grid_layout.addWidget(iris_gui, i, j)
+
+    layout.addLayout(grid_layout)
+
+
+    main_window.setLayout(layout)
+
+    main_window.show()
+
+    sys.exit(app.exec_())
+   
