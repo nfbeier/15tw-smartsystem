@@ -1,3 +1,7 @@
+-r devices/XPS/XPSRequirements.txt
+-r devices/XGS600/XGSRequirements.txt
+-r devices/NewportPicomotor/picoRequirements.txt
+-r devices/Iris/IrisRequirements.txt
 newportxps==0.3.0
 numpy==2.0.0
 pylablib==1.4.3
