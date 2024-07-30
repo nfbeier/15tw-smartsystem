@@ -13,7 +13,6 @@ cwd = os.path.sep.join(cwd.split(os.path.sep)[:cwd.split(os.path.sep).index('15t
 
 sys.path.insert(0,cwd)
 
-from devices.XGS600 import XGS600
 import serial.tools.list_ports
 from devices.XGS600.XGS600 import XGS600Driver
 from devices.XGS600.XGS600_WidgetUI import Ui_Form
