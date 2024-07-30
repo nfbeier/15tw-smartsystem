@@ -1,11 +1,20 @@
 from PyQt5.QtWidgets import QApplication, QMessageBox, QWidget, QVBoxLayout, QGridLayout
-import sys
-from irisWidget import Ui_Form
+import sys, os
 from PyQt5.QtCore import QTimer
 import serial.tools.list_ports
 
+cwd = os.getcwd()
+if '15tw-smartsystem' not in cwd.split(os.path.sep):
+    raise ValueError("The directory does not contain '15tw-smartsystem' folder.")
+# Rebuild the directory string up to and including '15tw-smartsystem', prevent import errors
+cwd = os.path.sep.join(cwd.split(os.path.sep)[:cwd.split(os.path.sep).index('15tw-smartsystem') + 1])
+sys.path.insert(0,cwd)
 
-class IrisGUI(QWidget, Ui_Form):
+from devices.Iris.irisWidget import Ui_Form
+
+
+
+class IrisGUIWidget(QWidget, Ui_Form):
     """
     IrisGUI class that represents the graphical user interface for controlling the Iris devices.
     Inherits from QWidget and Ui_Form.
@@ -409,7 +418,7 @@ if __name__ == "__main__":
     grid_layout = QGridLayout()
     for i in range(2):
         for j in range(1):
-            iris_gui = IrisGUI()
+            iris_gui = IrisGUIWidget()
             grid_layout.addWidget(iris_gui, i, j)
 
     layout.addLayout(grid_layout)
