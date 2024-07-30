@@ -1,7 +1,6 @@
-from PyQt5 import QtWidgets, uic, QtGui, QtCore
+from PyQt5 import QtWidgets, QtCore
 import os
 import sys
-import numpy as np
  
 cwd = os.getcwd()
 print(cwd)
@@ -14,11 +13,7 @@ cwd = os.path.sep.join(cwd.split(os.path.sep)[:cwd.split(os.path.sep).index('15t
 
 sys.path.insert(0,cwd)
 
-from devices.XGS600 import XGS600
-from math import floor
-from fractions import Fraction
-import time, json
-
+import serial.tools.list_ports
 from devices.XGS600.XGS600 import XGS600Driver
 from devices.XGS600.XGS600_WidgetUI import Ui_Form
 
@@ -27,14 +22,25 @@ class XGSWidget(QtWidgets.QWidget):
         super(XGSWidget,self).__init__()
         self.ui = Ui_Form()
         self.ui.setupUi(self)
-        self.xgs = XGS600Driver(port="COM3")
-        self.gauge_id = "MAIN1" #The 15 TW chamber vacuum gauge ID is MAIN1
-        self.ui.GaugeName.setText(self.gauge_id)
-        self.ui.pressureUnitsLabel.setText(self.xgs.read_pressure_unit())
 
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.updatePressure)
-        self.timer.start(1000)
+        # fuck wit the com port
+        self.comport = None
+        ports = serial.tools.list_ports.comports()
+        for port in ports:
+            if "PL2303GT" in port.description:
+                self.comport = port.device
+        if not self.comport:
+            QtWidgets.QMessageBox.critical(self, "Error", "XGS not connected")
+            return
+        else:
+            self.xgs = XGS600Driver(port=self.comport)
+            self.gauge_id = "MAIN1" #The 15 TW chamber vacuum gauge ID is MAIN1
+            self.ui.GaugeName.setText(self.gauge_id)
+            self.ui.pressureUnitsLabel.setText(self.xgs.read_pressure_unit())
+
+            self.timer = QtCore.QTimer()
+            self.timer.timeout.connect(self.updatePressure)
+            self.timer.start(1000)
 
     def updatePressure(self):
         pressure = self.xgs.read_pressure(f"U{self.gauge_id}")
