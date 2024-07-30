@@ -35,6 +35,11 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         layout.addWidget(self.mirror2)
         layout.addWidget(self.mirror3)
 
+        self.setLayout(layout)
+
+        # Set fixed size for the main window
+        self.setFixedSize(1000, 400)
+
     def closeEvent(self, event):
         if self.stage1:
             self.stage1.close()
