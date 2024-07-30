@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import (
-    QApplication, QDialog, QMainWindow, QMessageBox
+    QApplication, QDialog, QMainWindow, QMessageBox, QWidget
 )
 
 from PyQt5.uic import loadUi
@@ -7,12 +7,11 @@ import sys
 from irisUI import Ui_MainWindow
 from PyQt5.QtCore import QTimer
 import serial.tools.list_ports
+import json, os
 
-# opoen irirses after shutdown 
-# add fire button (open le irises)
 
 class Window(QMainWindow, Ui_MainWindow):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, iris1name="Iris 1", iris2name="Iris 2"):
         super().__init__(parent)
         self.setupUi(self)
         self.find_arduinos()
@@ -21,7 +20,6 @@ class Window(QMainWindow, Ui_MainWindow):
         # button attachments:
         self.comPortConnectButton.clicked.connect(self.initSerial)
         self.fireButton.clicked.connect(self.initFire)
-
 
         self.homeIrisButton.clicked.connect(lambda: self.onHome(iris=1))
         self.openIrisButton.clicked.connect(lambda: self.onOpen(iris=1))
@@ -36,6 +34,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.isHomed = False
         self.isHomed_2 = False
 
+        self.iris1label.setText(iris1name)
+        self.iris2label.setText(iris2name)
+
+
     def find_arduinos(self):
         # List all available serial ports
         ports = serial.tools.list_ports.comports()
@@ -47,6 +49,9 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def initSerial(self):
         self.serial_port = self.ComPortSelectBox.currentText()
+        if not self.serial_port:
+            QMessageBox.critical(self, "Error", "No serial port selected. Please select a serial port and try again.")
+            return
         self.baud_rate = 115200
         self.ser = serial.Serial(self.serial_port, self.baud_rate, timeout=20)
         self.ser.flushInput()
@@ -238,6 +243,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.goToDiameterButton_2.setEnabled(False)
                 self.fireButton.setStyleSheet("background-color: green")
 
+
     def closeSerial(self, event):
         if self.serial_port:
             def open_irises():
@@ -256,6 +262,6 @@ class Window(QMainWindow, Ui_MainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    win = Window()
+    win = Window(iris1name="Tube1", iris2name="Tube2")
     win.show() 
     sys.exit(app.exec())

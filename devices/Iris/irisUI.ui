@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>507</width>
-    <height>296</height>
+    <width>593</width>
+    <height>264</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QWidget" name="IrisWidget" native="true">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
+      <x>110</x>
+      <y>-10</y>
       <width>241</width>
       <height>201</height>
      </rect>
@@ -92,48 +92,6 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>19</y>
-       <width>101</width>
-       <height>91</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QLabel" name="ComPortLabel">
-        <property name="text">
-         <string>COM Port</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="ComPortSelectBox"/>
-      </item>
-      <item>
-       <widget class="QPushButton" name="comPortConnectButton">
-        <property name="text">
-         <string>Connect</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="iris1">
-        <property name="text">
-         <string>Iris 1</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="layoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
        <y>120</y>
        <width>223</width>
        <height>25</height>
@@ -156,12 +114,34 @@
       </item>
      </layout>
     </widget>
+    <widget class="QWidget" name="layoutWidget_6">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>101</width>
+       <height>91</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_7">
+      <item>
+       <widget class="QLabel" name="iris1label">
+        <property name="text">
+         <string>Iris 1</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </widget>
    <widget class="QWidget" name="IrisWidget_2" native="true">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>0</y>
+      <x>350</x>
+      <y>-10</y>
       <width>241</width>
       <height>201</height>
      </rect>
@@ -283,8 +263,8 @@
    <widget class="QPushButton" name="fireButton">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>210</y>
+      <x>120</x>
+      <y>200</y>
       <width>461</width>
       <height>23</height>
      </rect>
@@ -293,13 +273,45 @@
      <string>FIRE MODE</string>
     </property>
    </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>101</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="ComPortLabel">
+       <property name="text">
+        <string>COM Port</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="ComPortSelectBox"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="comPortConnectButton">
+       <property name="text">
+        <string>Connect</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>507</width>
+     <width>593</width>
      <height>21</height>
     </rect>
    </property>
