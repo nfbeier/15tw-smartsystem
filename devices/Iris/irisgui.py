@@ -1,6 +1,4 @@
 from PyQt5.QtWidgets import QApplication, QMessageBox, QWidget, QVBoxLayout, QGridLayout
-
-
 import sys
 from irisWidget import Ui_Form
 from PyQt5.QtCore import QTimer
