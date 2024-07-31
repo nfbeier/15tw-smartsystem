@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>289</width>
-    <height>304</height>
+    <width>376</width>
+    <height>350</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -187,6 +187,84 @@
    </property>
    <property name="text">
     <string>Home</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="connectionStatusLabel">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>20</y>
+     <width>201</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Connected Controllers: 0 </string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="LEDindicator">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>20</y>
+     <width>21</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">    background-color: red;
+    border-radius: 10px;
+    min-width: 20px;
+    min-height: 20px;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ButtonSafety">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>260</y>
+     <width>41</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>OK</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="MirrorLockLabel">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>270</y>
+     <width>131</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string> HIGH POWER MODE</string>
    </property>
   </widget>
  </widget>

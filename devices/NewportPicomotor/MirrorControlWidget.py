@@ -42,9 +42,20 @@ class MirrorControlWidget(QtWidgets.QWidget):
         Moves the specified axis by a user-defined number of steps.
     moveToHome()
         Moves both x and y axes to the home (0) position.
+    updateConnectionStatus():
+        Updates the connection status and LED indicator based on the number of connected stages.
+    SafetySwitch():
+        switch the safety mode on or off.
+    isMirrorSafeToFire():
+        Returns True if the mirror is safe to fire the laser (i.e not movable), False otherwise.
+    updateMovementButtons():
+        Updates the enabled state of movement buttons based on the safety mode.
+    updateMirrorLockLabel():
+        Updated the status of the safety switch based on the current safety mode
+
     '''
 
-    Max_steps = 1000 # Maximum nuber of steps to prevent damage to the mirrors
+    Max_steps = 1000 # Maximum number of steps to prevent damage to the mirrors
 
     def __init__(self, stage, xAxis, yAxis, mirror_label, parent=None):
         '''
@@ -73,6 +84,7 @@ class MirrorControlWidget(QtWidgets.QWidget):
         self.stage = stage
         self.xAxis = xAxis
         self.yAxis = yAxis
+        self.mirror_safe = True # mirror is safe (i.e mirror motion is disabled) by default
 
         self.ui = Ui_Form()  # Create an instance of the generated UI class
         self.ui.setupUi(self)  # Set up the UI within this widget
@@ -86,14 +98,16 @@ class MirrorControlWidget(QtWidgets.QWidget):
         self.ui.ButtonUp.clicked.connect(lambda: self.movePico(self.yAxis, self.ui.stepSize.value()))
         self.ui.ButtonDown.clicked.connect(lambda: self.movePico(self.yAxis, -1 * self.ui.stepSize.value()))
         self.ui.ButtonHome.clicked.connect(self.moveToHome)
+        self.ui.ButtonSafety.clicked.connect(self.SafetySwitch)
+
 
     def movePico(self, axis, steps):
         '''
-        Moves the specified axis by the given number of steps.
+        Moves the specified axis by a given number of steps.
 
         Arguments:
         axis : int
-            The axis number to move (xAxis or yAxis).
+            The axis to move (xAxis or yAxis).
         steps : int
             The number of steps to move the axis by.
         '''
@@ -106,14 +120,18 @@ class MirrorControlWidget(QtWidgets.QWidget):
                 if not isinstance(steps, int) or steps > self.Max_steps:
                     raise ValueError(f"Number of steps {steps} is out of bounds. Maximum allowed steps: {self.Max_steps}.")
 
-                self.stage.move_by(axis=axis, steps=steps)
-                self.stage.wait_move()
-                if axis == self.xAxis:
-                    self.ui.xStepNumber.display(self.stage.get_position(axis))
-                elif axis == self.yAxis:
-                    self.ui.yStepNumber.display(self.stage.get_position(axis))
-            except ValueError as ve:
-                QtWidgets.QMessageBox.warning(self, "Input Error", str(ve))
+
+                if not self.isMirrorSafeToFire():
+                    self.stage.move_by(axis=axis, steps=steps)
+                    self.stage.wait_move()
+                    if axis == self.xAxis:
+                        self.ui.xStepNumber.display(self.stage.get_position(axis))
+                    elif axis == self.yAxis:
+                        self.ui.yStepNumber.display(self.stage.get_position(axis))
+                else:
+                    QtWidgets.QMessageBox.warning(self, "Safety Mode", "Mirror movement is disabled. Please enable to move the mirror.") 
+            except ValueError as t:
+                QtWidgets.QMessageBox.warning(self, "Input Error", str(t))
             except Exception as e:
                 QtWidgets.QMessageBox.critical(self, "Error", f"Failed to move the Picomotor: {e}")
 
@@ -123,14 +141,70 @@ class MirrorControlWidget(QtWidgets.QWidget):
         '''
         if self.stage:
             try:
-                # Move x-axis to home
-                self.stage.move_to(axis=self.xAxis, position=0)
-                self.stage.wait_move()
-                # Move y-axis to home
-                self.stage.move_to(axis=self.yAxis, position=0)
-                self.stage.wait_move()
-                # Reset step counters
-                self.ui.xStepNumber.display(self.stage.get_position(self.xAxis))
-                self.ui.yStepNumber.display(self.stage.get_position(self.yAxis))
+                if not self.isMirrorSafeToFire():
+                    # Move x-axis to home
+                    self.stage.move_to(axis=self.xAxis, position=0)
+                    self.stage.wait_move()
+                    # Move y-axis to home
+                    self.stage.move_to(axis=self.yAxis, position=0)
+                    self.stage.wait_move()
+                    # Reset step counters
+                    self.ui.xStepNumber.display(self.stage.get_position(self.xAxis))
+                    self.ui.yStepNumber.display(self.stage.get_position(self.yAxis))
+                else:
+                    QtWidgets.QMessageBox.warning(self, "Safety Mode", "Mirror movement is disabled. Please enable to move the mirror.")
             except Exception as e:
                 QtWidgets.QMessageBox.critical(self, "Error", f"Failed to move to Home: {e}")
+
+        # Update connection status when initializing
+        self.updateConnectionStatus()
+
+    def updateConnectionStatus(self):
+        '''
+        Updates the connection status and LED indicator based on the number of connected stages.
+        '''
+        num_connected_stages = Newport.get_usb_devices_number_picomotor()
+        self.ui.connectionStatusLabel.setText(f"Connected Controllers: {num_connected_stages}")
+
+        if num_connected_stages >= 2:
+            self.ui.LEDindicator.setStyleSheet("background-color: green; border-radius: 10px; min-width: 20px; min-height: 20px;")
+        else:
+            self.ui.LEDindicator.setStyleSheet("background-color: red; border-radius: 10px; min-width: 20px; min-height: 20px;")
+
+
+        # Update movement button states based on initial safety status
+        self.updateMovementButtons()
+
+    def SafetySwitch(self):
+        '''
+        switch the safety mode on or off.
+        '''
+        self.mirror_safe = not self.mirror_safe
+        self.updateMovementButtons()
+        self.updateMirrorLockLabel()
+
+    def isMirrorSafeToFire(self):
+        '''
+        Returns True if the mirror is safe to fire the laser (i.e not movable), False otherwise.
+        '''
+        return self.mirror_safe
+
+    def updateMovementButtons(self):
+        '''
+        Updates the enabled state of movement buttons based on the safety mode.
+        '''
+        self.ui.ButtonLeft.setEnabled(not self.isMirrorSafeToFire())
+        self.ui.ButtonRight.setEnabled(not self.isMirrorSafeToFire())
+        self.ui.ButtonUp.setEnabled(not self.isMirrorSafeToFire())
+        self.ui.ButtonDown.setEnabled(not self.isMirrorSafeToFire())
+
+    def updateMirrorLockLabel(self):
+        '''
+        Updated the status of the safety switch based on the current safety mode
+        '''
+        if self.isMirrorSafeToFire():
+            self.ui.MirrorLockLabel.setText("High Power Mode")
+        else:
+            self.ui.MirrorLockLabel.setText("Alignment Mode")
+
+      

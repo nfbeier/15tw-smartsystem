@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(289, 304)
+        Form.resize(376, 350)
         self.stepSize = QtWidgets.QSpinBox(Form)
         self.stepSize.setGeometry(QtCore.QRect(20, 100, 101, 41))
         self.stepSize.setMaximum(1000)
@@ -70,6 +70,37 @@ class Ui_Form(object):
         font.setWeight(75)
         self.ButtonHome.setFont(font)
         self.ButtonHome.setObjectName("ButtonHome")
+        self.connectionStatusLabel = QtWidgets.QLabel(Form)
+        self.connectionStatusLabel.setGeometry(QtCore.QRect(90, 20, 201, 21))
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        font.setBold(True)
+        font.setWeight(75)
+        self.connectionStatusLabel.setFont(font)
+        self.connectionStatusLabel.setObjectName("connectionStatusLabel")
+        self.LEDindicator = QtWidgets.QLabel(Form)
+        self.LEDindicator.setGeometry(QtCore.QRect(30, 20, 21, 21))
+        self.LEDindicator.setStyleSheet("    background-color: red;\n"
+"    border-radius: 10px;\n"
+"    min-width: 20px;\n"
+"    min-height: 20px;")
+        self.LEDindicator.setText("")
+        self.LEDindicator.setObjectName("LEDindicator")
+        self.ButtonSafety = QtWidgets.QPushButton(Form)
+        self.ButtonSafety.setGeometry(QtCore.QRect(20, 260, 41, 41))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.ButtonSafety.setFont(font)
+        self.ButtonSafety.setObjectName("ButtonSafety")
+        self.MirrorLockLabel = QtWidgets.QLabel(Form)
+        self.MirrorLockLabel.setGeometry(QtCore.QRect(70, 270, 131, 21))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.MirrorLockLabel.setFont(font)
+        self.MirrorLockLabel.setObjectName("MirrorLockLabel")
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -85,6 +116,9 @@ class Ui_Form(object):
         self.yValueLabel.setText(_translate("Form", "Y value"))
         self.xValueLabel.setText(_translate("Form", "X value"))
         self.ButtonHome.setText(_translate("Form", "Home"))
+        self.connectionStatusLabel.setText(_translate("Form", "Connected Controllers: 0 "))
+        self.ButtonSafety.setText(_translate("Form", "OK"))
+        self.MirrorLockLabel.setText(_translate("Form", " HIGH POWER MODE"))
 
 
 if __name__ == "__main__":
