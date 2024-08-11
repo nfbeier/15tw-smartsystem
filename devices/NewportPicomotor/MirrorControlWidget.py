@@ -14,12 +14,8 @@ cwd = os.path.sep.join(cwd.split(os.path.sep)[:cwd.split(os.path.sep).index('15t
 
 sys.path.insert(0,cwd)
 
-# setting the correct path
-mirror_dir = os.path.dirname(os.path.abspath(__file__)) # current SingleMirror_GUI directory
-parent_dir = os.path.dirname(mirror_dir) # get the parent directory of SingleMirror_GUI
-sys.path.insert(0, parent_dir) 
 
-from SingleMirror_GUI import Ui_Form  # Import the generated UI class
+from devices.NewportPicomotor.SingleMirror_GUI import Ui_Form  # Import the generated UI class
 
 class MirrorControlWidget(QtWidgets.QWidget):
     '''
@@ -42,16 +38,8 @@ class MirrorControlWidget(QtWidgets.QWidget):
         Moves the specified axis by a user-defined number of steps.
     moveToHome()
         Moves both x and y axes to the home (0) position.
-    updateConnectionStatus():
-        Updates the connection status and LED indicator based on the number of connected stages.
-    SafetySwitch():
-        switch the safety mode on or off.
-    isMirrorSafeToFire():
-        Returns True if the mirror is safe to fire the laser (i.e not movable), False otherwise.
     updateMovementButtons():
         Updates the enabled state of movement buttons based on the safety mode.
-    updateMirrorLockLabel():
-        Updated the status of the safety switch based on the current safety mode
 
     '''
 
@@ -98,7 +86,10 @@ class MirrorControlWidget(QtWidgets.QWidget):
         self.ui.ButtonUp.clicked.connect(lambda: self.movePico(self.yAxis, self.ui.stepSize.value()))
         self.ui.ButtonDown.clicked.connect(lambda: self.movePico(self.yAxis, -1 * self.ui.stepSize.value()))
         self.ui.ButtonHome.clicked.connect(self.moveToHome)
-        self.ui.ButtonSafety.clicked.connect(self.SafetySwitch)
+
+
+        # Update movement button states when initializing
+        self.updateMovementButtons(mirror_safe=True)
 
 
     def movePico(self, axis, steps):
@@ -156,55 +147,15 @@ class MirrorControlWidget(QtWidgets.QWidget):
             except Exception as e:
                 QtWidgets.QMessageBox.critical(self, "Error", f"Failed to move to Home: {e}")
 
-        # Update connection status when initializing
-        self.updateConnectionStatus()
 
-    def updateConnectionStatus(self):
-        '''
-        Updates the connection status and LED indicator based on the number of connected stages.
-        '''
-        num_connected_stages = Newport.get_usb_devices_number_picomotor()
-        self.ui.connectionStatusLabel.setText(f"Connected Controllers: {num_connected_stages}")
-
-        if num_connected_stages >= 2:
-            self.ui.LEDindicator.setStyleSheet("background-color: green; border-radius: 10px; min-width: 20px; min-height: 20px;")
-        else:
-            self.ui.LEDindicator.setStyleSheet("background-color: red; border-radius: 10px; min-width: 20px; min-height: 20px;")
-
-
-        # Update movement button states based on initial safety status
-        self.updateMovementButtons()
-
-    def SafetySwitch(self):
-        '''
-        switch the safety mode on or off.
-        '''
-        self.mirror_safe = not self.mirror_safe
-        self.updateMovementButtons()
-        self.updateMirrorLockLabel()
-
-    def isMirrorSafeToFire(self):
-        '''
-        Returns True if the mirror is safe to fire the laser (i.e not movable), False otherwise.
-        '''
-        return self.mirror_safe
-
-    def updateMovementButtons(self):
+    def updateMovementButtons(self, mirror_safe):
         '''
         Updates the enabled state of movement buttons based on the safety mode.
         '''
-        self.ui.ButtonLeft.setEnabled(not self.isMirrorSafeToFire())
-        self.ui.ButtonRight.setEnabled(not self.isMirrorSafeToFire())
-        self.ui.ButtonUp.setEnabled(not self.isMirrorSafeToFire())
-        self.ui.ButtonDown.setEnabled(not self.isMirrorSafeToFire())
-
-    def updateMirrorLockLabel(self):
-        '''
-        Updated the status of the safety switch based on the current safety mode
-        '''
-        if self.isMirrorSafeToFire():
-            self.ui.MirrorLockLabel.setText("High Power Mode")
-        else:
-            self.ui.MirrorLockLabel.setText("Alignment Mode")
+        self.ui.ButtonLeft.setEnabled(not mirror_safe)
+        self.ui.ButtonRight.setEnabled(not mirror_safe)
+        self.ui.ButtonUp.setEnabled(not mirror_safe)
+        self.ui.ButtonDown.setEnabled(not mirror_safe)
+        self.ui.ButtonHome.setEnabled(not mirror_safe)
 
       

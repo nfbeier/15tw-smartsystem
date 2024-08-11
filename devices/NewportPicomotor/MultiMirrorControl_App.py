@@ -1,6 +1,6 @@
 from pylablib.devices import Newport
 import sys
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore, QtGui
 from MirrorControlWidget import MirrorControlWidget
 
 # Create the main application to use the widget (Multi-mirror control GUI)
@@ -22,6 +22,14 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         Control widget for the third mirror.
 
     Methods:
+    updateConnectionStatus():
+        Updates the connection status and LED indicator based on the number of connected stages.
+    SafetySwitch():
+        switch the safety mode on or off.
+    updateMovementButtons():
+        Updates the enabled state of movement buttons based on the safety mode.
+    updateSafetyStatusLabel():
+        Updated the status of the safety switch based on the current safety mode
     closeEvent(event)
         Closes the stage controllers when the application is closed.
     '''
@@ -49,18 +57,172 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
 
         # Create widgets for each mirror 
         self.mirror1 = MirrorControlWidget(self.stage1, 1, 2, "Mirror 1")
-        self.mirror2 = MirrorControlWidget(self.stage1, 3, 4, "Mirror 2")
+        self.mirror2 = MirrorControlWidget(self.stage1, 3, 4, "Mirror 2" )
         self.mirror3 = MirrorControlWidget(self.stage2, 1, 2, "Mirror 3")
+    
+
+        # Add a safety control button
+        self.safety_button = QtWidgets.QPushButton("Disable Safety", self)
+        self.safety_button.setGeometry(QtCore.QRect(20, 260, 71, 41))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.safety_button.setFont(font)
+        self.safety_button.setStyleSheet("""QPushButton {background-color: blue;  /* Fixed color (dark grey) */
+                color: white;
+                border-radius: 15px;
+                font-size: 12pt;
+                font-weight: bold;
+                padding: 10px;
+                border: 2px solid #333333;}""")
+
+        # connect the safety button 
+        self.safety_button.clicked.connect(self.SafetySwitch)
         
-        layout = QtWidgets.QHBoxLayout(self)
-        layout.addWidget(self.mirror1)
-        layout.addWidget(self.mirror2)
-        layout.addWidget(self.mirror3)
+        # Add a label to display the safety status
+        self.safety_status_label = QtWidgets.QLabel("High Power Mode", self)
+        self.safety_status_label.setGeometry(QtCore.QRect(90, 270, 131, 21))
+        font.setBold(True)
+        font.setWeight(75)
+        self.safety_status_label.setFont(font)
+        self.safety_status_label.setStyleSheet("""
+                QLabel {
+                    background-color: qlineargradient(
+                        spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                        stop:0 #FF6666, stop:1 #CC0000);
+                    color: white;
+                    border-radius: 10px;
+                    font-style: italic;                           
+                    font-size: 12pt;
+                    font-weight: bold;
+                    padding: 5px;
+                    border: 2px solid #AA0000;
+                    text-align: center;
+                }
+            """)
 
-        self.setLayout(layout)
+        # Add a connection status labels
+        self.connectionStatusLabel = QtWidgets.QLabel("Connected Controllers: 0",self)
+        self.connectionStatusLabel.setGeometry(QtCore.QRect(90, 20, 250, 30))  #90, 20, 201, 21
+        font.setPointSize(9)
+        font.setBold(True)
+        font.setWeight(75)
+        self.connectionStatusLabel.setFont(font) 
+        self.connectionStatusLabel.setStyleSheet("font-size: 14pt; font-weight: bold")
 
-        # Set fixed size for the main window
-        self.setFixedSize(1000, 400)
+        self.LEDindicator = QtWidgets.QLabel("",self)
+        self.LEDindicator.setGeometry(QtCore.QRect(40, 30, 31, 31)) #30, 20, 21, 21
+        self.LEDindicator.setStyleSheet("background-color: red;border-radius: 10px;min-width: 20px;min-height: 20px;")
+        
+
+        # Layout for the connection status and LED indicator
+        connection_layout = QtWidgets.QHBoxLayout()
+        connection_layout.addWidget(self.LEDindicator)
+        connection_layout.addWidget(self.connectionStatusLabel)
+        connection_layout.setAlignment(QtCore.Qt.AlignCenter)
+        connection_layout.setSpacing(20) # set the spacing between LEDindicator and connectionStatusLabel
+        connection_layout.setContentsMargins(0, 80, 0, 0) 
+
+        # Layout for the safety controls
+        safety_layout = QtWidgets.QHBoxLayout()
+        safety_layout.addWidget(self.safety_button)
+        safety_layout.addWidget(self.safety_status_label)
+        safety_layout.setAlignment(QtCore.Qt.AlignCenter)
+        safety_layout.setSpacing(20)  # Set the spacing between the  safety_button and safety_status_label
+        safety_layout.setContentsMargins(0, 0, 0, 80)
+
+        # Create a layout for the mirrors 
+        mirror_layout = QtWidgets.QHBoxLayout()
+        mirror_layout.addWidget(self.mirror1)
+        mirror_layout.addWidget(self.mirror2)
+        mirror_layout.addWidget(self.mirror3) 
+
+        # Layout of main window
+        main_layout = QtWidgets.QVBoxLayout(self)
+        main_layout.addLayout(connection_layout)
+        main_layout.addLayout(mirror_layout) 
+        main_layout.addLayout(safety_layout)
+
+
+        self.setLayout(main_layout)
+        self.setFixedSize(1000, 600)  # Adjust the window size
+
+        self.mirror_safe = True  # Initialize mirrors as safe (i.e motion is disabled)
+
+        # Update connection status when initializing
+        self.updateConnectionStatus()
+
+    def updateConnectionStatus(self):
+        '''
+        Updates the connection status and LED indicator based on the number of connected stages.
+        '''
+        num_connected_stages = Newport.get_usb_devices_number_picomotor()
+        self.connectionStatusLabel.setText(f"Connected Controllers: {num_connected_stages}")
+        self.connectionStatusLabel.setStyleSheet("font-size: 14pt; font-weight: bold")
+
+        if num_connected_stages >= 2:
+            self.LEDindicator.setStyleSheet("background-color: green;border-radius: 15px;min-width: 30px;min-height: 30px;")
+        else:
+            self.LEDindicator.setStyleSheet("background-color: red;border-radius: 15px;min-width: 30px;min-height: 30px;")
+            
+    def SafetySwitch(self):
+        '''
+        Toggles the safety mode on or off for all mirrors.
+        '''
+        self.mirror_safe = not self.mirror_safe
+        self.updateMovementButtons()
+        self.updateSafetyStatusLabel()
+
+    def updateMovementButtons(self):
+        '''
+        Updates the enabled state of movement buttons for all mirrors based on the safety mode.
+        '''
+        self.mirror1.updateMovementButtons(self.mirror_safe)
+        self.mirror2.updateMovementButtons(self.mirror_safe)
+        self.mirror3.updateMovementButtons(self.mirror_safe)
+
+    def updateSafetyStatusLabel(self):
+        '''
+        Updates the status label for the safety mode.
+        '''
+        if self.mirror_safe:
+            self.safety_status_label.setText("High Power Mode")
+            self.safety_status_label.setStyleSheet("""
+                QLabel {
+                    background-color: qlineargradient(
+                        spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                        stop:0 #FF6666, stop:1 #CC0000);
+                    color: white;
+                    border-radius: 10px;
+                    font-style: italic;                               
+                    font-size: 12pt;
+                    font-weight: bold;
+                    padding: 5px;
+                    border: 2px solid #AA0000;
+                    text-align: center;
+                }
+            """)
+            self.safety_button.setText("Disable Safety")
+        else:
+            self.safety_status_label.setText("Alignment Mode")
+            self.safety_button.setText("Enable Safety")
+            self.safety_status_label.setStyleSheet("""
+                QLabel {
+                    background-color: qlineargradient(
+                        spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                        stop:0 #99FF99, stop:1 #33CC33);
+                    color: white;
+                    border-radius: 10px;
+                    font-style: italic;                               
+                    font-size: 12pt;
+                    font-weight: bold;
+                    padding: 5px;
+                    border: 2px solid #00AA00;
+                    text-align: center;
+                }
+            """)
+
 
     def closeEvent(self, event):
         '''
