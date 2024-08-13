@@ -416,7 +416,7 @@ if __name__ == "__main__":
 
     layout = QVBoxLayout(main_window)
     grid_layout = QGridLayout()
-    for i in range(2):
+    for i in range(1):
         for j in range(1):
             iris_gui = IrisGUIWidget()
             grid_layout.addWidget(iris_gui, i, j)
