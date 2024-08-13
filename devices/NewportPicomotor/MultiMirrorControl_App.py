@@ -9,7 +9,7 @@ if '15tw-smartsystem' not in cwd.split(os.path.sep):
 cwd = os.path.sep.join(cwd.split(os.path.sep)[:cwd.split(os.path.sep).index('15tw-smartsystem') + 1])
 sys.path.insert(0,cwd)
 
-from MirrorControlWidget import MirrorControlWidget
+from devices.NewportPicomotor.MirrorControlWidget import MirrorControlWidget
 
 # Create the main application to use the widget (Multi-mirror control GUI)
 class MultiMirrorControl_App(QtWidgets.QWidget):
