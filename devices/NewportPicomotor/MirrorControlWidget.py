@@ -112,7 +112,7 @@ class MirrorControlWidget(QtWidgets.QWidget):
                     raise ValueError(f"Number of steps {steps} is out of bounds. Maximum allowed steps: {self.Max_steps}.")
 
 
-                if not self.isMirrorSafeToFire():
+                if self.mirror_safe:
                     self.stage.move_by(axis=axis, steps=steps)
                     self.stage.wait_move()
                     if axis == self.xAxis:
@@ -132,7 +132,7 @@ class MirrorControlWidget(QtWidgets.QWidget):
         '''
         if self.stage:
             try:
-                if not self.isMirrorSafeToFire():
+                if self.mirror_safe:
                     # Move x-axis to home
                     self.stage.move_to(axis=self.xAxis, position=0)
                     self.stage.wait_move()
