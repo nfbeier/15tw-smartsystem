@@ -43,7 +43,7 @@ class MirrorControlWidget(QtWidgets.QWidget):
 
     '''
 
-    Max_steps = 1000 # Maximum number of steps to prevent damage to the mirrors
+    Max_steps = 10000 # Maximum number of steps to prevent damage to the mirrors
 
     def __init__(self, stage, xAxis, yAxis, mirror_label, parent=None):
         '''

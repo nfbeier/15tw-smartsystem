@@ -17,7 +17,7 @@ class Ui_Form(object):
         Form.resize(274, 207)
         self.stepSize = QtWidgets.QSpinBox(Form)
         self.stepSize.setGeometry(QtCore.QRect(20, 40, 101, 41))
-        self.stepSize.setMaximum(1000)
+        self.stepSize.setMaximum(10000)
         self.stepSize.setObjectName("stepSize")
         self.ButtonUp = QtWidgets.QToolButton(Form)
         self.ButtonUp.setGeometry(QtCore.QRect(130, 40, 41, 41))
