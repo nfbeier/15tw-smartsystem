@@ -1,10 +1,17 @@
 from pylablib.devices import Newport
-import sys
+import sys, os
 from PyQt5 import QtWidgets, QtCore, QtGui
+
+cwd = os.getcwd()
+if '15tw-smartsystem' not in cwd.split(os.path.sep):
+    raise ValueError("The directory does not contain '15tw-smartsystem' folder.")
+# Rebuild the directory string up to and including '15tw-smartsystem', prevent import errors
+cwd = os.path.sep.join(cwd.split(os.path.sep)[:cwd.split(os.path.sep).index('15tw-smartsystem') + 1])
+sys.path.insert(0,cwd)
+
 from MirrorControlWidget import MirrorControlWidget
 
 # Create the main application to use the widget (Multi-mirror control GUI)
-
 class MultiMirrorControl_App(QtWidgets.QWidget):
     '''
     A QWidget subclass for controlling multiple mirrors using Newport Picomotor8742 stages.
