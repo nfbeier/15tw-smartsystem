@@ -69,7 +69,7 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         font.setBold(True)
         font.setWeight(75)
         self.safety_button.setFont(font)
-        self.safety_button.setStyleSheet("""QPushButton {background-color: blue;  /* Fixed color (dark grey) */
+        self.safety_button.setStyleSheet("""QPushButton {background-color: blue; 
                 color: white;
                 border-radius: 15px;
                 font-size: 12pt;
