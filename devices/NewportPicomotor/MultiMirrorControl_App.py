@@ -80,14 +80,11 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         if self.stage2 is None:
             print(f"Could not find the device with ID 8742-{self.expected_stage2_id} for Stage 2.")
 
-        # If both stages are connected, proceed with the rest of the initialization
-        if self.stage1 and self.stage2:
-            self.initialize_widgets()
-        else:
-            print("Initialization failed. Please check the device connections.")
-
         # Show total number of connected devices
         print(f"Number of connected devices: {Newport.get_usb_devices_number_picomotor()}")
+
+        # proceed with initialization of the mirrors
+        self.initialize_widgets()
 
     def initialize_widgets(self):
         # Create widgets for each mirror 
