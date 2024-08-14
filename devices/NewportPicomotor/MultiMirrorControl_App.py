@@ -46,27 +46,54 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         '''
         super(MultiMirrorControl_App, self).__init__()
 
-        try:
-            self.stage1 = Newport.Picomotor8742(conn=0,multiaddr=True)
-            print("Stage 1 initialized successfully.")
-        except Newport.base.NewportBackendError as e:
-            print(f"Stage 1 could not be initialized: {e}")
-            self.stage1 = None
+        # Define expected device IDs for both stages
+        self.expected_stage1_id = "102070"  # Expected device ID for stage 1
+        self.expected_stage2_id = "102092"  # Expected device ID for stage 2
 
-        try:
-            self.stage2 = Newport.Picomotor8742(conn=1,multiaddr=True)
-            print("Stage 2 initialized successfully.")
-        except Newport.base.NewportBackendError as e:
-            print(f"Stage 2 could not be initialized: {e}")
-            self.stage2 = None
+        self.stage1 = None
+        self.stage2 = None
 
+        # Attempt to connect to all available devices and assign to stage1 and stage2 based on device ID
+        for i in range(Newport.get_usb_devices_number_picomotor()):
+            try:
+                temp_stage = Newport.Picomotor8742(conn=i)
+                device_info = temp_stage.get_device_info()
+                
+                # Check if this is the expected device for stage 1
+                if device_info.id.endswith(self.expected_stage1_id):
+                    self.stage1 = temp_stage
+                    print(f"Stage 1 initialized successfully with ID 8742-{self.expected_stage1_id}.")
+                # Check if this is the expected device for stage 2
+                elif device_info.id.endswith(self.expected_stage2_id):
+                    self.stage2 = temp_stage
+                    print(f"Stage 2 initialized successfully with ID 8742-{self.expected_stage2_id}.")
+                else:
+                    # Close any devices that don't match the expected IDs
+                    temp_stage.close()
+
+            except Newport.base.NewportBackendError as e:
+                print(f"Stage {i + 1} could not be initialized: {e}")
+
+        # Check if stages are properly initialized
+        if self.stage1 is None:
+            print(f"Could not find the device with ID 8742-{self.expected_stage1_id} for Stage 1.")
+        if self.stage2 is None:
+            print(f"Could not find the device with ID 8742-{self.expected_stage2_id} for Stage 2.")
+
+        # If both stages are connected, proceed with the rest of the initialization
+        if self.stage1 and self.stage2:
+            self.initialize_widgets()
+        else:
+            print("Initialization failed. Please check the device connections.")
+
+        # Show total number of connected devices
         print(f"Number of connected devices: {Newport.get_usb_devices_number_picomotor()}")
 
+    def initialize_widgets(self):
         # Create widgets for each mirror 
         self.mirror1 = MirrorControlWidget(self.stage1, 1, 2, "Mirror 1")
-        self.mirror2 = MirrorControlWidget(self.stage1, 3, 4, "Mirror 2" )
+        self.mirror2 = MirrorControlWidget(self.stage1, 3, 4, "Mirror 2")
         self.mirror3 = MirrorControlWidget(self.stage2, 1, 2, "Mirror 3")
-    
 
         # Add a safety control button
         self.safety_button = QtWidgets.QPushButton("Disable Safety", self)
