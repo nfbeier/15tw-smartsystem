@@ -1,8 +1,8 @@
-[![python](https://img.shields.io/badge/Python-3.10-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
-
 ---
 Repository Description: 'Last Edited: 2024-08-28'
 ---
+
+[![python](https://img.shields.io/badge/Python-3.10-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
 
 # Overview
 
