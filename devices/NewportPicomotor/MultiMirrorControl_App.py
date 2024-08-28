@@ -105,6 +105,7 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         self.mirror1 = MirrorControlWidget(self.stage1, 1, 2, "Mirror 1")
         self.mirror2 = MirrorControlWidget(self.stage1, 3, 4, "Mirror 2")
         self.mirror3 = MirrorControlWidget(self.stage2, 1, 2, "Mirror 3")
+        self.mirror4 = MirrorControlWidget(self.stage2, 3, 4, "Mirror 4")
 
         # Add a safety control button
         self.safety_button = QtWidgets.QPushButton("Disable Safety", self)
@@ -193,6 +194,7 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         mirror_layout.addWidget(self.mirror1)
         mirror_layout.addWidget(self.mirror2)
         mirror_layout.addWidget(self.mirror3)
+        mirror_layout.addWidget(self.mirror4)
 
         # Layout of main window
         main_layout = QtWidgets.QVBoxLayout(self)
@@ -242,6 +244,7 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         self.mirror1.updateMovementButtons(self.mirror_safe)
         self.mirror2.updateMovementButtons(self.mirror_safe)
         self.mirror3.updateMovementButtons(self.mirror_safe)
+        self.mirror4.updateMovementButtons(self.mirror_safe)
 
     def updateSafetyStatusLabel(self):
         """
