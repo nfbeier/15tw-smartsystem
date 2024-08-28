@@ -249,17 +249,35 @@ class IrisGUIWidget(QWidget, Ui_Form):
         :param iris: The Iris device number (1 or 2).
         """
         if iris == 1:
-            diameter = float(self.currentDiameterLabel.text().split()[0]) + self.jog_len
-            command = f"GOTO {iris} {diameter};"
-            resp = self.send_command(command)
-            print(resp)
-            self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+            if not self.isHomed:
+                self.homeIrisButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(1000, lambda: self.homeIrisButton.setStyleSheet(""))
+            elif not self.serial_port:
+                self.comPortConnectButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(
+                    1000, lambda: self.comPortConnectButton.setStyleSheet("")
+                )
+            else:
+                diameter = float(self.currentDiameterLabel.text().split()[0]) + self.jog_len
+                command = f"GOTO {iris} {diameter};"
+                resp = self.send_command(command)
+                print(resp)
+                self.update_position(self.send_command(f"POS {iris};"), iris=iris)
         elif iris == 2:
-            diameter = float(self.currentDiameterLabel_2.text().split()[0]) + self.jog_len
-            command = f"GOTO {iris} {diameter};"
-            resp = self.send_command(command)
-            print(resp)
-            self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+            if not self.isHomed_2:
+                self.homeIrisButton_2.setStyleSheet("background-color: red")
+                QTimer.singleShot(1000, lambda: self.homeIrisButton_2.setStyleSheet(""))
+            elif not self.serial_port:
+                self.comPortConnectButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(
+                    1000, lambda: self.comPortConnectButton.setStyleSheet("")
+                )
+            else:
+                diameter = float(self.currentDiameterLabel_2.text().split()[0]) + self.jog_len
+                command = f"GOTO {iris} {diameter};"
+                resp = self.send_command(command)
+                print(resp)
+                self.update_position(self.send_command(f"POS {iris};"), iris=iris)
     
     def jog_closed(self, iris):
         """
@@ -273,17 +291,35 @@ class IrisGUIWidget(QWidget, Ui_Form):
         """
         
         if iris == 1:
-            diameter = float(self.currentDiameterLabel.text().split()[0]) - self.jog_len
-            command = f"GOTO {iris} {diameter};"
-            resp = self.send_command(command)
-            print(resp)
-            self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+            if not self.isHomed:
+                self.homeIrisButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(1000, lambda: self.homeIrisButton.setStyleSheet(""))
+            elif not self.serial_port:
+                self.comPortConnectButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(
+                    1000, lambda: self.comPortConnectButton.setStyleSheet("")
+                )
+            else:
+                diameter = float(self.currentDiameterLabel.text().split()[0]) - self.jog_len
+                command = f"GOTO {iris} {diameter};"
+                resp = self.send_command(command)
+                print(resp)
+                self.update_position(self.send_command(f"POS {iris};"), iris=iris)
         elif iris == 2:
-            diameter = float(self.currentDiameterLabel_2.text().split()[0]) - self.jog_len
-            command = f"GOTO {iris} {diameter};"
-            resp = self.send_command(command)
-            print(resp)
-            self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+            if not self.isHomed_2:
+                self.homeIrisButton_2.setStyleSheet("background-color: red")
+                QTimer.singleShot(1000, lambda: self.homeIrisButton_2.setStyleSheet(""))
+            elif not self.serial_port:
+                self.comPortConnectButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(
+                    1000, lambda: self.comPortConnectButton.setStyleSheet("")
+                )
+            else:
+                diameter = float(self.currentDiameterLabel_2.text().split()[0]) - self.jog_len
+                command = f"GOTO {iris} {diameter};"
+                resp = self.send_command(command)
+                print(resp)
+                self.update_position(self.send_command(f"POS {iris};"), iris=iris)
 
     def update_position(self, pos, iris):
         """
