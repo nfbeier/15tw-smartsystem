@@ -202,8 +202,10 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         main_layout.addLayout(mirror_layout)
         main_layout.addLayout(safety_layout)
 
+        main_layout.setSizeConstraint(QtWidgets.QLayout.SetNoConstraint)
+
         self.setLayout(main_layout)
-        self.setFixedSize(1000, 600)  # Adjust the window size
+        self.setFixedSize(1100, 400)  # Adjust the window size
 
         self.mirror_safe = True  # Initialize mirrors as safe (i.e motion is disabled)
 
