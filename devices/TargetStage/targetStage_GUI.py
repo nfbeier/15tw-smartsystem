@@ -38,21 +38,27 @@ class Ui_MainWindow(object):
         self.label_52.setObjectName("label_52")
         self.set_y_btn = QtWidgets.QPushButton(self.translationStage)
         self.set_y_btn.setGeometry(QtCore.QRect(240, 184, 101, 21))
-        self.set_y_btn.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.0149254 rgba(167, 0, 0, 255), stop:0.55 rgba(235, 148, 61, 255), stop:1 rgba(255, 178, 102, 255));\n"
-"color: rgb(255, 255, 255);")
+        self.set_y_btn.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.0149254 rgba(167, 0, 0, 255), stop:0.55 rgba(235, 148, 61, 255), stop:1 rgba(255, 178, 102, 255));\n"
+            "color: rgb(255, 255, 255);"
+        )
         self.set_y_btn.setObjectName("set_y_btn")
         self.set_both_btn = QtWidgets.QPushButton(self.translationStage)
         self.set_both_btn.setGeometry(QtCore.QRect(10, 317, 201, 21))
-        self.set_both_btn.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.333, y1:0.00568182, x2:0.891, y2:0.965909, stop:0.751244 rgba(255, 255, 255, 255), stop:1 rgba(255, 255, 255, 255));\n"
-"color: rgb(170, 0, 0);")
+        self.set_both_btn.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0.333, y1:0.00568182, x2:0.891, y2:0.965909, stop:0.751244 rgba(255, 255, 255, 255), stop:1 rgba(255, 255, 255, 255));\n"
+            "color: rgb(170, 0, 0);"
+        )
         self.set_both_btn.setObjectName("set_both_btn")
         self.step_length_line = QtWidgets.QLineEdit(self.translationStage)
         self.step_length_line.setGeometry(QtCore.QRect(389, 317, 61, 21))
         self.step_length_line.setObjectName("step_length_line")
         self.return_both_btn = QtWidgets.QPushButton(self.translationStage)
         self.return_both_btn.setGeometry(QtCore.QRect(10, 340, 201, 21))
-        self.return_both_btn.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.333, y1:0.00568182, x2:0.891, y2:0.965909, stop:0.751244 rgba(255, 255, 255, 255), stop:1 rgba(255, 255, 255, 255));\n"
-"color: rgb(170, 0, 0);")
+        self.return_both_btn.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0.333, y1:0.00568182, x2:0.891, y2:0.965909, stop:0.751244 rgba(255, 255, 255, 255), stop:1 rgba(255, 255, 255, 255));\n"
+            "color: rgb(170, 0, 0);"
+        )
         self.return_both_btn.setObjectName("return_both_btn")
         self.sample_length_line = QtWidgets.QLineEdit(self.translationStage)
         self.sample_length_line.setGeometry(QtCore.QRect(390, 257, 61, 21))
@@ -68,64 +74,84 @@ class Ui_MainWindow(object):
         self.step_interval_x.setObjectName("step_interval_x")
         self.enable_btn = QtWidgets.QPushButton(self.translationStage)
         self.enable_btn.setGeometry(QtCore.QRect(40, 410, 141, 21))
-        self.enable_btn.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.333, y1:0.00568182, x2:0.891, y2:0.965909, stop:0.751244 rgba(255, 255, 255, 255), stop:1 rgba(255, 255, 255, 255));\n"
-"")
+        self.enable_btn.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0.333, y1:0.00568182, x2:0.891, y2:0.965909, stop:0.751244 rgba(255, 255, 255, 255), stop:1 rgba(255, 255, 255, 255));\n"
+            ""
+        )
         self.enable_btn.setObjectName("enable_btn")
         self.set_x_btn = QtWidgets.QPushButton(self.translationStage)
         self.set_x_btn.setGeometry(QtCore.QRect(8, 184, 101, 21))
-        self.set_x_btn.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.0149254 rgba(167, 0, 0, 255), stop:0.55 rgba(235, 148, 61, 255), stop:1 rgba(255, 178, 102, 255));\n"
-"\n"
-"color: rgb(255, 255, 255);\n"
-"font: 8pt \"MS Shell Dlg 2\";")
+        self.set_x_btn.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.0149254 rgba(167, 0, 0, 255), stop:0.55 rgba(235, 148, 61, 255), stop:1 rgba(255, 178, 102, 255));\n"
+            "\n"
+            "color: rgb(255, 255, 255);\n"
+            'font: 8pt "MS Shell Dlg 2";'
+        )
         self.set_x_btn.setObjectName("set_x_btn")
         self.kill_btn = QtWidgets.QPushButton(self.translationStage)
         self.kill_btn.setGeometry(QtCore.QRect(40, 440, 141, 21))
-        self.kill_btn.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0.977, x2:1, y2:0.960227, stop:0.751244 rgba(255, 255, 255, 255), stop:1 rgba(255, 0, 0, 255));\n"
-"background-color: qlineargradient(spread:pad, x1:0, y1:0.977, x2:1, y2:0.960227, stop:0.736318 rgba(255, 255, 255, 255), stop:1 rgba(255, 125, 125, 255));")
+        self.kill_btn.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0.977, x2:1, y2:0.960227, stop:0.751244 rgba(255, 255, 255, 255), stop:1 rgba(255, 0, 0, 255));\n"
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0.977, x2:1, y2:0.960227, stop:0.736318 rgba(255, 255, 255, 255), stop:1 rgba(255, 125, 125, 255));"
+        )
         self.kill_btn.setObjectName("kill_btn")
         self.return_z_btn = QtWidgets.QPushButton(self.translationStage)
         self.return_z_btn.setGeometry(QtCore.QRect(572, 186, 101, 21))
-        self.return_z_btn.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.039801 rgba(235, 148, 61, 255), stop:0.477612 rgba(235, 148, 61, 255), stop:1 rgba(167, 0, 0, 255));\n"
-"color: rgb(255, 255, 255);")
+        self.return_z_btn.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.039801 rgba(235, 148, 61, 255), stop:0.477612 rgba(235, 148, 61, 255), stop:1 rgba(167, 0, 0, 255));\n"
+            "color: rgb(255, 255, 255);"
+        )
         self.return_z_btn.setObjectName("return_z_btn")
         self.right_btn = QtWidgets.QPushButton(self.translationStage)
         self.right_btn.setGeometry(QtCore.QRect(120, 68, 91, 31))
-        self.right_btn.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.512438 rgba(235, 148, 61, 255), stop:1 rgba(167, 0, 0, 255));\n"
-"font: 8pt \"MS Shell Dlg 2\";")
+        self.right_btn.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.512438 rgba(235, 148, 61, 255), stop:1 rgba(167, 0, 0, 255));\n"
+            'font: 8pt "MS Shell Dlg 2";'
+        )
         self.right_btn.setObjectName("right_btn")
         self.initialize_btn = QtWidgets.QPushButton(self.translationStage)
         self.initialize_btn.setGeometry(QtCore.QRect(40, 380, 141, 21))
         self.initialize_btn.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
-        self.initialize_btn.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0.019, y1:0.983, x2:0.986, y2:0.965909, stop:0 rgba(255, 255, 255, 255), stop:0.741294 rgba(255, 255, 255, 255), stop:1 rgba(73, 170, 73, 255));\n"
-"background-color: qlineargradient(spread:pad, x1:0.019, y1:0.983, x2:0.986, y2:0.965909, stop:0 rgba(255, 255, 255, 255), stop:0.741294 rgba(255, 255, 255, 255), stop:1 rgba(98, 170, 98, 255));")
+        self.initialize_btn.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0.019, y1:0.983, x2:0.986, y2:0.965909, stop:0 rgba(255, 255, 255, 255), stop:0.741294 rgba(255, 255, 255, 255), stop:1 rgba(73, 170, 73, 255));\n"
+            "background-color: qlineargradient(spread:pad, x1:0.019, y1:0.983, x2:0.986, y2:0.965909, stop:0 rgba(255, 255, 255, 255), stop:0.741294 rgba(255, 255, 255, 255), stop:1 rgba(98, 170, 98, 255));"
+        )
         self.initialize_btn.setObjectName("initialize_btn")
         self.return_y_btn = QtWidgets.QPushButton(self.translationStage)
         self.return_y_btn.setGeometry(QtCore.QRect(342, 184, 101, 21))
-        self.return_y_btn.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.039801 rgba(235, 148, 61, 255), stop:0.477612 rgba(235, 148, 61, 255), stop:1 rgba(167, 0, 0, 255));\n"
-"color: rgb(255, 255, 255);")
+        self.return_y_btn.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.039801 rgba(235, 148, 61, 255), stop:0.477612 rgba(235, 148, 61, 255), stop:1 rgba(167, 0, 0, 255));\n"
+            "color: rgb(255, 255, 255);"
+        )
         self.return_y_btn.setObjectName("return_y_btn")
         self.return_x_btn = QtWidgets.QPushButton(self.translationStage)
         self.return_x_btn.setGeometry(QtCore.QRect(110, 184, 101, 21))
-        self.return_x_btn.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.039801 rgba(235, 148, 61, 255), stop:0.477612 rgba(235, 148, 61, 255), stop:1 rgba(167, 0, 0, 255));\n"
-"color: rgb(255, 255, 255);")
+        self.return_x_btn.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.039801 rgba(235, 148, 61, 255), stop:0.477612 rgba(235, 148, 61, 255), stop:1 rgba(167, 0, 0, 255));\n"
+            "color: rgb(255, 255, 255);"
+        )
         self.return_x_btn.setObjectName("return_x_btn")
         self.z_group_combo = QtWidgets.QComboBox(self.translationStage)
         self.z_group_combo.setGeometry(QtCore.QRect(516, 21, 101, 21))
         self.z_group_combo.setObjectName("z_group_combo")
         self.left_btn = QtWidgets.QPushButton(self.translationStage)
         self.left_btn.setGeometry(QtCore.QRect(10, 68, 91, 31))
-        self.left_btn.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.0149254 rgba(167, 0, 0, 255), stop:0.55 rgba(235, 148, 61, 255), stop:1 rgba(255, 178, 102, 255));")
+        self.left_btn.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.0149254 rgba(167, 0, 0, 255), stop:0.55 rgba(235, 148, 61, 255), stop:1 rgba(255, 178, 102, 255));"
+        )
         self.left_btn.setObjectName("left_btn")
         self.up_btn = QtWidgets.QPushButton(self.translationStage)
         self.up_btn.setGeometry(QtCore.QRect(240, 68, 91, 31))
-        self.up_btn.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.0149254 rgba(167, 0, 0, 255), stop:0.55 rgba(235, 148, 61, 255), stop:1 rgba(255, 178, 102, 255));")
+        self.up_btn.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.0149254 rgba(167, 0, 0, 255), stop:0.55 rgba(235, 148, 61, 255), stop:1 rgba(255, 178, 102, 255));"
+        )
         self.up_btn.setObjectName("up_btn")
         self.label_57 = QtWidgets.QLabel(self.translationStage)
         self.label_57.setGeometry(QtCore.QRect(280, 401, 171, 16))
         self.label_57.setObjectName("label_57")
         self.label_68 = QtWidgets.QLabel(self.translationStage)
         self.label_68.setGeometry(QtCore.QRect(82, 1, 61, 16))
-        self.label_68.setStyleSheet("font: 10pt \"MS Shell Dlg 2\";")
+        self.label_68.setStyleSheet('font: 10pt "MS Shell Dlg 2";')
         self.label_68.setObjectName("label_68")
         self.sample_width_line = QtWidgets.QLineEdit(self.translationStage)
         self.sample_width_line.setGeometry(QtCore.QRect(390, 287, 61, 21))
@@ -134,7 +160,9 @@ class Ui_MainWindow(object):
         self.down_btn_z = QtWidgets.QPushButton(self.translationStage)
         self.down_btn_z.setGeometry(QtCore.QRect(580, 70, 91, 31))
         self.down_btn_z.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.down_btn_z.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.512438 rgba(235, 148, 61, 255), stop:1 rgba(167, 0, 0, 255));")
+        self.down_btn_z.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.512438 rgba(235, 148, 61, 255), stop:1 rgba(167, 0, 0, 255));"
+        )
         self.down_btn_z.setObjectName("down_btn_z")
         self.set_x_bound = QtWidgets.QPushButton(self.translationStage)
         self.set_x_bound.setGeometry(QtCore.QRect(278, 257, 111, 21))
@@ -143,12 +171,16 @@ class Ui_MainWindow(object):
         self.down_btn = QtWidgets.QPushButton(self.translationStage)
         self.down_btn.setGeometry(QtCore.QRect(351, 68, 91, 31))
         self.down_btn.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.down_btn.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.512438 rgba(235, 148, 61, 255), stop:1 rgba(167, 0, 0, 255));")
+        self.down_btn.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.512438 rgba(235, 148, 61, 255), stop:1 rgba(167, 0, 0, 255));"
+        )
         self.down_btn.setObjectName("down_btn")
         self.set_z_btn = QtWidgets.QPushButton(self.translationStage)
         self.set_z_btn.setGeometry(QtCore.QRect(470, 186, 101, 21))
-        self.set_z_btn.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.0149254 rgba(167, 0, 0, 255), stop:0.55 rgba(235, 148, 61, 255), stop:1 rgba(255, 178, 102, 255));\n"
-"color: rgb(255, 255, 255);")
+        self.set_z_btn.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.0149254 rgba(167, 0, 0, 255), stop:0.55 rgba(235, 148, 61, 255), stop:1 rgba(255, 178, 102, 255));\n"
+            "color: rgb(255, 255, 255);"
+        )
         self.set_z_btn.setObjectName("set_z_btn")
         self.rep_rate_line = QtWidgets.QLineEdit(self.translationStage)
         self.rep_rate_line.setGeometry(QtCore.QRect(390, 401, 61, 21))
@@ -159,8 +191,10 @@ class Ui_MainWindow(object):
         self.x_group_combo.setObjectName("x_group_combo")
         self.up_btn_z = QtWidgets.QPushButton(self.translationStage)
         self.up_btn_z.setGeometry(QtCore.QRect(470, 70, 91, 31))
-        self.up_btn_z.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.0149254 rgba(167, 0, 0, 255), stop:0.55 rgba(235, 148, 61, 255), stop:1 rgba(255, 178, 102, 255));\n"
-"")
+        self.up_btn_z.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.0149254 rgba(167, 0, 0, 255), stop:0.55 rgba(235, 148, 61, 255), stop:1 rgba(255, 178, 102, 255));\n"
+            ""
+        )
         self.up_btn_z.setObjectName("up_btn_z")
         self.stop_btn_2 = QtWidgets.QPushButton(self.translationStage)
         self.stop_btn_2.setGeometry(QtCore.QRect(368, 431, 91, 31))
@@ -171,9 +205,11 @@ class Ui_MainWindow(object):
         font.setItalic(False)
         font.setWeight(50)
         self.stop_btn_2.setFont(font)
-        self.stop_btn_2.setStyleSheet("font: 14pt \"MS Shell Dlg 2\";\n"
-"font: 12pt \"MS Shell Dlg 2\";\n"
-"color: rgb(255, 0, 0);")
+        self.stop_btn_2.setStyleSheet(
+            'font: 14pt "MS Shell Dlg 2";\n'
+            'font: 12pt "MS Shell Dlg 2";\n'
+            "color: rgb(255, 0, 0);"
+        )
         self.stop_btn_2.setObjectName("stop_btn_2")
         self.raster_btn = QtWidgets.QPushButton(self.translationStage)
         self.raster_btn.setGeometry(QtCore.QRect(278, 431, 91, 31))
@@ -184,10 +220,12 @@ class Ui_MainWindow(object):
         font.setItalic(False)
         font.setWeight(50)
         self.raster_btn.setFont(font)
-        self.raster_btn.setStyleSheet("color: rgb(0, 0, 255);\n"
-"font: 12pt \"MS Shell Dlg 2\";\n"
-"font: 75 8pt \"MS Shell Dlg 2\";\n"
-"font: 12pt \"MS Shell Dlg 2\";")
+        self.raster_btn.setStyleSheet(
+            "color: rgb(0, 0, 255);\n"
+            'font: 12pt "MS Shell Dlg 2";\n'
+            'font: 75 8pt "MS Shell Dlg 2";\n'
+            'font: 12pt "MS Shell Dlg 2";'
+        )
         self.raster_btn.setAutoDefault(False)
         self.raster_btn.setDefault(False)
         self.raster_btn.setFlat(False)
@@ -197,7 +235,9 @@ class Ui_MainWindow(object):
         self.rasterPlotWidget.setObjectName("rasterPlotWidget")
         self.x_slider = QtWidgets.QSlider(self.translationStage)
         self.x_slider.setGeometry(QtCore.QRect(10, 101, 201, 22))
-        self.x_slider.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(130, 0, 0, 255), stop:0.303483 rgba(255, 154, 53, 255), stop:0.686567 rgba(255, 154, 53, 255), stop:1 rgba(130, 0, 0, 255));")
+        self.x_slider.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(130, 0, 0, 255), stop:0.303483 rgba(255, 154, 53, 255), stop:0.686567 rgba(255, 154, 53, 255), stop:1 rgba(130, 0, 0, 255));"
+        )
         self.x_slider.setMaximum(99)
         self.x_slider.setSingleStep(1)
         self.x_slider.setPageStep(10)
@@ -212,16 +252,18 @@ class Ui_MainWindow(object):
         self.position_x.setObjectName("position_x")
         self.label_54 = QtWidgets.QLabel(self.translationStage)
         self.label_54.setGeometry(QtCore.QRect(10, 120, 31, 16))
-        self.label_54.setStyleSheet("font: 6pt \"MS Shell Dlg 2\";")
+        self.label_54.setStyleSheet('font: 6pt "MS Shell Dlg 2";')
         self.label_54.setObjectName("label_54")
         self.label_56 = QtWidgets.QLabel(self.translationStage)
         self.label_56.setGeometry(QtCore.QRect(194, 120, 31, 16))
-        self.label_56.setStyleSheet("font: 6pt \"MS Shell Dlg 2\";")
+        self.label_56.setStyleSheet('font: 6pt "MS Shell Dlg 2";')
         self.label_56.setObjectName("label_56")
         self.y_slider = QtWidgets.QSlider(self.translationStage)
         self.y_slider.setGeometry(QtCore.QRect(241, 101, 201, 22))
-        self.y_slider.setStyleSheet("\n"
-"background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(130, 0, 0, 255), stop:0.303483 rgba(255, 154, 53, 255), stop:0.686567 rgba(255, 154, 53, 255), stop:1 rgba(130, 0, 0, 255));")
+        self.y_slider.setStyleSheet(
+            "\n"
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(130, 0, 0, 255), stop:0.303483 rgba(255, 154, 53, 255), stop:0.686567 rgba(255, 154, 53, 255), stop:1 rgba(130, 0, 0, 255));"
+        )
         self.y_slider.setMaximum(99)
         self.y_slider.setSingleStep(1)
         self.y_slider.setPageStep(10)
@@ -232,23 +274,25 @@ class Ui_MainWindow(object):
         self.y_slider.setObjectName("y_slider")
         self.label_74 = QtWidgets.QLabel(self.translationStage)
         self.label_74.setGeometry(QtCore.QRect(240, 119, 31, 16))
-        self.label_74.setStyleSheet("font: 6pt \"MS Shell Dlg 2\";")
+        self.label_74.setStyleSheet('font: 6pt "MS Shell Dlg 2";')
         self.label_74.setObjectName("label_74")
         self.label_75 = QtWidgets.QLabel(self.translationStage)
         self.label_75.setGeometry(QtCore.QRect(425, 119, 31, 16))
-        self.label_75.setStyleSheet("font: 6pt \"MS Shell Dlg 2\";")
+        self.label_75.setStyleSheet('font: 6pt "MS Shell Dlg 2";')
         self.label_75.setObjectName("label_75")
         self.label_89 = QtWidgets.QLabel(self.translationStage)
         self.label_89.setGeometry(QtCore.QRect(654, 121, 31, 16))
-        self.label_89.setStyleSheet("font: 6pt \"MS Shell Dlg 2\";")
+        self.label_89.setStyleSheet('font: 6pt "MS Shell Dlg 2";')
         self.label_89.setObjectName("label_89")
         self.label_90 = QtWidgets.QLabel(self.translationStage)
         self.label_90.setGeometry(QtCore.QRect(470, 121, 31, 16))
-        self.label_90.setStyleSheet("font: 6pt \"MS Shell Dlg 2\";")
+        self.label_90.setStyleSheet('font: 6pt "MS Shell Dlg 2";')
         self.label_90.setObjectName("label_90")
         self.z_slider = QtWidgets.QSlider(self.translationStage)
         self.z_slider.setGeometry(QtCore.QRect(471, 103, 201, 22))
-        self.z_slider.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(130, 0, 0, 255), stop:0.303483 rgba(255, 154, 53, 255), stop:0.686567 rgba(255, 154, 53, 255), stop:1 rgba(130, 0, 0, 255));")
+        self.z_slider.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(130, 0, 0, 255), stop:0.303483 rgba(255, 154, 53, 255), stop:0.686567 rgba(255, 154, 53, 255), stop:1 rgba(130, 0, 0, 255));"
+        )
         self.z_slider.setMaximum(99)
         self.z_slider.setSingleStep(1)
         self.z_slider.setPageStep(10)
@@ -267,11 +311,11 @@ class Ui_MainWindow(object):
         self.position_z.setObjectName("position_z")
         self.label_69 = QtWidgets.QLabel(self.translationStage)
         self.label_69.setGeometry(QtCore.QRect(304, 1, 61, 16))
-        self.label_69.setStyleSheet("font: 10pt \"MS Shell Dlg 2\";")
+        self.label_69.setStyleSheet('font: 10pt "MS Shell Dlg 2";')
         self.label_69.setObjectName("label_69")
         self.label_91 = QtWidgets.QLabel(self.translationStage)
         self.label_91.setGeometry(QtCore.QRect(540, 1, 61, 16))
-        self.label_91.setStyleSheet("font: 10pt \"MS Shell Dlg 2\";")
+        self.label_91.setStyleSheet('font: 10pt "MS Shell Dlg 2";')
         self.label_91.setObjectName("label_91")
         self.position_x_ref = QtWidgets.QLabel(self.translationStage)
         self.position_x_ref.setGeometry(QtCore.QRect(13, 157, 201, 21))
@@ -291,10 +335,12 @@ class Ui_MainWindow(object):
         self.label_51.setObjectName("label_51")
         self.abs_move_btn = QtWidgets.QPushButton(self.translationStage)
         self.abs_move_btn.setGeometry(QtCore.QRect(160, 252, 51, 61))
-        self.abs_move_btn.setStyleSheet("color: rgb(170, 0, 0);\n"
-"\n"
-"font: 10pt \"MS Shell Dlg 2\";\n"
-"background-color: qlineargradient(spread:pad, x1:0.333, y1:0.00568182, x2:0.891, y2:0.965909, stop:0.751244 rgba(255, 255, 255, 255), stop:1 rgba(255, 255, 255, 255));")
+        self.abs_move_btn.setStyleSheet(
+            "color: rgb(170, 0, 0);\n"
+            "\n"
+            'font: 10pt "MS Shell Dlg 2";\n'
+            "background-color: qlineargradient(spread:pad, x1:0.333, y1:0.00568182, x2:0.891, y2:0.965909, stop:0.751244 rgba(255, 255, 255, 255), stop:1 rgba(255, 255, 255, 255));"
+        )
         self.abs_move_btn.setObjectName("abs_move_btn")
         self.abs_x_line = QtWidgets.QLineEdit(self.translationStage)
         self.abs_x_line.setGeometry(QtCore.QRect(106, 250, 51, 21))
@@ -336,28 +382,34 @@ class Ui_MainWindow(object):
         self.step_interval_z.setObjectName("step_interval_z")
         self.label_118 = QtWidgets.QLabel(self.translationStage)
         self.label_118.setGeometry(QtCore.QRect(22, 46, 111, 16))
-        self.label_118.setStyleSheet("font: 75 8pt \"MS Shell Dlg 2\";\n"
-"color: rgb(170, 0, 0);\n"
-"font: 9pt \"MS Shell Dlg 2\";\n"
-"color: rgb(85, 0, 0);")
+        self.label_118.setStyleSheet(
+            'font: 75 8pt "MS Shell Dlg 2";\n'
+            "color: rgb(170, 0, 0);\n"
+            'font: 9pt "MS Shell Dlg 2";\n'
+            "color: rgb(85, 0, 0);"
+        )
         self.label_118.setObjectName("label_118")
         self.label_119 = QtWidgets.QLabel(self.translationStage)
         self.label_119.setGeometry(QtCore.QRect(253, 46, 111, 16))
-        self.label_119.setStyleSheet("font: 75 8pt \"MS Shell Dlg 2\";\n"
-"color: rgb(170, 0, 0);\n"
-"font: 9pt \"MS Shell Dlg 2\";\n"
-"color: rgb(85, 0, 0);")
+        self.label_119.setStyleSheet(
+            'font: 75 8pt "MS Shell Dlg 2";\n'
+            "color: rgb(170, 0, 0);\n"
+            'font: 9pt "MS Shell Dlg 2";\n'
+            "color: rgb(85, 0, 0);"
+        )
         self.label_119.setObjectName("label_119")
         self.label_120 = QtWidgets.QLabel(self.translationStage)
         self.label_120.setGeometry(QtCore.QRect(480, 46, 111, 16))
-        self.label_120.setStyleSheet("font: 75 8pt \"MS Shell Dlg 2\";\n"
-"color: rgb(170, 0, 0);\n"
-"font: 9pt \"MS Shell Dlg 2\";\n"
-"color: rgb(85, 0, 0);")
+        self.label_120.setStyleSheet(
+            'font: 75 8pt "MS Shell Dlg 2";\n'
+            "color: rgb(170, 0, 0);\n"
+            'font: 9pt "MS Shell Dlg 2";\n'
+            "color: rgb(85, 0, 0);"
+        )
         self.label_120.setObjectName("label_120")
         self.label_132 = QtWidgets.QLabel(self.centralwidget)
         self.label_132.setGeometry(QtCore.QRect(380, 480, 131, 21))
-        self.label_132.setStyleSheet("font: 9pt \"MS Shell Dlg 2\";")
+        self.label_132.setStyleSheet('font: 9pt "MS Shell Dlg 2";')
         self.label_132.setObjectName("label_132")
         self.messages = QtWidgets.QLabel(self.centralwidget)
         self.messages.setGeometry(QtCore.QRect(10, 516, 441, 31))
@@ -383,7 +435,9 @@ class Ui_MainWindow(object):
         self.label_52.setText(_translate("MainWindow", "Step Length (mm):"))
         self.set_y_btn.setText(_translate("MainWindow", "Set Ref. Y Point"))
         self.set_both_btn.setText(_translate("MainWindow", "Set XYZ Reference Point"))
-        self.return_both_btn.setText(_translate("MainWindow", "Return to Reference Point"))
+        self.return_both_btn.setText(
+            _translate("MainWindow", "Return to Reference Point")
+        )
         self.enable_btn.setText(_translate("MainWindow", "Disable"))
         self.set_x_btn.setText(_translate("MainWindow", "Set Ref. X Point"))
         self.kill_btn.setText(_translate("MainWindow", "Kill All"))
@@ -424,6 +478,7 @@ class Ui_MainWindow(object):
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
