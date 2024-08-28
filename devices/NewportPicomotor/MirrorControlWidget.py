@@ -6,19 +6,24 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 cwd = os.getcwd()
 print(cwd)
 # Check if '15tw-smartsystem' is in the components
-if '15tw-smartsystem' not in cwd.split(os.path.sep):
+if "15tw-smartsystem" not in cwd.split(os.path.sep):
     raise ValueError("The directory does not contain '15tw-smartsystem' folder.")
 
 # Rebuild the directory string up to and including '15tw-smartsystem', prevent import errors
-cwd = os.path.sep.join(cwd.split(os.path.sep)[:cwd.split(os.path.sep).index('15tw-smartsystem') + 1])
+cwd = os.path.sep.join(
+    cwd.split(os.path.sep)[: cwd.split(os.path.sep).index("15tw-smartsystem") + 1]
+)
 
-sys.path.insert(0,cwd)
+sys.path.insert(0, cwd)
 
 
-from devices.NewportPicomotor.SingleMirror_GUI import Ui_Form  # Import the generated UI class
+from devices.NewportPicomotor.SingleMirror_GUI import (
+    Ui_Form,
+)  # Import the generated UI class
+
 
 class MirrorControlWidget(QtWidgets.QWidget):
-    '''
+    """
     A QWidget subclass for controlling a mirror using Newport Picomotor8742 stages.
 
     Attributes:
@@ -41,12 +46,12 @@ class MirrorControlWidget(QtWidgets.QWidget):
     updateMovementButtons():
         Updates the enabled state of movement buttons based on the safety mode.
 
-    '''
+    """
 
-    Max_steps = 10000 # Maximum number of steps to prevent damage to the mirrors
+    Max_steps = 10000  # Maximum number of steps to prevent damage to the mirrors
 
     def __init__(self, stage, xAxis, yAxis, mirror_label, parent=None):
-        '''
+        """
         Initializes the MirrorControlWidget with a given stage and axis configurations.
 
         Arguments:
@@ -60,19 +65,25 @@ class MirrorControlWidget(QtWidgets.QWidget):
             The label for the mirror.
         parent : QWidget (optional)
             The parent widget (default is None).
-        '''
+        """
         super(MirrorControlWidget, self).__init__(parent)
 
-        # Error handling (Validate the x axis and y axis inputs)  
+        # Error handling (Validate the x axis and y axis inputs)
         if not isinstance(xAxis, int) or xAxis < 1 or xAxis > 4:
-            raise ValueError("Axis number must be an odd positive integer, either 1 or 3.")
+            raise ValueError(
+                "Axis number must be an odd positive integer, either 1 or 3."
+            )
         if not isinstance(yAxis, int) or yAxis < 1 or yAxis > 4:
-            raise ValueError("Axis number must be an even positive integer, either 2 or 4.")
-        
+            raise ValueError(
+                "Axis number must be an even positive integer, either 2 or 4."
+            )
+
         self.stage = stage
         self.xAxis = xAxis
         self.yAxis = yAxis
-        self.mirror_safe = True # mirror is safe (i.e mirror motion is disabled) by default
+        self.mirror_safe = (
+            True  # mirror is safe (i.e mirror motion is disabled) by default
+        )
 
         self.ui = Ui_Form()  # Create an instance of the generated UI class
         self.ui.setupUi(self)  # Set up the UI within this widget
@@ -81,19 +92,25 @@ class MirrorControlWidget(QtWidgets.QWidget):
         self.ui.Mirror_Label.setText(mirror_label)
 
         # Connect buttons to picomotor functions
-        self.ui.ButtonLeft.clicked.connect(lambda: self.movePico(self.xAxis, -1 * self.ui.stepSize.value()))
-        self.ui.ButtonRight.clicked.connect(lambda: self.movePico(self.xAxis, self.ui.stepSize.value()))
-        self.ui.ButtonUp.clicked.connect(lambda: self.movePico(self.yAxis, self.ui.stepSize.value()))
-        self.ui.ButtonDown.clicked.connect(lambda: self.movePico(self.yAxis, -1 * self.ui.stepSize.value()))
+        self.ui.ButtonLeft.clicked.connect(
+            lambda: self.movePico(self.xAxis, -1 * self.ui.stepSize.value())
+        )
+        self.ui.ButtonRight.clicked.connect(
+            lambda: self.movePico(self.xAxis, self.ui.stepSize.value())
+        )
+        self.ui.ButtonUp.clicked.connect(
+            lambda: self.movePico(self.yAxis, self.ui.stepSize.value())
+        )
+        self.ui.ButtonDown.clicked.connect(
+            lambda: self.movePico(self.yAxis, -1 * self.ui.stepSize.value())
+        )
         self.ui.ButtonHome.clicked.connect(self.moveToHome)
-
 
         # Update movement button states when initializing
         self.updateMovementButtons(mirror_safe=True)
 
-
     def movePico(self, axis, steps):
-        '''
+        """
         Moves the specified axis by a given number of steps.
 
         Arguments:
@@ -101,16 +118,17 @@ class MirrorControlWidget(QtWidgets.QWidget):
             The axis to move (xAxis or yAxis).
         steps : int
             The number of steps to move the axis by.
-        '''
+        """
         if self.stage:
             try:
                 if axis not in [self.xAxis, self.yAxis]:
                     raise ValueError(f"Axis {axis} is not valid.")
-                
+
                 # Validate number of steps
                 if not isinstance(steps, int) or steps > self.Max_steps:
-                    raise ValueError(f"Number of steps {steps} is out of bounds. Maximum allowed steps: {self.Max_steps}.")
-
+                    raise ValueError(
+                        f"Number of steps {steps} is out of bounds. Maximum allowed steps: {self.Max_steps}."
+                    )
 
                 if self.mirror_safe:
                     self.stage.move_by(axis=axis, steps=steps)
@@ -120,16 +138,22 @@ class MirrorControlWidget(QtWidgets.QWidget):
                     elif axis == self.yAxis:
                         self.ui.yStepNumber.display(self.stage.get_position(axis))
                 else:
-                    QtWidgets.QMessageBox.warning(self, "Safety Mode", "Mirror movement is disabled. Please enable to move the mirror.") 
+                    QtWidgets.QMessageBox.warning(
+                        self,
+                        "Safety Mode",
+                        "Mirror movement is disabled. Please enable to move the mirror.",
+                    )
             except ValueError as t:
                 QtWidgets.QMessageBox.warning(self, "Input Error", str(t))
             except Exception as e:
-                QtWidgets.QMessageBox.critical(self, "Error", f"Failed to move the Picomotor: {e}")
+                QtWidgets.QMessageBox.critical(
+                    self, "Error", f"Failed to move the Picomotor: {e}"
+                )
 
     def moveToHome(self):
-        '''
+        """
         Moves both x and y axes to the home (0) position.
-        '''
+        """
         if self.stage:
             try:
                 if self.mirror_safe:
@@ -143,19 +167,22 @@ class MirrorControlWidget(QtWidgets.QWidget):
                     self.ui.xStepNumber.display(self.stage.get_position(self.xAxis))
                     self.ui.yStepNumber.display(self.stage.get_position(self.yAxis))
                 else:
-                    QtWidgets.QMessageBox.warning(self, "Safety Mode", "Mirror movement is disabled. Please enable to move the mirror.")
+                    QtWidgets.QMessageBox.warning(
+                        self,
+                        "Safety Mode",
+                        "Mirror movement is disabled. Please enable to move the mirror.",
+                    )
             except Exception as e:
-                QtWidgets.QMessageBox.critical(self, "Error", f"Failed to move to Home: {e}")
-
+                QtWidgets.QMessageBox.critical(
+                    self, "Error", f"Failed to move to Home: {e}"
+                )
 
     def updateMovementButtons(self, mirror_safe):
-        '''
+        """
         Updates the enabled state of movement buttons based on the safety mode.
-        '''
+        """
         self.ui.ButtonLeft.setEnabled(not mirror_safe)
         self.ui.ButtonRight.setEnabled(not mirror_safe)
         self.ui.ButtonUp.setEnabled(not mirror_safe)
         self.ui.ButtonDown.setEnabled(not mirror_safe)
         self.ui.ButtonHome.setEnabled(not mirror_safe)
-
-      
