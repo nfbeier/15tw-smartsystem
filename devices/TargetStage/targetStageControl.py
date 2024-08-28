@@ -2,7 +2,7 @@
 """
 Created on Wed Aug  7 13:21:12 2024
 
-@author: User
+@author: Morteza
 """
 # Importing necessary libraries
 from PyQt5 import QtWidgets, QtGui, QtCore
