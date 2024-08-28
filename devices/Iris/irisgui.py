@@ -32,7 +32,7 @@ class IrisGUIWidget(QWidget, Ui_Form):
         self.setupUi(self)
         self.find_arduinos()
         self.serial_port = False
-
+        self.jog_len = 0.5      # mm
         # button attachments:
         self.comPortConnectButton.clicked.connect(self.initSerial)
         self.fireButton.clicked.connect(self.initFire)
@@ -46,6 +46,14 @@ class IrisGUIWidget(QWidget, Ui_Form):
         self.openIrisButton_2.clicked.connect(lambda: self.onOpen(iris=2))
         self.closeIrisButton_2.clicked.connect(lambda: self.onClose(iris=2))
         self.goToDiameterButton_2.clicked.connect(lambda: self.handle_goto(iris=2))
+
+        self.iris1_jogopen.clicked.connect(lambda: self.jog_open(iris=1))
+        self.iris1_jogclosed.clicked.connect(lambda: self.jog_closed(iris=1))
+        self.iris2_jogopen.clicked.connect(lambda: self.jog_open(iris=2))
+        self.iris2_jogclosed.clicked.connect(lambda: self.jog_closed(iris=2))
+
+
+
         self.closeEvent = self.closeSerial
         self.isHomed = False
         self.isHomed_2 = False
@@ -229,6 +237,53 @@ class IrisGUIWidget(QWidget, Ui_Form):
                 resp = self.send_command(f"CLOSE {iris};")
                 print(resp)
                 self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+    
+    def jog_open(self, iris):
+        """
+        Jogs the specified Iris device open.
+
+        This function sends a jog open command to the specified Iris device (1 or 2).
+        It checks if the serial port is initialized and sends the appropriate command
+        to the connected Arduino device.
+
+        :param iris: The Iris device number (1 or 2).
+        """
+        if iris == 1:
+            diameter = float(self.currentDiameterLabel.text().split()[0]) + self.jog_len
+            command = f"GOTO {iris} {diameter};"
+            resp = self.send_command(command)
+            print(resp)
+            self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+        elif iris == 2:
+            diameter = float(self.currentDiameterLabel_2.text().split()[0]) + self.jog_len
+            command = f"GOTO {iris} {diameter};"
+            resp = self.send_command(command)
+            print(resp)
+            self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+    
+    def jog_closed(self, iris):
+        """
+        Jogs the specified Iris device closed.
+
+        This function sends a jog close command to the specified Iris device (1 or 2).
+        It checks if the serial port is initialized and sends the appropriate command
+        to the connected Arduino device.
+
+        :param iris: The Iris device number (1 or 2).
+        """
+        
+        if iris == 1:
+            diameter = float(self.currentDiameterLabel.text().split()[0]) - self.jog_len
+            command = f"GOTO {iris} {diameter};"
+            resp = self.send_command(command)
+            print(resp)
+            self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+        elif iris == 2:
+            diameter = float(self.currentDiameterLabel_2.text().split()[0]) - self.jog_len
+            command = f"GOTO {iris} {diameter};"
+            resp = self.send_command(command)
+            print(resp)
+            self.update_position(self.send_command(f"POS {iris};"), iris=iris)
 
     def update_position(self, pos, iris):
         """
