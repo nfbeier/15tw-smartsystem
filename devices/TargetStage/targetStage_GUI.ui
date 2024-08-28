@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>705</width>
-    <height>600</height>
+    <width>707</width>
+    <height>607</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -610,7 +610,7 @@ font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
       <number>1</number>
      </property>
      <property name="pageStep">
-      <number>10</number>
+      <number>1</number>
      </property>
      <property name="sliderPosition">
       <number>0</number>
@@ -690,7 +690,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
       <number>1</number>
      </property>
      <property name="pageStep">
-      <number>10</number>
+      <number>1</number>
      </property>
      <property name="sliderPosition">
       <number>0</number>
@@ -788,7 +788,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
       <number>1</number>
      </property>
      <property name="pageStep">
-      <number>10</number>
+      <number>1</number>
      </property>
      <property name="sliderPosition">
       <number>0</number>
@@ -1160,8 +1160,8 @@ color: rgb(85, 0, 0);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>705</width>
-     <height>26</height>
+     <width>707</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>

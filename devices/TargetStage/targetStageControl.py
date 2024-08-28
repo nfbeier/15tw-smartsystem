@@ -27,16 +27,15 @@ from devices.XPS.XPS import XPS
 
 
 # Main class for GUI
-class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
+class TargetStage(QtWidgets.QMainWindow):
     def __init__(self):
-        QtWidgets.QMainWindow.__init__(self)
-        Ui_MainWindow.__init__(self)
-        self.setupUi(self)
+        super(TargetStage,self).__init__()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
 
         # STAGE CONTROL ----------------------------------------------------------------------
         # Access the QWidget by its object name in Qt Designer
 
-        self.rasterPlotWidget = self.findChild(QtWidgets.QWidget, "rasterPlotWidget")
         self.groupCombo = [self.x_group_combo, self.y_group_combo, self.z_group_combo]
         self.xpsAxes = []
         try:
@@ -58,9 +57,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.y_group_combo.activated.connect(lambda: self.update_group("Y"))
         self.z_group_combo.activated.connect(lambda: self.update_group("Z"))
 
-        self.x_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[0]) * 10))
-        self.y_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[1]) * 10))
-        self.z_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[2]) * 10))
+        self.ui.x_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[0]) * 10))
+        self.ui.y_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[1]) * 10))
+        self.ui.z_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[2]) * 10))
 
         self.stageStatus = [self.xps.getStageStatus(axis) for axis in self.xpsAxes]
 
@@ -90,38 +89,30 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.ax.set_yticks([])
         self.ax.grid(True)
         # Add the canvas to the QWidget (rasterPlotWidget)
-        layout = QtWidgets.QVBoxLayout(self.rasterPlotWidget)
+        layout = QtWidgets.QVBoxLayout(self.ui.rasterPlotWidget)
         layout.addWidget(self.canvas)
 
         self.setLayout(layout)
         # X Axis Slider
-        self.x_slider = self.findChild(QtWidgets.QSlider, "x_slider")
-        self.x_slider.setPageStep(1)
         self.slider_factor = 10  # This will allow increments of 0.1 mm
-        self.x_slider.setMinimum(0)  # Represents 0.1 mm
-        self.x_slider.setMaximum(int(self.abs_max[0] * 10))  # Represents 40.0 mm
-        self.x_slider.setTickInterval(10)
-        self.x_slider.valueChanged.connect(
+        self.ui.x_slider.setMinimum(0)  # Represents 0.1 mm
+        self.ui.x_slider.setMaximum(int(self.abs_max[0] * 10))  # Represents 40.0 mm
+        self.ui.x_slider.setTickInterval(10)
+        self.ui.x_slider.valueChanged.connect(
             lambda: self.update_position_from_scrollbar("X_slider")
         )  # Connect the scrollbar to the update function
         # Y Axis Slider
-        self.y_slider = self.findChild(QtWidgets.QSlider, "y_slider")
-        self.y_slider.setPageStep(1)
-        self.slider_factor = 10  # This will allow increments of 0.1 mm
-        self.y_slider.setMinimum(0)  # Represents 0.1 mm
-        self.y_slider.setMaximum(int(self.abs_max[1] * 10))  # Represents 40.0 mm
-        self.y_slider.setTickInterval(10)
-        self.y_slider.valueChanged.connect(
+        self.ui.y_slider.setMinimum(0)  # Represents 0.1 mm
+        self.ui.y_slider.setMaximum(int(self.abs_max[1] * 10))  # Represents 40.0 mm
+        self.ui.y_slider.setTickInterval(10)
+        self.ui.y_slider.valueChanged.connect(
             lambda: self.update_position_from_scrollbar("Y_slider")
         )  # Connect the scrollbar to the update function
         # Z Axis Slider
-        self.z_slider = self.findChild(QtWidgets.QSlider, "z_slider")
-        self.z_slider.setPageStep(1)
-        self.slider_factor = 10  # This will allow increments of 0.1 mm
-        self.z_slider.setMinimum(0)  # Represents 0.1 mm
-        self.z_slider.setMaximum(int(self.abs_max[1] * 10))  # Represents 40.0 mm
-        self.z_slider.setTickInterval(10)
-        self.z_slider.valueChanged.connect(
+        self.ui.z_slider.setMinimum(0)  # Represents 0.1 mm
+        self.ui.z_slider.setMaximum(int(self.abs_max[1] * 10))  # Represents 40.0 mm
+        self.ui.z_slider.setTickInterval(10)
+        self.ui.z_slider.valueChanged.connect(
             lambda: self.update_position_from_scrollbar("Z_slider")
         )  # Connect the scrollbar to the update function
 
@@ -581,61 +572,61 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.step_interval_x.text():
             # Gets the step length to step relatively by
             dist = float(self.step_interval_x.text())
-            current_value = (self.x_slider.value(), self.y_slider.value())
+            current_value = (self.ui.x_slider.value(), self.ui.y_slider.value())
             if btn == "left":
                 self.x_xps.moveRelative(self.x_axis, 0 - dist)
                 new_value = max(
-                    self.x_slider.minimum(),
+                    self.ui.x_slider.minimum(),
                     current_value[0] - int(dist * self.slider_factor),
                 )
-                self.x_slider.setValue(new_value)
+                self.ui.x_slider.setValue(new_value)
                 self.log_window.append(f"X moved {-dist:.2f} mm to left.  ")
             elif btn == "right":
                 self.x_xps.moveRelative(self.x_axis, dist)
                 new_value = min(
-                    self.x_slider.maximum(),
+                    self.ui.x_slider.maximum(),
                     current_value[0] + int(dist * self.slider_factor),
                 )
-                self.x_slider.setValue(new_value)
+                self.ui.x_slider.setValue(new_value)
                 self.log_window.append(f"X Moved {dist:.3f} mm to Right. ")
         if self.step_interval_y.text():
             dist = float(self.step_interval_y.text())
-            current_value = (self.x_slider.value(), self.y_slider.value())
+            current_value = (self.ui.x_slider.value(), self.ui.y_slider.value())
             if btn == "up":
                 self.y_xps.moveRelative(self.y_axis, 0 - dist)
                 self.log_window.append(f"Y Moved {-dist:.3f} mm to Left.")
                 new_value = max(
-                    self.y_slider.minimum(),
+                    self.ui.y_slider.minimum(),
                     current_value[1] - int(dist * self.slider_factor),
                 )
-                self.y_slider.setValue(new_value)
+                self.ui.y_slider.setValue(new_value)
             elif btn == "down":
                 self.y_xps.moveRelative(self.y_axis, dist)
                 self.log_window.append(f"Y moved {dist:.3f} mm to Right.")
                 new_value = min(
-                    self.y_slider.maximum(),
+                    self.ui.y_slider.maximum(),
                     current_value[1] + int(dist * self.slider_factor),
                 )
-                self.y_slider.setValue(new_value)
+                self.ui.y_slider.setValue(new_value)
         if self.step_interval_z.text():
             dist = float(self.step_interval_z.text())
-            current_value = (self.z_slider.value(), self.z_slider.value())
+            current_value = (self.ui.z_slider.value(), self.ui.z_slider.value())
             if btn == "up_z":
                 self.z_xps.moveRelative(self.z_axis, 0 - dist)
                 self.log_window.append(f"Z Moved {-dist:.3f} mm to Down.")
                 new_value = max(
-                    self.z_slider.minimum(),
+                    self.ui.z_slider.minimum(),
                     current_value[1] - int(dist * self.slider_factor),
                 )
-                self.z_slider.setValue(new_value)
+                self.ui.z_slider.setValue(new_value)
             elif btn == "down_z":
                 self.z_xps.moveRelative(self.z_axis, dist)
                 self.log_window.append(f"Z moved {dist:.3f} mm to Up.")
                 new_value = min(
-                    self.z_slider.maximum(),
+                    self.ui.z_slider.maximum(),
                     current_value[1] + int(dist * self.slider_factor),
                 )
-                self.z_slider.setValue(new_value)
+                self.ui.z_slider.setValue(new_value)
 
     def update_group(self, axis):
         """
@@ -758,9 +749,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         ]
         #  self.abs_lbl.setText(str(abs[0])+", "+str(abs[1]))
         #  self.rel_lbl.setText(str(abs[0]-self.ref[0])+", "+str(abs[1]-self.ref[1]))
-        self.x_slider.setValue(int(abs[0] * 10))
-        self.y_slider.setValue(int(abs[1] * 10))
-        self.z_slider.setValue(int(abs[2] * 10))
+        self.ui.x_slider.setValue(int(abs[0] * 10))
+        self.ui.y_slider.setValue(int(abs[1] * 10))
+        self.ui.z_slider.setValue(int(abs[2] * 10))
         self.position_x.setText(f"Position X (abs.): {abs[0]:.2f} mm")
         self.position_y.setText(f"Position Y (abs.): {abs[1]:.2f} mm")
         self.position_z.setText(f"Position Z (abs.): {abs[2]:.2f} mm")
@@ -787,18 +778,18 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         Update the stage position based on the scrollbar value.
         """
         if pos_scrollbar == "X_slider":
-            x_value = self.x_slider.value() / self.slider_factor
-            self.x_slider.setValue(int(x_value * 10))
+            x_value = self.ui.x_slider.value() / self.slider_factor
+            self.ui.x_slider.setValue(int(x_value * 10))
         elif pos_scrollbar == "Y_slider":
-            y_value = self.y_slider.value() / self.slider_factor
-            self.y_slider.setValue(int(y_value * 10))
+            y_value = self.ui.y_slider.value() / self.slider_factor
+            self.ui.y_slider.setValue(int(y_value * 10))
         elif pos_scrollbar == "Z_slider":
-            z_value = self.z_slider.value() / self.slider_factor
-            self.z_slider.setValue(int(z_value * 10))
+            z_value = self.ui.z_slider.value() / self.slider_factor
+            self.ui.z_slider.setValue(int(z_value * 10))
 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    window = MyApp()
+    window = TargetStage()
     window.show()
-    app.exec_()
+    sys.exit(app.exec_())
