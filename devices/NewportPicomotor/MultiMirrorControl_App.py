@@ -158,7 +158,7 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         self.connectionStatusLabel = QtWidgets.QLabel("Connected Controllers: 0", self)
         self.connectionStatusLabel.setGeometry(
             QtCore.QRect(90, 20, 250, 30)
-        )  # 90, 20, 201, 21
+        )  
         font.setPointSize(9)
         font.setBold(True)
         font.setWeight(75)
@@ -205,7 +205,7 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         main_layout.setSizeConstraint(QtWidgets.QLayout.SetNoConstraint)
 
         self.setLayout(main_layout)
-        self.setFixedSize(1100, 400)  # Adjust the window size
+        self.setFixedSize(1200, 600)  # Adjust the window size
 
         self.mirror_safe = True  # Initialize mirrors as safe (i.e motion is disabled)
 
