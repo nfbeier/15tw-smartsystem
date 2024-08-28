@@ -5,7 +5,7 @@ Created on Wed Aug  7 13:21:12 2024
 @author: User
 """
 # Importing necessary libraries
-from PyQt5 import QtWidgets, uic, QtGui, QtCore
+from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import QLabel
 import numpy as np
 import sys, os
@@ -25,10 +25,6 @@ sys.path.insert(0, cwd)
 from devices.TargetStage.targetStage_GUI import Ui_MainWindow
 from devices.XPS.XPS import XPS
 
-# GUI Design file importing here (qt design file)
-# qtcreator_file  = "TEST.ui" # Enter file here.
-# Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
-
 
 # Main class for GUI
 class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -36,14 +32,41 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
+
         # STAGE CONTROL ----------------------------------------------------------------------
         # Access the QWidget by its object name in Qt Designer
+
         self.rasterPlotWidget = self.findChild(QtWidgets.QWidget, "rasterPlotWidget")
+        self.groupCombo = [self.x_group_combo, self.y_group_combo, self.z_group_combo]
+        self.xpsAxes = []
+        try:
+            self.xps = XPS()
+            self.xps_groups = self.xps.getXPSStatus()
+
+            for idx, axis in enumerate(self.groupCombo):
+                axis.clear()
+                axis.addItems(list(self.xps_groups.keys()))
+                axis.setCurrentIndex(idx)
+                self.xpsAxes.append(str(axis.currentText()))
+                self.xps.setGroup(self.xpsAxes[-1])
+
+            self.stageStatus = [self.xps.getStageStatus(axis) for axis in self.xpsAxes]
+        except AttributeError:
+            self.xps = None
+
+        self.x_group_combo.activated.connect(lambda: self.update_group("X"))
+        self.y_group_combo.activated.connect(lambda: self.update_group("Y"))
+        self.z_group_combo.activated.connect(lambda: self.update_group("Z"))
+
+        self.x_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[0]) * 10))
+        self.y_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[1]) * 10))
+        self.z_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[2]) * 10))
+
+        self.stageStatus = [self.xps.getStageStatus(axis) for axis in self.xpsAxes]
+
+        """Nick edits up to here"""
 
         # self.setupUi(self)
-        self.x_xps = XPS()
-        self.y_xps = XPS()
-        self.z_xps = XPS()
         self.abs_max = [
             40.00000,
             40.00000,
@@ -101,38 +124,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.z_slider.valueChanged.connect(
             lambda: self.update_position_from_scrollbar("Z_slider")
         )  # Connect the scrollbar to the update function
-
-        # X-Axis Combo Box
-        self.xps_groups = self.x_xps.getXPSStatus()
-        self.x_group_combo.clear()
-        self.x_group_combo.addItems(list(self.xps_groups.keys()))
-        self.x_axis = str(self.x_group_combo.currentText())
-        self.x_xps.setGroup(self.x_axis)
-        self.stageStatus = self.x_xps.getStageStatus(self.x_axis)
-        # self.update_group("X")
-        self.x_group_combo.activated.connect(lambda: self.update_group("X"))
-        self.x_slider.setValue(int(self.x_xps.getStagePosition(self.x_axis) * 10))
-
-        print(int(self.x_xps.getStagePosition(self.x_axis) * 10))
-        # Y-Axis Combo Box
-        self.y_group_combo.clear()
-        self.y_group_combo.addItems(list(self.xps_groups.keys()))
-        self.y_group_combo.setCurrentIndex(1)
-        self.y_axis = str(self.y_group_combo.currentText())
-        self.y_xps.setGroup(self.y_axis)
-        self.stageStatus = self.y_xps.getStageStatus(self.y_axis)
-        # self.update_group("Y")
-        self.y_group_combo.activated.connect(lambda: self.update_group("Y"))
-        self.y_slider.setValue(int(self.y_xps.getStagePosition(self.y_axis) * 10))
-        # Z-Axis Combo Box
-        self.z_group_combo.clear()
-        self.z_group_combo.addItems(list(self.xps_groups.keys()))
-        self.z_group_combo.setCurrentIndex(1)
-        self.z_axis = str(self.z_group_combo.currentText())
-        self.z_xps.setGroup(self.z_axis)
-        self.stageStatus = self.z_xps.getStageStatus(self.z_axis)
-        self.z_group_combo.activated.connect(lambda: self.update_group("Z"))
-        self.z_slider.setValue(int(self.y_xps.getStagePosition(self.z_axis) * 10))
 
         # Raster Input Boxes
         self.step_length_line.setValidator(QtGui.QDoubleValidator(0.10, 40.00, 2))
