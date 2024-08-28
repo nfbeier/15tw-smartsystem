@@ -15,6 +15,9 @@ changes in experimental setups.
 The Amplitude Arco X laser system is a 500 mJ, 30 fs at spec laser system firing at a repetition rate of 10 Hz. This laser system will be used by the Hussein Lab for relativistic
 laser-driven plasma acceleration experiments.
 
+# Python Version
+We are standardized on Python 3.10 for all software in this repo
+
 # Importing Driver Code
 This project aims to provide a consistent and reliable way to handle relative imports across various modules. By including a default pathing block at the top of the main programs, we ensure that all relative imports are correctly resolved, preventing potential import errors.
 
@@ -22,7 +25,6 @@ This project aims to provide a consistent and reliable way to handle relative im
 To maintain consistent relative imports, we include the following default pathing block at the top of our main programs:
 
 ```
-python
 import os
 import sys
 
