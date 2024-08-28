@@ -45,10 +45,18 @@ class Ui_Form(object):
         self.Mirror_Label.setObjectName("Mirror_Label")
         self.yStepNumber = QtWidgets.QLCDNumber(Form)
         self.yStepNumber.setGeometry(QtCore.QRect(180, 70, 61, 41))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.yStepNumber.setFont(font)
         self.yStepNumber.setDigitCount(5)
         self.yStepNumber.setObjectName("yStepNumber")
         self.xStepNumber = QtWidgets.QLCDNumber(Form)
         self.xStepNumber.setGeometry(QtCore.QRect(20, 140, 61, 41))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.xStepNumber.setFont(font)
         self.xStepNumber.setObjectName("xStepNumber")
         self.yValueLabel = QtWidgets.QLabel(Form)
         self.yValueLabel.setGeometry(QtCore.QRect(180, 30, 81, 31))
@@ -89,7 +97,6 @@ class Ui_Form(object):
 
 if __name__ == "__main__":
     import sys
-
     app = QtWidgets.QApplication(sys.argv)
     Form = QtWidgets.QWidget()
     ui = Ui_Form()
