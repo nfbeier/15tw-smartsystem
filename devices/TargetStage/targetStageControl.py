@@ -213,20 +213,17 @@ class TargetStage(QtWidgets.QMainWindow):
         """
         if cmd == "set":
             if axis == "x":
-                self.ref_x = round(self.x_xps.getStagePosition(self.x_axis), 2)
-                self.ref[0] = round(self.ref_x, 2)  # Update self.ref for x-axis
+                self.ref[0] = round(self.xps.getStagePosition(self.xpsAxes[0]), 2)  # Update self.ref for x-axis
                 self.position_x_ref.setText(f"Ref. X is: {self.ref[0]:.2f} mm")
                 self.log_window.append(f"Set Ref. X to {self.ref[0] :.2f} mm. ")
                 # Update the marker on the slider
             #  self.update_slider_marker()
             elif axis == "y":
-                self.ref_y = round(self.y_xps.getStagePosition(self.y_axis), 2)
-                self.ref[1] = round(self.ref_y, 2)  # Update self.ref for y-axis
+                self.ref[1] = round(self.xps.getStagePosition(self.xpsAxes[1]), 2)  # Update self.ref for y-axis
                 self.position_y_ref.setText(f"Ref. Y is: {self.ref[1]:.2f} mm")
                 self.log_window.append(f"Set Ref. Y to {self.ref[1] :.2f} mm.")
             elif axis == "z":
-                self.ref_z = round(self.z_xps.getStagePosition(self.z_axis), 2)
-                self.ref[2] = round(self.ref_z, 2)  # Update self.ref for z-axis
+                self.ref[2] = round(self.xps.getStagePosition(self.xpsAxes[2]), 2)  # Update self.ref for z-axis
                 self.position_z_ref.setText(f"Ref. Z is: {self.ref[2]:.2f} mm")
                 self.log_window.append(f"Set Ref. Z to {self.ref[2] :.2f} mm.")
 
@@ -234,9 +231,9 @@ class TargetStage(QtWidgets.QMainWindow):
                 self.log_window.append(
                     f"Clicked button! Set Ref. XYZ to ({self.ref[0] :.2f}, {self.ref[1] :.2f}, {self.ref[1] :.2f} ) mm."
                 )
-                self.ref_x = round(self.x_xps.getStagePosition(self.x_axis), 2)
-                self.ref_y = round(self.y_xps.getStagePosition(self.y_axis), 2)
-                self.ref_z = round(self.z_xps.getStagePosition(self.z_axis), 2)
+                self.ref_x = round(self.xps.getStagePosition(self.xpsAxes[0]), 2)
+                self.ref_y = round(self.xps.getStagePosition(self.xpsAxes[1]), 2)
+                self.ref_z = round(self.xps.getStagePosition(self.xpsAxes[2]), 2)
                 self.ref = [
                     self.ref_x,
                     self.ref_y,
