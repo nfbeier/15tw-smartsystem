@@ -32,6 +32,7 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         Control widget for the third mirror.
 
     Methods:
+    initialize_widgets() : Create widgets for each mirror
     updateConnectionStatus():
         Updates the connection status and LED indicator based on the number of connected stages.
     SafetySwitch():
@@ -40,7 +41,7 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         Updates the enabled state of movement buttons based on the safety mode.
     updateSafetyStatusLabel():
         Updated the status of the safety switch based on the current safety mode
-    closeEvent(event)
+    closeEvent()
         Closes the stage controllers when the application is closed.
     """
 
@@ -67,13 +68,13 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
                 if device_info.id.endswith(self.expected_stage1_id):
                     self.stage1 = temp_stage
                     print(
-                        f"Stage 1 initialized successfully with ID 8742-{self.expected_stage1_id}."
+                        f"Stage 1 initialized successfully using ID 8742-{self.expected_stage1_id}."
                     )
                 # Check if this is the expected device for stage 2
                 elif device_info.id.endswith(self.expected_stage2_id):
                     self.stage2 = temp_stage
                     print(
-                        f"Stage 2 initialized successfully with ID 8742-{self.expected_stage2_id}."
+                        f"Stage 2 initialized successfully using ID 8742-{self.expected_stage2_id}."
                     )
                 else:
                     # Close any devices that don't match the expected IDs
@@ -94,7 +95,7 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
 
         # Show total number of connected devices
         print(
-            f"Number of connected devices: {Newport.get_usb_devices_number_picomotor()}"
+            f"Total number of connected devices: {Newport.get_usb_devices_number_picomotor()}"
         )
 
         # proceed with initialization of the mirrors
