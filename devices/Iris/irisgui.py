@@ -120,7 +120,7 @@ class IrisGUIWidget(QWidget, Ui_Form):
             if iris == 1:
                 if resp == "OK":
                     self.isHomed = True
-                    print(f"Iris {iris} homed")
+                    print(f"Iris {iris} homed")      
                 elif resp == "NC":
                     QMessageBox.critical(
                         self,
