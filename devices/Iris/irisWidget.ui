@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>578</width>
-    <height>247</height>
+    <width>595</width>
+    <height>376</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>110</x>
-     <y>210</y>
+     <y>240</y>
      <width>461</width>
      <height>22</height>
     </rect>
@@ -32,7 +32,7 @@
      <x>100</x>
      <y>0</y>
      <width>241</width>
-     <height>200</height>
+     <height>241</height>
     </rect>
    </property>
    <widget class="QWidget" name="layoutWidget">
@@ -41,7 +41,7 @@
       <x>120</x>
       <y>20</y>
       <width>111</width>
-      <height>91</height>
+      <height>141</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -66,13 +66,27 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="iris1_jogopen">
+       <property name="text">
+        <string>Jog Open</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="iris1_jogclosed">
+       <property name="text">
+        <string>Jog Close</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
    <widget class="QWidget" name="layoutWidget_2">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>153</y>
+      <y>200</y>
       <width>221</width>
       <height>41</height>
      </rect>
@@ -104,7 +118,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>120</y>
+      <y>170</y>
       <width>223</width>
       <height>25</height>
      </rect>
@@ -155,7 +169,7 @@
      <x>340</x>
      <y>0</y>
      <width>241</width>
-     <height>200</height>
+     <height>241</height>
     </rect>
    </property>
    <widget class="QWidget" name="layoutWidget_4">
@@ -164,7 +178,7 @@
       <x>120</x>
       <y>20</y>
       <width>111</width>
-      <height>91</height>
+      <height>141</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -189,13 +203,27 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="iris2_jogopen">
+       <property name="text">
+        <string>Jog Open</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="iris2_jogclosed">
+       <property name="text">
+        <string>Jog Close</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
    <widget class="QWidget" name="layoutWidget_5">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>153</y>
+      <y>200</y>
       <width>221</width>
       <height>41</height>
      </rect>
@@ -249,7 +277,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>120</y>
+      <y>167</y>
       <width>223</width>
       <height>25</height>
      </rect>

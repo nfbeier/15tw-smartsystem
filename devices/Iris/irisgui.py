@@ -32,6 +32,8 @@ class IrisGUIWidget(QWidget, Ui_Form):
         self.setupUi(self)
         self.find_arduinos()
         self.serial_port = False
+        self.jog_len = 0.5      # mm
+        self.limits = [2.0, 41.3]
 
         # button attachments:
         self.comPortConnectButton.clicked.connect(self.initSerial)
@@ -46,6 +48,14 @@ class IrisGUIWidget(QWidget, Ui_Form):
         self.openIrisButton_2.clicked.connect(lambda: self.onOpen(iris=2))
         self.closeIrisButton_2.clicked.connect(lambda: self.onClose(iris=2))
         self.goToDiameterButton_2.clicked.connect(lambda: self.handle_goto(iris=2))
+
+        self.iris1_jogopen.clicked.connect(lambda: self.jog_open(iris=1))
+        self.iris1_jogclosed.clicked.connect(lambda: self.jog_closed(iris=1))
+        self.iris2_jogopen.clicked.connect(lambda: self.jog_open(iris=2))
+        self.iris2_jogclosed.clicked.connect(lambda: self.jog_closed(iris=2))
+
+
+
         self.closeEvent = self.closeSerial
         self.isHomed = False
         self.isHomed_2 = False
@@ -229,6 +239,93 @@ class IrisGUIWidget(QWidget, Ui_Form):
                 resp = self.send_command(f"CLOSE {iris};")
                 print(resp)
                 self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+    
+    def jog_open(self, iris):
+        """
+        Jogs the specified Iris device open.
+
+        This function sends a jog open command to the specified Iris device (1 or 2).
+        It checks if the serial port is initialized and sends the appropriate command
+        to the connected Arduino device.
+
+        :param iris: The Iris device number (1 or 2).
+        """
+        if iris == 1:
+            if not self.isHomed:
+                self.homeIrisButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(1000, lambda: self.homeIrisButton.setStyleSheet(""))
+            elif not self.serial_port:
+                self.comPortConnectButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(
+                    1000, lambda: self.comPortConnectButton.setStyleSheet("")
+                )
+            else:
+                diameter = float(self.currentDiameterLabel.text().split()[0]) + self.jog_len
+                if diameter > self.limits[1]:
+                    diameter = self.limits
+                command = f"GOTO {iris} {diameter};"
+                resp = self.send_command(command)
+                print(resp)
+                self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+        elif iris == 2:
+            if not self.isHomed_2:
+                self.homeIrisButton_2.setStyleSheet("background-color: red")
+                QTimer.singleShot(1000, lambda: self.homeIrisButton_2.setStyleSheet(""))
+            elif not self.serial_port:
+                self.comPortConnectButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(
+                    1000, lambda: self.comPortConnectButton.setStyleSheet("")
+                )
+            else:
+                diameter = float(self.currentDiameterLabel_2.text().split()[0]) + self.jog_len
+                command = f"GOTO {iris} {diameter};"
+                resp = self.send_command(command)
+                print(resp)
+                self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+    
+    def jog_closed(self, iris):
+        """
+        Jogs the specified Iris device closed.
+
+        This function sends a jog close command to the specified Iris device (1 or 2).
+        It checks if the serial port is initialized and sends the appropriate command
+        to the connected Arduino device.
+
+        :param iris: The Iris device number (1 or 2).
+        """
+         
+        if iris == 1:
+            if not self.isHomed:
+                self.homeIrisButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(1000, lambda: self.homeIrisButton.setStyleSheet(""))
+            elif not self.serial_port:
+                self.comPortConnectButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(
+                    1000, lambda: self.comPortConnectButton.setStyleSheet("")
+                )
+            else:
+                diameter = float(self.currentDiameterLabel.text().split()[0]) - self.jog_len
+                if diameter < self.limits[0]:
+                    diameter = self.limits[0]
+                command = f"GOTO {iris} {diameter};"
+                resp = self.send_command(command)
+                print(resp)
+                self.update_position(self.send_command(f"POS {iris};"), iris=iris)
+        elif iris == 2:
+            if not self.isHomed_2:
+                self.homeIrisButton_2.setStyleSheet("background-color: red")
+                QTimer.singleShot(1000, lambda: self.homeIrisButton_2.setStyleSheet(""))
+            elif not self.serial_port:
+                self.comPortConnectButton.setStyleSheet("background-color: red")
+                QTimer.singleShot(
+                    1000, lambda: self.comPortConnectButton.setStyleSheet("")
+                )
+            else:
+                diameter = float(self.currentDiameterLabel_2.text().split()[0]) - self.jog_len
+                command = f"GOTO {iris} {diameter};"
+                resp = self.send_command(command)
+                print(resp)
+                self.update_position(self.send_command(f"POS {iris};"), iris=iris)
 
     def update_position(self, pos, iris):
         """
@@ -281,7 +378,7 @@ class IrisGUIWidget(QWidget, Ui_Form):
             home_button = self.homeIrisButton_2
         try:
             diameter = float(go_to_diameter)
-            if 2 <= diameter <= 41.3:
+            if self.limits[0] <= diameter <= self.limits[1]:
                 if not is_homed:
                     home_button.setStyleSheet("background-color: red")
                     QTimer.singleShot(1000, lambda: home_button.setStyleSheet(""))
