@@ -12,7 +12,7 @@ cwd = os.path.sep.join(
 sys.path.insert(0, cwd)
 
 #from devices.NewportPicomotor.MirrorControlWidget import MirrorControlWidget
-from devices.NewportPicomotor.multiMirror_GUI import Ui_MainWindow
+from software.LaserAlignment.alignment_GUI import Ui_MainWindow
 from devices.NewportPicomotor.MirrorControlWidget import MirrorControlWidget
 
 class MultiMirrorControl_App(QtWidgets.QMainWindow):
