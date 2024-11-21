@@ -29,33 +29,39 @@ from devices.XPS.XPS import XPS
 # Main class for GUI
 class TargetStage(QtWidgets.QMainWindow):
     def __init__(self):
+         
+        
         super(TargetStage,self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-
         # STAGE CONTROL ----------------------------------------------------------------------
-        # Access the QWidget by its object name in Qt Designer
-
-        self.groupCombo = [self.x_group_combo, self.y_group_combo, self.z_group_combo]
+        
+        
+        # Initialize combo boxes for the stage groups
+        self.groupCombo = [self.ui.x_group_combo, self.ui.y_group_combo, self.ui.z_group_combo] 
         self.xpsAxes = []
         try:
-            self.xps = XPS()
+            
+            self.xps = XPS(ipAddress = '192.168.0.254')
             self.xps_groups = self.xps.getXPSStatus()
-
+           
             for idx, axis in enumerate(self.groupCombo):
                 axis.clear()
                 axis.addItems(list(self.xps_groups.keys()))
                 axis.setCurrentIndex(idx)
                 self.xpsAxes.append(str(axis.currentText()))
                 self.xps.setGroup(self.xpsAxes[-1])
-
+                
             self.stageStatus = [self.xps.getStageStatus(axis) for axis in self.xpsAxes]
-        except AttributeError:
+                        
+        except AttributeError as e:
+            print(e)
             self.xps = None
 
-        self.x_group_combo.activated.connect(lambda: self.update_group("X"))
-        self.y_group_combo.activated.connect(lambda: self.update_group("Y"))
-        self.z_group_combo.activated.connect(lambda: self.update_group("Z"))
+        self.ui.x_group_combo.activated.connect(lambda: self.update_group("X"))
+        self.ui.y_group_combo.activated.connect(lambda: self.update_group("Y"))
+        self.ui.z_group_combo.activated.connect(lambda: self.update_group("Z"))
+        
 
         self.ui.x_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[0]) * 10))
         self.ui.y_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[1]) * 10))
@@ -117,30 +123,30 @@ class TargetStage(QtWidgets.QMainWindow):
         )  # Connect the scrollbar to the update function
 
         # Raster Input Boxes
-        self.step_length_line.setValidator(QtGui.QDoubleValidator(0.10, 40.00, 2))
-        self.step_length_line.textChanged.connect(
+        self.ui.step_length_line.setValidator(QtGui.QDoubleValidator(0.10, 40.00, 2))
+        self.ui.step_length_line.textChanged.connect(
             lambda: self.raster_inp("step_length")
         )
-        self.sample_length_line.setValidator(QtGui.QDoubleValidator(0.10, 40.00, 2))
-        self.sample_length_line.textChanged.connect(
+        self.ui.sample_length_line.setValidator(QtGui.QDoubleValidator(0.10, 40.00, 2))
+        self.ui.sample_length_line.textChanged.connect(
             lambda: self.raster_inp("sample_length")
         )
-        self.sample_width_line.setValidator(QtGui.QDoubleValidator(0.10, 40.00, 2))
-        self.sample_width_line.textChanged.connect(
+        self.ui.sample_width_line.setValidator(QtGui.QDoubleValidator(0.10, 40.00, 2))
+        self.ui.sample_width_line.textChanged.connect(
             lambda: self.raster_inp("sample_width")
         )
-        self.set_x_bound.clicked.connect(lambda: self.raster_inp("set_bound_x"))
-        self.set_y_bound.clicked.connect(lambda: self.raster_inp("set_bound_y"))
+        self.ui.set_x_bound.clicked.connect(lambda: self.raster_inp("set_bound_x"))
+        self.ui.set_y_bound.clicked.connect(lambda: self.raster_inp("set_bound_y"))
         # self.num_shots_line.setEnabled(False)
         # self.num_shots_line.textChanged.connect(lambda: self.raster_inp('num_shots'))
-        self.rep_rate_line.setValidator(QtGui.QDoubleValidator(1, 40.00, 1))
-        self.rep_rate_line.textChanged.connect(lambda: self.raster_inp("Rep_rate"))
+        self.ui.rep_rate_line.setValidator(QtGui.QDoubleValidator(1, 40.00, 1))
+        self.ui.rep_rate_line.textChanged.connect(lambda: self.raster_inp("Rep_rate"))
 
         # Raster Controls
-        self.raster_btn.setEnabled(False)
-        self.raster_btn.clicked.connect(self.start_raster)
+        self.ui.raster_btn.setEnabled(False)
+        self.ui.raster_btn.clicked.connect(self.start_raster)
         # Connect the stop button to stop the timer:
-        self.stop_btn_2.clicked.connect(self.rast_timer.stop)
+        self.ui.stop_btn_2.clicked.connect(self.rast_timer.stop)
 
         # Log window
         # layout=QtWidgets.QVBoxLayout()
@@ -150,28 +156,28 @@ class TargetStage(QtWidgets.QMainWindow):
         # # layout.addWidget(QtWidgets.QVBoxLayout("log:"))
         # layout.addWidget(self.log_window)
         # Relative Motion Controls
-        self.step_interval_x.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
-        self.step_interval_y.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
-        self.step_interval_z.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
-        self.left_btn.clicked.connect(lambda: self.relative("left"))
-        self.right_btn.clicked.connect(lambda: self.relative("right"))
-        self.down_btn.clicked.connect(lambda: self.relative("down"))
-        self.up_btn.clicked.connect(lambda: self.relative("up"))
-        self.down_btn_z.clicked.connect(lambda: self.relative("down_z"))
-        self.up_btn_z.clicked.connect(lambda: self.relative("up_z"))
+        self.ui.step_interval_x.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
+        self.ui.step_interval_y.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
+        self.ui.step_interval_z.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
+        self.ui.left_btn.clicked.connect(lambda: self.relative("left"))
+        self.ui.right_btn.clicked.connect(lambda: self.relative("right"))
+        self.ui.down_btn.clicked.connect(lambda: self.relative("down"))
+        self.ui.up_btn.clicked.connect(lambda: self.relative("up"))
+        self.ui.down_btn_z.clicked.connect(lambda: self.relative("down_z"))
+        self.ui.up_btn_z.clicked.connect(lambda: self.relative("up_z"))
         # Status Buttons
-        self.initialize_btn.clicked.connect(self.initialize)
-        self.kill_btn.clicked.connect(self.kill)
-        self.enable_btn.clicked.connect(self.enable_disable)
+        self.ui.initialize_btn.clicked.connect(self.initialize)
+        self.ui.kill_btn.clicked.connect(self.kill)
+        self.ui.enable_btn.clicked.connect(self.enable_disable)
 
         # Absolute Motion Controls
-        self.abs_x_line.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
-        self.abs_x_line.textChanged.connect(lambda: self.chkvalue("abs_x_length"))
-        self.abs_y_line.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
-        self.abs_y_line.textChanged.connect(lambda: self.chkvalue("abs_y_length"))
-        self.abs_z_line.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
-        self.abs_z_line.textChanged.connect(lambda: self.chkvalue("abs_z_length"))
-        self.abs_move_btn.clicked.connect(self.absolute)
+        self.ui.abs_x_line.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
+        self.ui.abs_x_line.textChanged.connect(lambda: self.chkvalue("abs_x_length"))
+        self.ui.abs_y_line.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
+        self.ui.abs_y_line.textChanged.connect(lambda: self.chkvalue("abs_y_length"))
+        self.ui.abs_z_line.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
+        self.ui.abs_z_line.textChanged.connect(lambda: self.chkvalue("abs_z_length"))
+        self.ui.abs_move_btn.clicked.connect(self.absolute)
 
         # Reference Point Commands
         self.ref = [
@@ -183,15 +189,15 @@ class TargetStage(QtWidgets.QMainWindow):
         self.ref_y = 0.00000  # Initialize reference point for y-axis
         self.ref_z = 0.00000  # Initialize reference point for z-axis
         # Connect buttons to the ref_commands method for individual axes
-        self.set_x_btn.clicked.connect(lambda: self.ref_commands("set", "x"))
-        self.return_x_btn.clicked.connect(lambda: self.ref_commands("return", "x"))
-        self.set_y_btn.clicked.connect(lambda: self.ref_commands("set", "y"))
-        self.return_y_btn.clicked.connect(lambda: self.ref_commands("return", "y"))
-        self.set_z_btn.clicked.connect(lambda: self.ref_commands("set", "z"))
-        self.return_z_btn.clicked.connect(lambda: self.ref_commands("return", "z"))
+        self.ui.set_x_btn.clicked.connect(lambda: self.ref_commands("set", "x"))
+        self.ui.return_x_btn.clicked.connect(lambda: self.ref_commands("return", "x"))
+        self.ui.set_y_btn.clicked.connect(lambda: self.ref_commands("set", "y"))
+        self.ui.return_y_btn.clicked.connect(lambda: self.ref_commands("return", "y"))
+        self.ui.set_z_btn.clicked.connect(lambda: self.ref_commands("set", "z"))
+        self.ui.return_z_btn.clicked.connect(lambda: self.ref_commands("return", "z"))
         # Combined set and return buttons for both axes
-        self.set_both_btn.clicked.connect(lambda: self.ref_commands("set", "both"))
-        self.return_both_btn.clicked.connect(
+        self.ui.set_both_btn.clicked.connect(lambda: self.ref_commands("set", "both"))
+        self.ui.return_both_btn.clicked.connect(
             lambda: self.ref_commands("return", "both")
         )
 
@@ -663,30 +669,30 @@ class TargetStage(QtWidgets.QMainWindow):
             == "Not initialized state due to a GroupKill or KillAll command"
             or stage_status == "Not referenced state"
         ):
-            for widget in self.translationStage.children():
+            for widget in self.ui.translationStage.children():
                 if not isinstance(
                     widget, (QtCore.QTimer, QtGui.QDoubleValidator, QtGui.QIntValidator)
                 ):
                     widget.setEnabled(False)
-            self.initialize_btn.setEnabled(True)
-            self.messages.setText("Not Initialized")
+            self.ui.initialize_btn.setEnabled(True)
+            self.ui.messages.setText("Not Initialized")
 
         elif stage_status == "Disabled state":
-            for widget in self.translationStage.children():
+            for widget in self.ui.translationStage.children():
                 if not isinstance(
                     widget, (QtCore.QTimer, QtGui.QDoubleValidator, QtGui.QIntValidator)
                 ):
                     widget.setEnabled(False)
-            self.enable_btn.setEnabled(True)
-            self.messages.setText("Enable")
+            self.ui.enable_btn.setEnabled(True)
+            self.ui.messages.setText("Enable")
 
         # Initialized and enabled
         elif stage_status[:11].upper() == "Ready state".upper():
-            for widget in self.translationStage.children():
+            for widget in self.ui.translationStage.children():
                 if not isinstance(
                     widget, (QtCore.QTimer, QtGui.QDoubleValidator, QtGui.QIntValidator)
                 ):
-                    if widget != self.rep_rate_line and widget != self.raster_btn:
+                    if widget != self.ui.rep_rate_line and widget != self.ui.raster_btn:
                         widget.setEnabled(True)
             # self.messages.setText("Disable")
 
@@ -694,81 +700,73 @@ class TargetStage(QtWidgets.QMainWindow):
         """
         Initializes and homes both selected actuators.
         """
-        self.x_xps.initializeStage(self.x_axis)
-        self.x_xps.homeStage(self.x_axis)
-        self.y_xps.initializeStage(self.y_axis)
-        self.y_xps.homeStage(self.y_axis)
-
-        self.update_status(self.x_xps.getStageStatus(self.x_axis))
-        self.update_status(self.y_xps.getStageStatus(self.y_axis))
+        for axis in self.xpsAxes:
+            self.xps.initializeStage(axis)
+            self.xps.homeStage(axis)
+            self.update_status(self.xps.getStageStatus(axis))
 
     def kill(self):
         """
         Kills both selected actuators.
         """
-        self.x_xps.killAll(self.x_axis)
-        self.y_xps.killAll(self.y_axis)
-
-        self.update_status(self.x_xps.getStageStatus(self.x_axis))
-        self.update_status(self.y_xps.getStageStatus(self.y_axis))
+        for axis in self.xpsAxes:
+            self.xps.killAll(axis)
+            self.update_status(self.xps.getStageStatus(axis))
 
     def enable_disable(self):
         """
         Enables or disables both selected actuators depending on its status.
         """
+        
         if (
-            self.x_xps.getStageStatus(self.x_axis).upper() == "Disabled state".upper()
-            or self.y_xps.getStageStatus(self.y_axis).upper()
-            == "Disabled state".upper()
+            self.xps.getStageStatus(self.xpsAxes[0]).upper() == "Disabled state".upper()
+            or self.xps.getStageStatus(self.xpsAxes[1]).upper() == "Disabled state".upper() 
+            or self.xps.getStageStatus(self.xpsAxes[2]).upper() == "Disabled state".upper() 
         ):
-            self.x_xps.enableGroup(self.x_axis)
-            self.y_xps.enableGroup(self.y_axis)
+            for axis in self.xpsAxes:
+                self.xps.enableGroup(axis)
+                self.update_status(self.xps.getStageStatus(axis))
         elif (
-            self.x_xps.getStageStatus(self.x_axis)[:11].upper() == "Ready state".upper()
-            or self.y_xps.getStageStatus(self.y_axis)[:11].upper()
-            == "Ready state".upper()
+            self.xps.getStageStatus(self.xpsAxes[0])[:11].upper() == "Ready state".upper()
+            or self.xps.getStageStatus(self.xpsAxes[1])[:11].upper() == "Ready state".upper()
+            or self.xps.getStageStatus(self.xpsAxes[2])[:11].upper() == "Ready state".upper()
         ):
-            self.x_xps.disableGroup(self.x_axis)
-            self.y_xps.disableGroup(self.y_axis)
-
-        self.update_status(self.x_xps.getStageStatus(self.x_axis))
-        self.update_status(self.y_xps.getStageStatus(self.y_axis))
+            for axis in self.xpsAxes:
+                self.xps.disableGroup(axis)
+                self.update_status(self.xps.getStageStatus(axis))
 
     def print_location(self):
         """
         Prints the absolute and relative location of the 2 actuators. Also checks actuator
         status and enables/disables accordingly.
         """
-        abs = [
-            round(self.x_xps.getStagePosition(self.x_axis), 2),
-            round(self.y_xps.getStagePosition(self.y_axis), 2),
-            round(self.z_xps.getStagePosition(self.z_axis), 2),
-        ]
+
         #  self.abs_lbl.setText(str(abs[0])+", "+str(abs[1]))
         #  self.rel_lbl.setText(str(abs[0]-self.ref[0])+", "+str(abs[1]-self.ref[1]))
-        self.ui.x_slider.setValue(int(abs[0] * 10))
-        self.ui.y_slider.setValue(int(abs[1] * 10))
-        self.ui.z_slider.setValue(int(abs[2] * 10))
-        self.position_x.setText(f"Position X (abs.): {abs[0]:.2f} mm")
-        self.position_y.setText(f"Position Y (abs.): {abs[1]:.2f} mm")
-        self.position_z.setText(f"Position Z (abs.): {abs[2]:.2f} mm")
-        self.position_x_ref.setText(
+        self.ui.x_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[0]) * 10))
+        self.ui.y_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[1]) * 10))
+        self.ui.z_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[2]) * 10))
+        
+        self.ui.position_x.setText(f"Position X (abs.): {self.ui.x_slider.value():.2f} mm")
+        self.ui.position_y.setText(f"Position Y (abs.): {self.ui.y_slider.value():.2f} mm")
+        self.ui.position_z.setText(f"Position Z (abs.): {self.ui.z_slider.value():.2f} mm")
+        self.ui.position_x_ref.setText(
             f"Ref. X is: {self.ref[0]:.2f} mm"
             + ",  "
-            + f"X (rel.): {(abs[0]-self.ref[0]):.2f} mm"
+            + f"X (rel.): {(self.ui.x_slider.value()-self.ref[0]):.2f} mm"
         )
-        self.position_y_ref.setText(
+        self.ui.position_y_ref.setText(
             f"Ref. Y is: {self.ref[1]:.2f} mm"
             + ",  "
-            + f"Y (rel.): {(abs[1]-self.ref[1]):.2f} mm"
+            + f"Y (rel.): {(self.ui.y_slider.value()-self.ref[1]):.2f} mm"
         )
-        self.position_z_ref.setText(
+        self.ui.position_z_ref.setText(
             f"Ref. Z is: {self.ref[2]:.2f} mm"
             + ",  "
-            + f"Z (rel.): {(abs[2]-self.ref[2]):.2f} mm"
+            + f"Z (rel.): {(self.ui.z_slider.value()-self.ref[2]):.2f} mm"
         )
         #  print(f"abs0:{abs[0]}")
-        self.update_status(self.x_xps.getStageStatus(self.x_axis))
+        self.update_status(self.xps.getStageStatus(self.xpsAxes[0]))
 
     def update_position_from_scrollbar(self, pos_scrollbar):
         """

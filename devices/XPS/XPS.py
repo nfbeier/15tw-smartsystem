@@ -171,8 +171,8 @@ class XPS(Actuator):
         Actuator positioner name. By default it is groupName + ".pos"
     '''
     
-    
-    def __init__(self,ipAddress = '192.168.0.79',username = 'Administrator',password = 'Administrator'):
+    #Default IP Address for XPS in 15TW is 192.168.0.79
+    def __init__(self,ipAddress = '192.168.0.254',username = 'Administrator',password = 'Administrator'): 
         '''
         Initializes the XPS class.
         
@@ -186,6 +186,7 @@ class XPS(Actuator):
         
         try:
             self.xps = NewportXPS(ipAddress, username = username, password = password)
+           
         except:
             print("XPS connection cannot be established.")
         self.groupList = {}
