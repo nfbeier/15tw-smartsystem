@@ -11,11 +11,11 @@ cwd = os.path.sep.join(
 )
 sys.path.insert(0, cwd)
 
+#from devices.NewportPicomotor.MirrorControlWidget import MirrorControlWidget
+from software.LaserAlignment.alignment_GUI import Ui_MainWindow
 from devices.NewportPicomotor.MirrorControlWidget import MirrorControlWidget
 
-
-# Create the main application to use the widget (Multi-mirror control GUI)
-class MultiMirrorControl_App(QtWidgets.QWidget):
+class Alignator9000(QtWidgets.QMainWindow):
     """
     A QWidget subclass for controlling multiple mirrors using Newport Picomotor8742 stages.
 
@@ -32,6 +32,7 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         Control widget for the third mirror.
 
     Methods:
+    initialize_widgets() : Create widgets for each mirror
     updateConnectionStatus():
         Updates the connection status and LED indicator based on the number of connected stages.
     SafetySwitch():
@@ -40,7 +41,7 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         Updates the enabled state of movement buttons based on the safety mode.
     updateSafetyStatusLabel():
         Updated the status of the safety switch based on the current safety mode
-    closeEvent(event)
+    closeEvent()
         Closes the stage controllers when the application is closed.
     """
 
@@ -48,8 +49,11 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         """
         Initializes the MultiMirrorControl_App with the specified Picomotor stage controllers and the control widgets.
         """
-        super(MultiMirrorControl_App, self).__init__()
+        super(Alignator9000, self).__init__()
 
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        
         # Define expected device IDs for both stages
         self.expected_stage1_id = "102070"  # Expected device ID for stage 1
         self.expected_stage2_id = "102092"  # Expected device ID for stage 2
@@ -67,13 +71,13 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
                 if device_info.id.endswith(self.expected_stage1_id):
                     self.stage1 = temp_stage
                     print(
-                        f"Stage 1 initialized successfully with ID 8742-{self.expected_stage1_id}."
+                        f"Stage 1 initialized successfully using ID 8742-{self.expected_stage1_id}."
                     )
                 # Check if this is the expected device for stage 2
                 elif device_info.id.endswith(self.expected_stage2_id):
                     self.stage2 = temp_stage
                     print(
-                        f"Stage 2 initialized successfully with ID 8742-{self.expected_stage2_id}."
+                        f"Stage 2 initialized successfully using ID 8742-{self.expected_stage2_id}."
                     )
                 else:
                     # Close any devices that don't match the expected IDs
@@ -94,7 +98,7 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
 
         # Show total number of connected devices
         print(
-            f"Number of connected devices: {Newport.get_usb_devices_number_picomotor()}"
+            f"Total number of connected devices: {Newport.get_usb_devices_number_picomotor()}"
         )
 
         # proceed with initialization of the mirrors
@@ -102,108 +106,19 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
 
     def initialize_widgets(self):
         # Create widgets for each mirror
-        self.mirror1 = MirrorControlWidget(self.stage1, 1, 2, "Mirror 1")
-        self.mirror2 = MirrorControlWidget(self.stage1, 3, 4, "Mirror 2")
-        self.mirror3 = MirrorControlWidget(self.stage2, 1, 2, "Mirror 3")
-        self.mirror4 = MirrorControlWidget(self.stage2, 3, 4, "Mirror 4")
+        self.ui.mirror1 = MirrorControlWidget(self.stage1, 1, 2, "Mirror 1")
+        self.ui.mirror2 = MirrorControlWidget(self.stage1, 3, 4, "Mirror 2")
+        self.ui.mirror3 = MirrorControlWidget(self.stage2, 1, 2, "Mirror 3")
+        self.ui.mirror4 = MirrorControlWidget(self.stage2, 3, 4, "Mirror 4")
 
-        self.mirrors = [self.mirror1, self.mirror2, self.mirror3, self.mirror4]
+        self.mirrors = [self.ui.mirror1, self.ui.mirror2, self.ui.mirror3, self.ui.mirror4]
 
-        # Add a safety control button
-        self.safety_button = QtWidgets.QPushButton("Disable Safety", self)
-        self.safety_button.setGeometry(QtCore.QRect(20, 260, 71, 41))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        font.setBold(True)
-        font.setWeight(75)
-        self.safety_button.setFont(font)
-        self.safety_button.setStyleSheet(
-            """QPushButton {background-color: blue; 
-                color: white;
-                border-radius: 15px;
-                font-size: 12pt;
-                font-weight: bold;
-                padding: 10px;
-                border: 2px solid #333333;}"""
-        )
-
+        #self.ui.mirrorLayout.resize(800, 600)
         # connect the safety button
-        self.safety_button.clicked.connect(self.SafetySwitch)
+        self.ui.safety_button.clicked.connect(self.SafetySwitch)
 
-        # Add a label to display the safety status
-        self.safety_status_label = QtWidgets.QLabel("High Power Mode", self)
-        self.safety_status_label.setGeometry(QtCore.QRect(90, 270, 131, 21))
-        font.setBold(True)
-        font.setWeight(75)
-        self.safety_status_label.setFont(font)
-        self.safety_status_label.setStyleSheet(
-            """
-                QLabel {
-                    background-color: qlineargradient(
-                        spread:pad, x1:0, y1:0, x2:1, y2:1, 
-                        stop:0 #FF6666, stop:1 #CC0000);
-                    color: white;
-                    border-radius: 10px;
-                    font-style: italic;                           
-                    font-size: 12pt;
-                    font-weight: bold;
-                    padding: 5px;
-                    border: 2px solid #AA0000;
-                    text-align: center;
-                }
-            """
-        )
-
-        # Add a connection status labels
-        self.connectionStatusLabel = QtWidgets.QLabel("Connected Controllers: 0", self)
-        self.connectionStatusLabel.setGeometry(
-            QtCore.QRect(90, 20, 250, 30)
-        )  # 90, 20, 201, 21
-        font.setPointSize(9)
-        font.setBold(True)
-        font.setWeight(75)
-        self.connectionStatusLabel.setFont(font)
-        self.connectionStatusLabel.setStyleSheet("font-size: 14pt; font-weight: bold")
-
-        self.LEDindicator = QtWidgets.QLabel("", self)
-        self.LEDindicator.setGeometry(QtCore.QRect(40, 30, 31, 31))  # 30, 20, 21, 21
-        self.LEDindicator.setStyleSheet(
-            "background-color: red;border-radius: 10px;min-width: 20px;min-height: 20px;"
-        )
-
-        # Layout for the connection status and LED indicator
-        connection_layout = QtWidgets.QHBoxLayout()
-        connection_layout.addWidget(self.LEDindicator)
-        connection_layout.addWidget(self.connectionStatusLabel)
-        connection_layout.setAlignment(QtCore.Qt.AlignCenter)
-        connection_layout.setSpacing(
-            20
-        )  # set the spacing between LEDindicator and connectionStatusLabel
-        connection_layout.setContentsMargins(0, 80, 0, 0)
-
-        # Layout for the safety controls
-        safety_layout = QtWidgets.QHBoxLayout()
-        safety_layout.addWidget(self.safety_button)
-        safety_layout.addWidget(self.safety_status_label)
-        safety_layout.setAlignment(QtCore.Qt.AlignCenter)
-        safety_layout.setSpacing(
-            20
-        )  # Set the spacing between the  safety_button and safety_status_label
-        safety_layout.setContentsMargins(0, 0, 0, 80)
-
-        # Create a layout for the mirrors
-        mirror_layout = QtWidgets.QHBoxLayout()
         for mirror in self.mirrors:
-            mirror_layout.addWidget(mirror)
-
-        # Layout of main window
-        main_layout = QtWidgets.QVBoxLayout(self)
-        main_layout.addLayout(connection_layout)
-        main_layout.addLayout(mirror_layout)
-        main_layout.addLayout(safety_layout)
-
-        self.setLayout(main_layout)
-        self.setFixedSize(1000, 600)  # Adjust the window size
+            self.ui.mirrorLayout.addWidget(mirror)
 
         self.mirror_safe = True  # Initialize mirrors as safe (i.e motion is disabled)
 
@@ -215,17 +130,17 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         Updates the connection status and LED indicator based on the number of connected stages.
         """
         num_connected_stages = Newport.get_usb_devices_number_picomotor()
-        self.connectionStatusLabel.setText(
+        self.ui.connectionStatusLabel.setText(
             f"Connected Controllers: {num_connected_stages}"
         )
-        self.connectionStatusLabel.setStyleSheet("font-size: 14pt; font-weight: bold")
+        self.ui.connectionStatusLabel.setStyleSheet("font-size: 14pt; font-weight: bold")
 
         if num_connected_stages >= 2:
-            self.LEDindicator.setStyleSheet(
+            self.ui.LEDindicator.setStyleSheet(
                 "background-color: green;border-radius: 15px;min-width: 30px;min-height: 30px;"
             )
         else:
-            self.LEDindicator.setStyleSheet(
+            self.ui.LEDindicator.setStyleSheet(
                 "background-color: red;border-radius: 15px;min-width: 30px;min-height: 30px;"
             )
 
@@ -249,8 +164,8 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         Updates the status label for the safety mode.
         """
         if self.mirror_safe:
-            self.safety_status_label.setText("High Power Mode")
-            self.safety_status_label.setStyleSheet(
+            self.ui.safety_status_label.setText("High Power Mode")
+            self.ui.safety_status_label.setStyleSheet(
                 """
                 QLabel {
                     background-color: qlineargradient(
@@ -267,11 +182,11 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
                 }
             """
             )
-            self.safety_button.setText("Disable Safety")
+            self.ui.safety_button.setText("Disable Safety")
         else:
-            self.safety_status_label.setText("Alignment Mode")
-            self.safety_button.setText("Enable Safety")
-            self.safety_status_label.setStyleSheet(
+            self.ui.safety_status_label.setText("Alignment Mode")
+            self.ui.safety_button.setText("Enable Safety")
+            self.ui.safety_status_label.setStyleSheet(
                 """
                 QLabel {
                     background-color: qlineargradient(
@@ -303,9 +218,9 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
             self.stage2.close()
         event.accept()
 
-
 if __name__ == "__main__":
+    import sys
     app = QtWidgets.QApplication(sys.argv)
-    mainApp = MultiMirrorControl_App()
+    mainApp = Alignator9000()
     mainApp.show()
     sys.exit(app.exec_())
