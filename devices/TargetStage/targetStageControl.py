@@ -29,8 +29,7 @@ from devices.XPS.XPS import XPS
 # Main class for GUI
 class TargetStage(QtWidgets.QMainWindow):
     def __init__(self):
-         
-        
+             
         super(TargetStage,self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -44,7 +43,7 @@ class TargetStage(QtWidgets.QMainWindow):
             
             self.xps = XPS(ipAddress = '192.168.0.254')
             self.xps_groups = self.xps.getXPSStatus()
-           
+                       
             for idx, axis in enumerate(self.groupCombo):
                 axis.clear()
                 axis.addItems(list(self.xps_groups.keys()))
@@ -55,7 +54,7 @@ class TargetStage(QtWidgets.QMainWindow):
             self.stageStatus = [self.xps.getStageStatus(axis) for axis in self.xpsAxes]
                         
         except AttributeError as e:
-            print(e)
+           
             self.xps = None
 
         self.ui.x_group_combo.activated.connect(lambda: self.update_group("X"))
@@ -63,9 +62,9 @@ class TargetStage(QtWidgets.QMainWindow):
         self.ui.z_group_combo.activated.connect(lambda: self.update_group("Z"))
         
 
-        self.ui.x_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[0]) * 10))
-        self.ui.y_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[1]) * 10))
-        self.ui.z_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[2]) * 10))
+        self.ui.x_slider.setValue(int(round(self.xps.getStagePosition(self.xpsAxes[0]),2) * 10))
+        self.ui.y_slider.setValue(int(round(self.xps.getStagePosition(self.xpsAxes[1]),2) * 10))
+        self.ui.z_slider.setValue(int(round(self.xps.getStagePosition(self.xpsAxes[2]),2) * 10))
 
         self.stageStatus = [self.xps.getStageStatus(axis) for axis in self.xpsAxes]
 
@@ -101,22 +100,22 @@ class TargetStage(QtWidgets.QMainWindow):
         self.setLayout(layout)
         # X Axis Slider
         self.slider_factor = 10  # This will allow increments of 0.1 mm
-        self.ui.x_slider.setMinimum(0)  # Represents 0.1 mm
-        self.ui.x_slider.setMaximum(int(self.abs_max[0] * 10))  # Represents 40.0 mm
+        self.ui.x_slider.setMinimum(0)   # Minimum value (0.0 mm)          
+        self.ui.x_slider.setMaximum(int(self.abs_max[0] * 10))  # Maximum value (400 * 0.1 = 40.0 mm) 
         self.ui.x_slider.setTickInterval(10)
         self.ui.x_slider.valueChanged.connect(
             lambda: self.update_position_from_scrollbar("X_slider")
         )  # Connect the scrollbar to the update function
         # Y Axis Slider
-        self.ui.y_slider.setMinimum(0)  # Represents 0.1 mm
+        self.ui.y_slider.setMinimum(0)  # Minimum value (0.0 mm)
         self.ui.y_slider.setMaximum(int(self.abs_max[1] * 10))  # Represents 40.0 mm
         self.ui.y_slider.setTickInterval(10)
         self.ui.y_slider.valueChanged.connect(
             lambda: self.update_position_from_scrollbar("Y_slider")
         )  # Connect the scrollbar to the update function
         # Z Axis Slider
-        self.ui.z_slider.setMinimum(0)  # Represents 0.1 mm
-        self.ui.z_slider.setMaximum(int(self.abs_max[1] * 10))  # Represents 40.0 mm
+        self.ui.z_slider.setMinimum(0)  # Minimum value (0.0 mm)
+        self.ui.z_slider.setMaximum(int(self.abs_max[2] * 10))  # Represents 40.0 mm
         self.ui.z_slider.setTickInterval(10)
         self.ui.z_slider.valueChanged.connect(
             lambda: self.update_position_from_scrollbar("Z_slider")
@@ -156,9 +155,9 @@ class TargetStage(QtWidgets.QMainWindow):
         # # layout.addWidget(QtWidgets.QVBoxLayout("log:"))
         # layout.addWidget(self.log_window)
         # Relative Motion Controls
-        self.ui.step_interval_x.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
-        self.ui.step_interval_y.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
-        self.ui.step_interval_z.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
+        self.ui.step_interval_x.setValidator(QtGui.QDoubleValidator(0.10, 40.00, 2))
+        self.ui.step_interval_y.setValidator(QtGui.QDoubleValidator(0.10, 40.00, 2))
+        self.ui.step_interval_z.setValidator(QtGui.QDoubleValidator(0.10, 40.00, 2))
         self.ui.left_btn.clicked.connect(lambda: self.relative("left"))
         self.ui.right_btn.clicked.connect(lambda: self.relative("right"))
         self.ui.down_btn.clicked.connect(lambda: self.relative("down"))
@@ -171,11 +170,11 @@ class TargetStage(QtWidgets.QMainWindow):
         self.ui.enable_btn.clicked.connect(self.enable_disable)
 
         # Absolute Motion Controls
-        self.ui.abs_x_line.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
+        self.ui.abs_x_line.setValidator(QtGui.QDoubleValidator(0.10, 40.00, 2))
         self.ui.abs_x_line.textChanged.connect(lambda: self.chkvalue("abs_x_length"))
-        self.ui.abs_y_line.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
+        self.ui.abs_y_line.setValidator(QtGui.QDoubleValidator(0.10, 40.00, 2))
         self.ui.abs_y_line.textChanged.connect(lambda: self.chkvalue("abs_y_length"))
-        self.ui.abs_z_line.setValidator(QtGui.QDoubleValidator(0.10, 50.00, 2))
+        self.ui.abs_z_line.setValidator(QtGui.QDoubleValidator(0.10, 40.00, 2))
         self.ui.abs_z_line.textChanged.connect(lambda: self.chkvalue("abs_z_length"))
         self.ui.abs_move_btn.clicked.connect(self.absolute)
 
@@ -220,21 +219,21 @@ class TargetStage(QtWidgets.QMainWindow):
         if cmd == "set":
             if axis == "x":
                 self.ref[0] = round(self.xps.getStagePosition(self.xpsAxes[0]), 2)  # Update self.ref for x-axis
-                self.position_x_ref.setText(f"Ref. X is: {self.ref[0]:.2f} mm")
-                self.log_window.append(f"Set Ref. X to {self.ref[0] :.2f} mm. ")
+                self.ui.position_x_ref.setText(f"Ref. X is: {self.ref[0]:.2f} mm")
+                self.ui.log_window.append(f"Set Ref. X to {self.ref[0] :.2f} mm. ")
                 # Update the marker on the slider
             #  self.update_slider_marker()
             elif axis == "y":
                 self.ref[1] = round(self.xps.getStagePosition(self.xpsAxes[1]), 2)  # Update self.ref for y-axis
-                self.position_y_ref.setText(f"Ref. Y is: {self.ref[1]:.2f} mm")
-                self.log_window.append(f"Set Ref. Y to {self.ref[1] :.2f} mm.")
+                self.ui.position_y_ref.setText(f"Ref. Y is: {self.ref[1]:.2f} mm")
+                self.ui.log_window.append(f"Set Ref. Y to {self.ref[1] :.2f} mm.")
             elif axis == "z":
                 self.ref[2] = round(self.xps.getStagePosition(self.xpsAxes[2]), 2)  # Update self.ref for z-axis
-                self.position_z_ref.setText(f"Ref. Z is: {self.ref[2]:.2f} mm")
-                self.log_window.append(f"Set Ref. Z to {self.ref[2] :.2f} mm.")
+                self.ui.position_z_ref.setText(f"Ref. Z is: {self.ref[2]:.2f} mm")
+                self.ui.log_window.append(f"Set Ref. Z to {self.ref[2] :.2f} mm.")
 
             elif axis == "both":
-                self.log_window.append(
+                self.ui.log_window.append(
                     f"Clicked button! Set Ref. XYZ to ({self.ref[0] :.2f}, {self.ref[1] :.2f}, {self.ref[1] :.2f} ) mm."
                 )
                 self.ref_x = round(self.xps.getStagePosition(self.xpsAxes[0]), 2)
@@ -248,21 +247,22 @@ class TargetStage(QtWidgets.QMainWindow):
 
         elif cmd == "return":
             if axis == "x":
-                self.log_window.append(f"Clicked button! Return X to Ref. Point. ")
-                self.x_xps.moveAbsolute(self.x_axis, self.ref_x)
+                self.ui.log_window.append(f"Clicked button! Return X to Ref. Point. ")
+                self.xps.moveAbsolute(self.xpsAxes[0], self.ref[0])
 
             elif axis == "y":
-                self.log_window.append(f"Clicked button! Return Y to Ref. Point.")
-                self.y_xps.moveAbsolute(self.y_axis, self.ref_y)
+                self.ui.log_window.append(f"Clicked button! Return Y to Ref. Point.")
+                self.xps.moveAbsolute(self.xpsAxes[1], self.ref[1])
             elif axis == "z":
-                self.log_window.append(f"Clicked button! Return Z to Ref. Point.")
-                self.z_xps.moveAbsolute(self.z_axis, self.ref_z)
+                self.ui.log_window.append(f"Clicked button! Return Z to Ref. Point.")
+                self.xps.moveAbsolute(self.xpsAxes[2], self.ref[2])
 
             elif axis == "both":
-                self.log_window.append(f"Clicked button! Return XYZ to Ref. button.")
-                self.x_xps.moveAbsolute(self.x_axis, self.ref[0])
-                self.y_xps.moveAbsolute(self.y_axis, self.ref[1])
-                self.z_xps.moveAbsolute(self.z_axis, self.ref[2])
+                self.ui.log_window.append(f"Clicked button! Return XYZ to Ref. button.")
+                self.xps.moveAbsolute(self.xpsAxes[0], self.ref[0])  # Move X axis
+                self.xps.moveAbsolute(self.xpsAxes[1], self.ref[1])  # Move Y axis
+                self.xps.moveAbsolute(self.xpsAxes[2], self.ref[2])  # Move Z axis
+
 
     def raster_inp(self, inp):
         """
@@ -271,99 +271,99 @@ class TargetStage(QtWidgets.QMainWindow):
         all inputs have been entered.
         """
         if inp == "step_length":
-            if self.step_length_line.text():
-                self.step_length = float(self.step_length_line.text())
-                self.log_window.append(
+            if self.ui.step_length_line.text():
+                self.step_length = float(self.ui.step_length_line.text())
+                self.ui.log_window.append(
                     f"Step Length changed  to: {self.step_length:.3f} mm"
                 )
         elif inp == "sample_length":
             max_length = self.abs_max[0] - self.ref[0]
-            if self.sample_length_line.text():
-                if float(self.sample_length_line.text()) > max_length:
-                    self.sample_length_line.setText(str(max_length))
-                self.sample_length = float(self.sample_length_line.text())
-                self.log_window.append(
+            if self.ui.sample_length_line.text():
+                if float(self.ui.sample_length_line.text()) > max_length:
+                    self.ui.sample_length_line.setText(str(max_length))
+                self.sample_length = float(self.ui.sample_length_line.text())
+                self.ui.log_window.append(
                     f"Sample Length changed to: {self.sample_length:.3f} mm"
                 )
         elif inp == "sample_width":
             max_width = self.abs_max[1] - self.ref[1]
-            if self.sample_width_line.text():
-                if float(self.sample_width_line.text()) > max_width:
-                    self.sample_width_line.setText(str(max_width))
-                self.sample_width = float(self.sample_width_line.text())
-                self.log_window.append(
+            if self.ui.sample_width_line.text():
+                if float(self.ui.sample_width_line.text()) > max_width:
+                    self.ui.sample_width_line.setText(str(max_width))
+                self.sample_width = float(self.ui.sample_width_line.text())
+                self.ui.log_window.append(
                     f"Sample Width changed to: {self.sample_width:.3f} mm"
                 )
         elif inp == "set_bound_x":
             self.sample_length = np.abs(
-                self.x_xps.getStagePosition(self.x_axis) - self.ref[0]
+                round(self.xps.getStagePosition(self.xpsAxes[0]),2) - self.ref[0]
             )
-            self.sample_length_line.setText(f"{self.sample_length:.3f}")
-            self.log_window.append(
+            self.ui.sample_length_line.setText(f"{self.sample_length:.3f}")
+            self.ui.log_window.append(
                 f"Set Bound X clicked. Sample Length: {self.sample_length:.3f}"
             )
 
         elif inp == "set_bound_y":
             self.sample_width = np.abs(
-                self.y_xps.getStagePosition(self.y_axis) - self.ref[1]
+                round(self.xps.getStagePosition(self.xpsAxes[1]),2) - self.ref[1]
             )
-            self.sample_width_line.setText(f"{self.sample_width:.3f}")
-            self.log_window.append(
+            self.ui.sample_width_line.setText(f"{self.sample_width:.3f}")
+            self.ui.log_window.append(
                 f"Set Bound Y clicked. Sample Width: {self.sample_width:.3f}"
             )
         elif inp == "Rep_rate":
-            if self.rep_rate_line.text():
-                self.rep_rate = int(float(self.rep_rate_line.text()) * 1000)
-                self.log_window.append(
+            if self.ui.rep_rate_line.text():
+                self.rep_rate = int(float(self.ui.rep_rate_line.text()) * 1000)
+                self.ui.log_window.append(
                     f"Rep. Rate changed to: {self.rep_rate//1000:.1f} s"
                 )
                 if (
-                    self.step_length_line.text()
-                    and self.sample_length_line.text()
-                    and self.sample_width_line.text()
+                    self.ui.step_length_line.text()
+                    and self.ui.sample_length_line.text()
+                    and self.ui.sample_width_line.text()
                 ):
-                    self.raster_btn.setEnabled(True)
+                    self.ui.raster_btn.setEnabled(True)
         # elif inp == 'num_shots':
         #     if self.num_shots_line.text():
         #         self.num_shots = int(self.num_shots_line.text())
 
         # Calculate the maximum number of shots if all inputs have been filled
         if (
-            self.step_length_line.text()
-            and self.sample_length_line.text()
-            and self.sample_width_line.text()
+            self.ui.step_length_line.text()
+            and self.ui.sample_length_line.text()
+            and self.ui.sample_width_line.text()
         ):
             if self.step_length == 0:
-                self.messages.setText("ERROR: Step Length cannot be 0")
-                self.messages.setStyleSheet("color: red;font-size: 14pt")
+                self.ui.messages.setText("ERROR: Step Length cannot be 0")
+                self.ui.messages.setStyleSheet("color: red;font-size: 14pt")
                 self.error_flag = True
 
                 return
             if self.step_length > self.sample_length:
-                self.messages.setText(
+                self.ui.messages.setText(
                     "ERROR: Step length cannot be greater than X bound"
                 )
-                self.messages.setStyleSheet("color: red;font-size: 12pt")
+                self.ui.messages.setStyleSheet("color: red;font-size: 12pt")
                 self.error_flag = True
 
                 return
             if self.step_length > self.sample_width:
-                self.messages.setText(
+                self.ui.messages.setText(
                     "ERROR: Step length cannot be greater than Y bound"
                 )
-                self.messages.setStyleSheet("color: red;font-size: 12pt")
+                self.ui.messages.setStyleSheet("color: red;font-size: 12pt")
                 self.error_flag = True
 
                 return
             else:
                 if self.error_flag:
-                    self.messages.clear()
-                    self.messages.setStyleSheet("color: blue")
+                    self.ui.messages.clear()
+                    self.ui.messages.setStyleSheet("color: blue")
                     self.error_flag = False
             self.max_cols = int(self.sample_length // self.step_length)
             self.max_rows = int(self.sample_width // self.step_length)
             self.max_shots = self.max_rows * self.max_cols
-            self.max_shots_lbl.setText(f"Number of Steps in Raster: {self.max_shots}")
+            self.ui.max_shots_lbl.setText(f"Number of Steps in Raster: {self.max_shots}")
             # self.e.setValidator(QtGui.QIntValidator(1, self.max_shots, self))
             # self.num_shots_num_shots_linline.setEnabled(True)
 
@@ -380,12 +380,12 @@ class TargetStage(QtWidgets.QMainWindow):
         self.current_row = 0
         self.current_col = 0
         # Set up the timer to control raster speed
-        if self.rep_rate_line.text():
-            rep_rate = int(float(self.rep_rate_line.text()) * 1000)
+        if self.ui.rep_rate_line.text():
+            rep_rate = int(float(self.ui.rep_rate_line.text()) * 1000)
         else:
             rep_rate = 0
         # self.rast_timer = QtCore.QTimer(self, interval = rep_rate, timeout = self.perform_raster_step)
-        self.log_window.append(f"Raster button Clicked!")
+        self.ui.log_window.append(f"Raster button Clicked!")
         self.rast_timer.setInterval(
             self.rep_rate
         )  # Set the interval to the desired rep rate
@@ -426,8 +426,9 @@ class TargetStage(QtWidgets.QMainWindow):
         x_pos (float) : X-axis position to move to.
         y_pos (float) : Y-axis position to move to.
         """
-        self.x_xps.moveAbsolute(self.x_axis, x_pos)
-        self.y_xps.moveAbsolute(self.y_axis, y_pos)
+        self.xps.moveAbsolute(self.xpsAxes[0], x_pos)  # X axis
+        self.xps.moveAbsolute(self.xpsAxes[1], y_pos)  # Y axis
+
 
     def update_raster_plot(self, x_pos, y_pos):
         """
@@ -460,44 +461,44 @@ class TargetStage(QtWidgets.QMainWindow):
         mve (string) : The type of movement being checked. Either 'abs_x_length' or 'abs_y_length'.
         """
         if mve == "abs_x_length":
-            if self.abs_x_line.text():
-                if float(self.abs_x_line.text()) > self.abs_max[0]:
-                    self.messages.setText(
+            if self.ui.abs_x_line.text():
+                if float(self.ui.abs_x_line.text()) > self.abs_max[0]:
+                    self.ui.messages.setText(
                         "ERROR: Position X (abs.) is greater than the maximum value!"
                     )
-                    self.messages.setStyleSheet("color: red;font-size: 11pt")
+                    self.ui.messages.setStyleSheet("color: red;font-size: 11pt")
                     self.error_flag = True
                     return
                 else:
-                    self.messages.clear()
-                    self.messages.setStyleSheet("color: blue")
+                    self.ui.messages.clear()
+                    self.ui.messages.setStyleSheet("color: blue")
                     self.error_flag = False
-                    pos = float(self.abs_x_line.text())
+                    pos = float(self.ui.abs_x_line.text())
         if mve == "abs_y_length":
-            if self.abs_y_line.text():
-                if float(self.abs_y_line.text()) > int(self.abs_max[1]):
-                    self.messages.setText(
+            if self.ui.abs_y_line.text():
+                if float(self.ui.abs_y_line.text()) > int(self.abs_max[1]):
+                    self.ui.messages.setText(
                         "ERROR: Position Y (abs.) is greater than the maximum value!"
                     )
-                    self.messages.setStyleSheet("color: red;font-size: 11pt")
+                    self.ui.messages.setStyleSheet("color: red;font-size: 11pt")
                     self.error_flag = True
                     return
                 else:
-                    self.messages.clear()
-                    self.messages.setStyleSheet("color: blue")
+                    self.ui.messages.clear()
+                    self.ui.messages.setStyleSheet("color: blue")
                     self.error_flag = False
         if mve == "abs_z_length":
-            if self.abs_z_line.text():
-                if float(self.abs_z_line.text()) > int(self.abs_max[1]):
-                    self.messages.setText(
+            if self.ui.abs_z_line.text():
+                if float(self.ui.abs_z_line.text()) > int(self.abs_max[1]):
+                    self.ui.messages.setText(
                         "ERROR: Position Z (abs.) is greater than the maximum value!"
                     )
-                    self.messages.setStyleSheet("color: red;font-size: 11pt")
+                    self.ui.messages.setStyleSheet("color: red;font-size: 11pt")
                     self.error_flag = True
                     return
                 else:
-                    self.messages.clear()
-                    self.messages.setStyleSheet("color: blue")
+                    self.ui.messages.clear()
+                    self.ui.messages.setStyleSheet("color: blue")
                     self.error_flag = False
 
     def absolute(self):
@@ -506,34 +507,36 @@ class TargetStage(QtWidgets.QMainWindow):
         independantly of eachother.
         """
         abs = [
-            round(self.x_xps.getStagePosition(self.x_axis), 2),
-            round(self.y_xps.getStagePosition(self.y_axis), 2),
-            round(self.z_xps.getStagePosition(self.z_axis), 2),
+        round(self.xps.getStagePosition(self.xpsAxes[0]), 2),  # X axis
+        round(self.xps.getStagePosition(self.xpsAxes[1]), 2),  # Y axis
+        round(self.xps.getStagePosition(self.xpsAxes[2]), 2),  # Z axis
         ]
-        if self.abs_x_line.text():
-            pos = float(self.abs_x_line.text())
-            self.log_window.append(
-                f"X moved to: {float(self.abs_x_line.text()):.2f} mm"
+
+        if self.ui.abs_x_line.text():
+            pos = float(self.ui.abs_x_line.text())
+            self.ui.log_window.append(
+                f"X moved to: {float(self.ui.abs_x_line.text()):.2f} mm"
             )
         else:
             pos = float(abs[0])
-        self.x_xps.moveAbsolute(self.x_axis, pos)
-        if self.abs_y_line.text():
-            pos = float(self.abs_y_line.text())
-            self.log_window.append(
-                f"Y moved to: {float(self.abs_y_line.text()):.2f} mm"
+        self.xps.moveAbsolute(self.xpsAxes[0], pos)
+
+        if self.ui.abs_y_line.text():
+            pos = float(self.ui.abs_y_line.text())
+            self.ui.log_window.append(
+                f"Y moved to: {float(self.ui.abs_y_line.text()):.2f} mm"
             )
         else:
             pos = float(abs[1])
-        self.y_xps.moveAbsolute(self.y_axis, pos)
-        if self.abs_z_line.text():
-            pos = float(self.abs_z_line.text())
-            self.log_window.append(
-                f"Z moved to: {float(self.abs_z_line.text()):.2f} mm"
+        self.xps.moveAbsolute(self.xpsAxes[1], pos)  # Y axis
+        if self.ui.abs_z_line.text():
+            pos = float(self.ui.abs_z_line.text())
+            self.ui.log_window.append(
+                f"Z moved to: {float(self.ui.abs_z_line.text()):.2f} mm"
             )
         else:
             pos = float(abs[2])
-        self.z_xps.moveAbsolute(self.z_axis, pos)
+        self.xps.moveAbsolute(self.xpsAxes[2], pos)  # Z axis
 
     def relative(self, btn):
         """
@@ -545,89 +548,89 @@ class TargetStage(QtWidgets.QMainWindow):
         """
         # check if XYZ Step Interval is evaluated or NOt?
         if btn == "left" or btn == "right":
-            if not self.step_interval_x.text():
-                self.messages.setText(
+            if not self.ui.step_interval_x.text():
+                self.ui.messages.setText(
                     "ERROR: X Step Interval must be provided befor moving!"
                 )
-                self.messages.setStyleSheet("color:red;font-size:14px")
+                self.ui.messages.setStyleSheet("color:red;font-size:14px")
                 return
             else:
-                self.messages.clear()
+                self.ui.messages.clear()
         if btn == "up" or btn == "down":
-            if not self.step_interval_y.text():
-                self.messages.setText(
+            if not self.ui.step_interval_y.text():
+                self.ui.messages.setText(
                     "ERROR: Y Step Interval must be provided befor moving!"
                 )
-                self.messages.setStyleSheet("color:red;font-size:14px")
+                self.ui.messages.setStyleSheet("color:red;font-size:14px")
                 return
             else:
-                self.messages.clear()
+                self.ui.messages.clear()
         if btn == "up_z" or btn == "down_z":
-            if not self.step_interval_z.text():
-                self.messages.setText(
+            if not self.ui.step_interval_z.text():
+                self.ui.messages.setText(
                     "ERROR: Z Step Interval must be provided befor moving!"
                 )
-                self.messages.setStyleSheet("color:red;font-size:14px")
+                self.ui.messages.setStyleSheet("color:red;font-size:14px")
                 return
             else:
-                self.messages.clear()
+                self.ui.messages.clear()
 
-        if self.step_interval_x.text():
+        if self.ui.step_interval_x.text():
             # Gets the step length to step relatively by
-            dist = float(self.step_interval_x.text())
-            current_value = (self.ui.x_slider.value(), self.ui.y_slider.value())
+            dist = float(self.ui.step_interval_x.text())
+            current_value = (self.ui.x_slider.value(), self.ui.y_slider.value(),self.ui.z_slider.value())
             if btn == "left":
-                self.x_xps.moveRelative(self.x_axis, 0 - dist)
+                self.xps.moveRelative(self.xpsAxes[0],0-dist)
                 new_value = max(
                     self.ui.x_slider.minimum(),
                     current_value[0] - int(dist * self.slider_factor),
                 )
                 self.ui.x_slider.setValue(new_value)
-                self.log_window.append(f"X moved {-dist:.2f} mm to left.  ")
+                self.ui.log_window.append(f"X moved {-dist:.2f} mm to left.  ")
             elif btn == "right":
-                self.x_xps.moveRelative(self.x_axis, dist)
+                self.xps.moveRelative(self.xpsAxes[0], dist)
                 new_value = min(
                     self.ui.x_slider.maximum(),
                     current_value[0] + int(dist * self.slider_factor),
                 )
                 self.ui.x_slider.setValue(new_value)
-                self.log_window.append(f"X Moved {dist:.3f} mm to Right. ")
-        if self.step_interval_y.text():
-            dist = float(self.step_interval_y.text())
-            current_value = (self.ui.x_slider.value(), self.ui.y_slider.value())
+                self.ui.log_window.append(f"X Moved {dist:.3f} mm to Right. ")
+        if self.ui.step_interval_y.text():
+            dist = float(self.ui.step_interval_y.text())
+            current_value = (self.ui.x_slider.value(), self.ui.y_slider.value(),self.ui.z_slider.value())
             if btn == "up":
-                self.y_xps.moveRelative(self.y_axis, 0 - dist)
-                self.log_window.append(f"Y Moved {-dist:.3f} mm to Left.")
+                self.xps.moveRelative(self.xpsAxes[1],0 -dist) 
+                self.ui.log_window.append(f"Y Moved {-dist:.3f} mm to Left.")
                 new_value = max(
                     self.ui.y_slider.minimum(),
                     current_value[1] - int(dist * self.slider_factor),
                 )
                 self.ui.y_slider.setValue(new_value)
             elif btn == "down":
-                self.y_xps.moveRelative(self.y_axis, dist)
-                self.log_window.append(f"Y moved {dist:.3f} mm to Right.")
+                self.xps.moveRelative(self.xpsAxes[1], dist) 
+                self.ui.log_window.append(f"Y moved {dist:.3f} mm to Right.")
                 new_value = min(
                     self.ui.y_slider.maximum(),
                     current_value[1] + int(dist * self.slider_factor),
                 )
                 self.ui.y_slider.setValue(new_value)
-        if self.step_interval_z.text():
-            dist = float(self.step_interval_z.text())
-            current_value = (self.ui.z_slider.value(), self.ui.z_slider.value())
+        if self.ui.step_interval_z.text():
+            dist = float(self.ui.step_interval_z.text())
+            current_value = (self.ui.z_slider.value(), self.ui.z_slider.value(),self.ui.z_slider.value())
             if btn == "up_z":
-                self.z_xps.moveRelative(self.z_axis, 0 - dist)
-                self.log_window.append(f"Z Moved {-dist:.3f} mm to Down.")
+                self.xps.moveRelative(self.xpsAxes[2], 0 -dist)
+                self.ui.log_window.append(f"Z Moved {-dist:.3f} mm to Down.")
                 new_value = max(
                     self.ui.z_slider.minimum(),
-                    current_value[1] - int(dist * self.slider_factor),
+                    current_value[2] - int(dist * self.slider_factor),
                 )
                 self.ui.z_slider.setValue(new_value)
             elif btn == "down_z":
-                self.z_xps.moveRelative(self.z_axis, dist)
-                self.log_window.append(f"Z moved {dist:.3f} mm to Up.")
+                self.xps.moveRelative(self.xpsAxes[2], dist)
+                self.ui.log_window.append(f"Z moved {dist:.3f} mm to Up.")
                 new_value = min(
                     self.ui.z_slider.maximum(),
-                    current_value[1] + int(dist * self.slider_factor),
+                    current_value[2] + int(dist * self.slider_factor),
                 )
                 self.ui.z_slider.setValue(new_value)
 
@@ -640,20 +643,21 @@ class TargetStage(QtWidgets.QMainWindow):
         axis (string) : The axis of travel that the actuator will be moving along. Either "X" for
                         x-axis or "Y" for y-axis
         """
-        self.xps_groups = self.x_xps.getXPSStatus()
+        self.xps_groups = self.xps.getXPSStatus()
+
         if axis == "X":
-            self.x_axis = str(self.x_group_combo.currentText())
-            self.x_xps.setGroup(self.x_axis)
-            self.update_status(self.x_xps.getStageStatus(self.x_axis))
+            self.x_axis = str(self.ui.x_group_combo.currentText())
+            self.xps.setGroup(self.x_axis)  # Set the group in XPS
+            self.update_status(self.xps.getStageStatus(self.x_axis))
 
         elif axis == "Y":
-            self.y_axis = str(self.y_group_combo.currentText())
-            self.y_xps.setGroup(self.y_axis)
-            self.update_status(self.y_xps.getStageStatus(self.y_axis))
+            self.y_axis = str(self.ui.y_group_combo.currentText())
+            self.xps.setGroup(self.y_axis)
+            self.update_status(self.xps.getStageStatus(self.y_axis))
         elif axis == "Z":
-            self.z_axis = str(self.z_group_combo.currentText())
-            self.z_xps.setGroup(self.z_axis)
-            self.update_status(self.z_xps.getStageStatus(self.z_axis))
+            self.z_axis = str(self.ui.z_group_combo.currentText())
+            self.xps.setGroup(self.z_axis)
+            self.update_status(self.xps.getStageStatus(self.z_axis))
 
     def update_status(self, stage_status):
         """
@@ -740,30 +744,27 @@ class TargetStage(QtWidgets.QMainWindow):
         Prints the absolute and relative location of the 2 actuators. Also checks actuator
         status and enables/disables accordingly.
         """
-
-        #  self.abs_lbl.setText(str(abs[0])+", "+str(abs[1]))
-        #  self.rel_lbl.setText(str(abs[0]-self.ref[0])+", "+str(abs[1]-self.ref[1]))
-        self.ui.x_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[0]) * 10))
-        self.ui.y_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[1]) * 10))
-        self.ui.z_slider.setValue(int(self.xps.getStagePosition(self.xpsAxes[2]) * 10))
+        self.ui.x_slider.setValue(int(round(self.xps.getStagePosition(self.xpsAxes[0]),2) * 10))
+        self.ui.y_slider.setValue(int(round(self.xps.getStagePosition(self.xpsAxes[1]),2) * 10))
+        self.ui.z_slider.setValue(int(round(self.xps.getStagePosition(self.xpsAxes[2]),2) * 10))
         
-        self.ui.position_x.setText(f"Position X (abs.): {self.ui.x_slider.value():.2f} mm")
-        self.ui.position_y.setText(f"Position Y (abs.): {self.ui.y_slider.value():.2f} mm")
-        self.ui.position_z.setText(f"Position Z (abs.): {self.ui.z_slider.value():.2f} mm")
+        self.ui.position_x.setText(f"Position X (abs.): {self.ui.x_slider.value()/ self.slider_factor:.2f} mm")
+        self.ui.position_y.setText(f"Position Y (abs.): {self.ui.y_slider.value()/ self.slider_factor:.2f} mm")
+        self.ui.position_z.setText(f"Position Z (abs.): {self.ui.z_slider.value()/ self.slider_factor:.2f} mm")
         self.ui.position_x_ref.setText(
             f"Ref. X is: {self.ref[0]:.2f} mm"
             + ",  "
-            + f"X (rel.): {(self.ui.x_slider.value()-self.ref[0]):.2f} mm"
+            + f"X (rel.): {(self.ui.x_slider.value()/ self.slider_factor-self.ref[0]):.2f} mm"
         )
         self.ui.position_y_ref.setText(
             f"Ref. Y is: {self.ref[1]:.2f} mm"
             + ",  "
-            + f"Y (rel.): {(self.ui.y_slider.value()-self.ref[1]):.2f} mm"
+            + f"Y (rel.): {(self.ui.y_slider.value()/ self.slider_factor-self.ref[1]):.2f} mm"
         )
         self.ui.position_z_ref.setText(
             f"Ref. Z is: {self.ref[2]:.2f} mm"
             + ",  "
-            + f"Z (rel.): {(self.ui.z_slider.value()-self.ref[2]):.2f} mm"
+            + f"Z (rel.): {(self.ui.z_slider.value()/ self.slider_factor-self.ref[2]):.2f} mm"
         )
         #  print(f"abs0:{abs[0]}")
         self.update_status(self.xps.getStageStatus(self.xpsAxes[0]))
