@@ -517,7 +517,7 @@ color: rgb(255, 255, 255);</string>
       <string>&lt;&lt;&lt;---  Down</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="stop_btn_2">
+    <widget class="QPushButton" name="stop_btn">
      <property name="geometry">
       <rect>
        <x>368</x>

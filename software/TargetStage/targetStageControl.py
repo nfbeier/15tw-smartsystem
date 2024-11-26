@@ -33,8 +33,6 @@ class TargetStage(QtWidgets.QMainWindow):
         super(TargetStage,self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        # STAGE CONTROL ----------------------------------------------------------------------
-        
         
         # Initialize combo boxes for the stage groups
         self.groupCombo = [self.ui.x_group_combo, self.ui.y_group_combo, self.ui.z_group_combo] 
@@ -68,9 +66,6 @@ class TargetStage(QtWidgets.QMainWindow):
 
         self.stageStatus = [self.xps.getStageStatus(axis) for axis in self.xpsAxes]
 
-        """Nick edits up to here"""
-
-        # self.setupUi(self)
         self.abs_max = [
             40.00000,
             40.00000,
@@ -83,9 +78,7 @@ class TargetStage(QtWidgets.QMainWindow):
         ]  # Minimum absolute position of the stage
         self.rast_timer = QtCore.QTimer(self)
         self.error_flag = False
-        self.x_reference = None
-        # self.rep_rate=2
-        self.x_pos = 0
+
         # Initialize the matplotlib canvas
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
@@ -136,8 +129,7 @@ class TargetStage(QtWidgets.QMainWindow):
         )
         self.ui.set_x_bound.clicked.connect(lambda: self.raster_inp("set_bound_x"))
         self.ui.set_y_bound.clicked.connect(lambda: self.raster_inp("set_bound_y"))
-        # self.num_shots_line.setEnabled(False)
-        # self.num_shots_line.textChanged.connect(lambda: self.raster_inp('num_shots'))
+        
         self.ui.rep_rate_line.setValidator(QtGui.QDoubleValidator(1, 40.00, 1))
         self.ui.rep_rate_line.textChanged.connect(lambda: self.raster_inp("Rep_rate"))
 
@@ -145,15 +137,8 @@ class TargetStage(QtWidgets.QMainWindow):
         self.ui.raster_btn.setEnabled(False)
         self.ui.raster_btn.clicked.connect(self.start_raster)
         # Connect the stop button to stop the timer:
-        self.ui.stop_btn_2.clicked.connect(self.rast_timer.stop)
+        self.ui.stop_btn.clicked.connect(self.rast_timer.stop)
 
-        # Log window
-        # layout=QtWidgets.QVBoxLayout()
-        # self.log_window = QtWidgets.QTextEdit()
-        # self.log_window.setReadOnly(True)
-        # self.log_window.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
-        # # layout.addWidget(QtWidgets.QVBoxLayout("log:"))
-        # layout.addWidget(self.log_window)
         # Relative Motion Controls
         self.ui.step_interval_x.setValidator(QtGui.QDoubleValidator(0.10, 40.00, 2))
         self.ui.step_interval_y.setValidator(QtGui.QDoubleValidator(0.10, 40.00, 2))
@@ -184,9 +169,7 @@ class TargetStage(QtWidgets.QMainWindow):
             0.00000,
             0.00000,
         ]  # Initialize reference point for both x and y axes
-        self.ref_x = 0.00000  # Initialize reference point for x-axis
-        self.ref_y = 0.00000  # Initialize reference point for y-axis
-        self.ref_z = 0.00000  # Initialize reference point for z-axis
+
         # Connect buttons to the ref_commands method for individual axes
         self.ui.set_x_btn.clicked.connect(lambda: self.ref_commands("set", "x"))
         self.ui.return_x_btn.clicked.connect(lambda: self.ref_commands("return", "x"))
@@ -236,14 +219,8 @@ class TargetStage(QtWidgets.QMainWindow):
                 self.ui.log_window.append(
                     f"Clicked button! Set Ref. XYZ to ({self.ref[0] :.2f}, {self.ref[1] :.2f}, {self.ref[1] :.2f} ) mm."
                 )
-                self.ref_x = round(self.xps.getStagePosition(self.xpsAxes[0]), 2)
-                self.ref_y = round(self.xps.getStagePosition(self.xpsAxes[1]), 2)
-                self.ref_z = round(self.xps.getStagePosition(self.xpsAxes[2]), 2)
-                self.ref = [
-                    self.ref_x,
-                    self.ref_y,
-                    self.ref_z,
-                ]  # Update self.ref for three axes
+
+                self.ref = [round(self.xps.getStagePosition(axis),2) for axis in self.xpsAxes]
 
         elif cmd == "return":
             if axis == "x":
@@ -506,11 +483,8 @@ class TargetStage(QtWidgets.QMainWindow):
         Controls absolute movements of the stage. X and y-axes can move absolutely
         independantly of eachother.
         """
-        abs = [
-        round(self.xps.getStagePosition(self.xpsAxes[0]), 2),  # X axis
-        round(self.xps.getStagePosition(self.xpsAxes[1]), 2),  # Y axis
-        round(self.xps.getStagePosition(self.xpsAxes[2]), 2),  # Z axis
-        ]
+        
+        abs = [round(self.xps.getStagePosition(axis),2) for axis in self.xpsAxes]
 
         if self.ui.abs_x_line.text():
             pos = float(self.ui.abs_x_line.text())

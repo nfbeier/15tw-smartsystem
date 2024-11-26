@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\devices\TargetStage\targetStage_GUI.ui'
+# Form implementation generated from reading ui file '.\software\TargetStage\targetStage_GUI.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -162,19 +162,19 @@ class Ui_MainWindow(object):
         self.up_btn_z.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0.0149254 rgba(167, 0, 0, 255), stop:0.55 rgba(235, 148, 61, 255), stop:1 rgba(255, 178, 102, 255));\n"
 "")
         self.up_btn_z.setObjectName("up_btn_z")
-        self.stop_btn_2 = QtWidgets.QPushButton(self.translationStage)
-        self.stop_btn_2.setGeometry(QtCore.QRect(368, 431, 91, 31))
+        self.stop_btn = QtWidgets.QPushButton(self.translationStage)
+        self.stop_btn.setGeometry(QtCore.QRect(368, 431, 91, 31))
         font = QtGui.QFont()
         font.setFamily("MS Shell Dlg 2")
         font.setPointSize(12)
         font.setBold(False)
         font.setItalic(False)
         font.setWeight(50)
-        self.stop_btn_2.setFont(font)
-        self.stop_btn_2.setStyleSheet("font: 14pt \"MS Shell Dlg 2\";\n"
+        self.stop_btn.setFont(font)
+        self.stop_btn.setStyleSheet("font: 14pt \"MS Shell Dlg 2\";\n"
 "font: 12pt \"MS Shell Dlg 2\";\n"
 "color: rgb(255, 0, 0);")
-        self.stop_btn_2.setObjectName("stop_btn_2")
+        self.stop_btn.setObjectName("stop_btn")
         self.raster_btn = QtWidgets.QPushButton(self.translationStage)
         self.raster_btn.setGeometry(QtCore.QRect(278, 431, 91, 31))
         font = QtGui.QFont()
@@ -401,7 +401,7 @@ class Ui_MainWindow(object):
         self.down_btn.setText(_translate("MainWindow", "Right  --->>>"))
         self.set_z_btn.setText(_translate("MainWindow", "Set Ref. Z Point"))
         self.up_btn_z.setText(_translate("MainWindow", "<<<---  Down"))
-        self.stop_btn_2.setText(_translate("MainWindow", "Stop"))
+        self.stop_btn.setText(_translate("MainWindow", "Stop"))
         self.raster_btn.setText(_translate("MainWindow", "Raster"))
         self.label_54.setText(_translate("MainWindow", "min"))
         self.label_56.setText(_translate("MainWindow", "max"))
