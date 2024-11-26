@@ -29,40 +29,46 @@ from devices.XPS.XPS import XPS
 # Main class for GUI
 class TargetStage(QtWidgets.QMainWindow):
     def __init__(self):
-             
-        super(TargetStage,self).__init__()
+        super(TargetStage, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        
+
         # Initialize combo boxes for the stage groups
-        self.groupCombo = [self.ui.x_group_combo, self.ui.y_group_combo, self.ui.z_group_combo] 
+        self.groupCombo = [
+            self.ui.x_group_combo,
+            self.ui.y_group_combo,
+            self.ui.z_group_combo,
+        ]
         self.xpsAxes = []
         try:
-            
-            self.xps = XPS(ipAddress = '192.168.0.254')
+            self.xps = XPS(ipAddress="192.168.0.254")
             self.xps_groups = self.xps.getXPSStatus()
-                       
+
             for idx, axis in enumerate(self.groupCombo):
                 axis.clear()
                 axis.addItems(list(self.xps_groups.keys()))
                 axis.setCurrentIndex(idx)
                 self.xpsAxes.append(str(axis.currentText()))
                 self.xps.setGroup(self.xpsAxes[-1])
-                
+
             self.stageStatus = [self.xps.getStageStatus(axis) for axis in self.xpsAxes]
-                        
+
         except AttributeError as e:
-           
             self.xps = None
 
         self.ui.x_group_combo.activated.connect(lambda: self.update_group("X"))
         self.ui.y_group_combo.activated.connect(lambda: self.update_group("Y"))
         self.ui.z_group_combo.activated.connect(lambda: self.update_group("Z"))
-        
 
-        self.ui.x_slider.setValue(int(round(self.xps.getStagePosition(self.xpsAxes[0]),2) * 10))
-        self.ui.y_slider.setValue(int(round(self.xps.getStagePosition(self.xpsAxes[1]),2) * 10))
-        self.ui.z_slider.setValue(int(round(self.xps.getStagePosition(self.xpsAxes[2]),2) * 10))
+        self.ui.x_slider.setValue(
+            int(round(self.xps.getStagePosition(self.xpsAxes[0]), 2) * 10)
+        )
+        self.ui.y_slider.setValue(
+            int(round(self.xps.getStagePosition(self.xpsAxes[1]), 2) * 10)
+        )
+        self.ui.z_slider.setValue(
+            int(round(self.xps.getStagePosition(self.xpsAxes[2]), 2) * 10)
+        )
 
         self.stageStatus = [self.xps.getStageStatus(axis) for axis in self.xpsAxes]
 
@@ -93,8 +99,10 @@ class TargetStage(QtWidgets.QMainWindow):
         self.setLayout(layout)
         # X Axis Slider
         self.slider_factor = 10  # This will allow increments of 0.1 mm
-        self.ui.x_slider.setMinimum(0)   # Minimum value (0.0 mm)          
-        self.ui.x_slider.setMaximum(int(self.abs_max[0] * 10))  # Maximum value (400 * 0.1 = 40.0 mm) 
+        self.ui.x_slider.setMinimum(0)  # Minimum value (0.0 mm)
+        self.ui.x_slider.setMaximum(
+            int(self.abs_max[0] * 10)
+        )  # Maximum value (400 * 0.1 = 40.0 mm)
         self.ui.x_slider.setTickInterval(10)
         self.ui.x_slider.valueChanged.connect(
             lambda: self.update_position_from_scrollbar("X_slider")
@@ -129,7 +137,7 @@ class TargetStage(QtWidgets.QMainWindow):
         )
         self.ui.set_x_bound.clicked.connect(lambda: self.raster_inp("set_bound_x"))
         self.ui.set_y_bound.clicked.connect(lambda: self.raster_inp("set_bound_y"))
-        
+
         self.ui.rep_rate_line.setValidator(QtGui.QDoubleValidator(1, 40.00, 1))
         self.ui.rep_rate_line.textChanged.connect(lambda: self.raster_inp("Rep_rate"))
 
@@ -201,17 +209,21 @@ class TargetStage(QtWidgets.QMainWindow):
         """
         if cmd == "set":
             if axis == "x":
-                self.ref[0] = round(self.xps.getStagePosition(self.xpsAxes[0]), 2)  # Update self.ref for x-axis
+                self.ref[0] = round(
+                    self.xps.getStagePosition(self.xpsAxes[0]), 2
+                )  # Update self.ref for x-axis
                 self.ui.position_x_ref.setText(f"Ref. X is: {self.ref[0]:.2f} mm")
                 self.ui.log_window.append(f"Set Ref. X to {self.ref[0] :.2f} mm. ")
-                # Update the marker on the slider
-            #  self.update_slider_marker()
             elif axis == "y":
-                self.ref[1] = round(self.xps.getStagePosition(self.xpsAxes[1]), 2)  # Update self.ref for y-axis
+                self.ref[1] = round(
+                    self.xps.getStagePosition(self.xpsAxes[1]), 2
+                )  # Update self.ref for y-axis
                 self.ui.position_y_ref.setText(f"Ref. Y is: {self.ref[1]:.2f} mm")
                 self.ui.log_window.append(f"Set Ref. Y to {self.ref[1] :.2f} mm.")
             elif axis == "z":
-                self.ref[2] = round(self.xps.getStagePosition(self.xpsAxes[2]), 2)  # Update self.ref for z-axis
+                self.ref[2] = round(
+                    self.xps.getStagePosition(self.xpsAxes[2]), 2
+                )  # Update self.ref for z-axis
                 self.ui.position_z_ref.setText(f"Ref. Z is: {self.ref[2]:.2f} mm")
                 self.ui.log_window.append(f"Set Ref. Z to {self.ref[2] :.2f} mm.")
 
@@ -220,7 +232,9 @@ class TargetStage(QtWidgets.QMainWindow):
                     f"Clicked button! Set Ref. XYZ to ({self.ref[0] :.2f}, {self.ref[1] :.2f}, {self.ref[1] :.2f} ) mm."
                 )
 
-                self.ref = [round(self.xps.getStagePosition(axis),2) for axis in self.xpsAxes]
+                self.ref = [
+                    round(self.xps.getStagePosition(axis), 2) for axis in self.xpsAxes
+                ]
 
         elif cmd == "return":
             if axis == "x":
@@ -239,7 +253,6 @@ class TargetStage(QtWidgets.QMainWindow):
                 self.xps.moveAbsolute(self.xpsAxes[0], self.ref[0])  # Move X axis
                 self.xps.moveAbsolute(self.xpsAxes[1], self.ref[1])  # Move Y axis
                 self.xps.moveAbsolute(self.xpsAxes[2], self.ref[2])  # Move Z axis
-
 
     def raster_inp(self, inp):
         """
@@ -273,7 +286,7 @@ class TargetStage(QtWidgets.QMainWindow):
                 )
         elif inp == "set_bound_x":
             self.sample_length = np.abs(
-                round(self.xps.getStagePosition(self.xpsAxes[0]),2) - self.ref[0]
+                round(self.xps.getStagePosition(self.xpsAxes[0]), 2) - self.ref[0]
             )
             self.ui.sample_length_line.setText(f"{self.sample_length:.3f}")
             self.ui.log_window.append(
@@ -282,7 +295,7 @@ class TargetStage(QtWidgets.QMainWindow):
 
         elif inp == "set_bound_y":
             self.sample_width = np.abs(
-                round(self.xps.getStagePosition(self.xpsAxes[1]),2) - self.ref[1]
+                round(self.xps.getStagePosition(self.xpsAxes[1]), 2) - self.ref[1]
             )
             self.ui.sample_width_line.setText(f"{self.sample_width:.3f}")
             self.ui.log_window.append(
@@ -340,7 +353,9 @@ class TargetStage(QtWidgets.QMainWindow):
             self.max_cols = int(self.sample_length // self.step_length)
             self.max_rows = int(self.sample_width // self.step_length)
             self.max_shots = self.max_rows * self.max_cols
-            self.ui.max_shots_lbl.setText(f"Number of Steps in Raster: {self.max_shots}")
+            self.ui.max_shots_lbl.setText(
+                f"Number of Steps in Raster: {self.max_shots}"
+            )
             # self.e.setValidator(QtGui.QIntValidator(1, self.max_shots, self))
             # self.num_shots_num_shots_linline.setEnabled(True)
 
@@ -405,7 +420,6 @@ class TargetStage(QtWidgets.QMainWindow):
         """
         self.xps.moveAbsolute(self.xpsAxes[0], x_pos)  # X axis
         self.xps.moveAbsolute(self.xpsAxes[1], y_pos)  # Y axis
-
 
     def update_raster_plot(self, x_pos, y_pos):
         """
@@ -484,7 +498,7 @@ class TargetStage(QtWidgets.QMainWindow):
         independantly of eachother.
         """
 
-        abs = [round(self.xps.getStagePosition(axis),2) for axis in self.xpsAxes]
+        abs = [round(self.xps.getStagePosition(axis), 2) for axis in self.xpsAxes]
 
         if self.ui.abs_x_line.text():
             pos = float(self.ui.abs_x_line.text())
@@ -552,9 +566,13 @@ class TargetStage(QtWidgets.QMainWindow):
         if self.ui.step_interval_x.text():
             # Gets the step length to step relatively by
             dist = float(self.ui.step_interval_x.text())
-            current_value = (self.ui.x_slider.value(), self.ui.y_slider.value(),self.ui.z_slider.value())
+            current_value = (
+                self.ui.x_slider.value(),
+                self.ui.y_slider.value(),
+                self.ui.z_slider.value(),
+            )
             if btn == "left":
-                self.xps.moveRelative(self.xpsAxes[0],0-dist)
+                self.xps.moveRelative(self.xpsAxes[0], 0 - dist)
                 new_value = max(
                     self.ui.x_slider.minimum(),
                     current_value[0] - int(dist * self.slider_factor),
@@ -571,9 +589,13 @@ class TargetStage(QtWidgets.QMainWindow):
                 self.ui.log_window.append(f"X Moved {dist:.3f} mm to Right. ")
         if self.ui.step_interval_y.text():
             dist = float(self.ui.step_interval_y.text())
-            current_value = (self.ui.x_slider.value(), self.ui.y_slider.value(),self.ui.z_slider.value())
+            current_value = (
+                self.ui.x_slider.value(),
+                self.ui.y_slider.value(),
+                self.ui.z_slider.value(),
+            )
             if btn == "up":
-                self.xps.moveRelative(self.xpsAxes[1],0 -dist) 
+                self.xps.moveRelative(self.xpsAxes[1], 0 - dist)
                 self.ui.log_window.append(f"Y Moved {-dist:.3f} mm to Left.")
                 new_value = max(
                     self.ui.y_slider.minimum(),
@@ -581,7 +603,7 @@ class TargetStage(QtWidgets.QMainWindow):
                 )
                 self.ui.y_slider.setValue(new_value)
             elif btn == "down":
-                self.xps.moveRelative(self.xpsAxes[1], dist) 
+                self.xps.moveRelative(self.xpsAxes[1], dist)
                 self.ui.log_window.append(f"Y moved {dist:.3f} mm to Right.")
                 new_value = min(
                     self.ui.y_slider.maximum(),
@@ -590,9 +612,13 @@ class TargetStage(QtWidgets.QMainWindow):
                 self.ui.y_slider.setValue(new_value)
         if self.ui.step_interval_z.text():
             dist = float(self.ui.step_interval_z.text())
-            current_value = (self.ui.z_slider.value(), self.ui.z_slider.value(),self.ui.z_slider.value())
+            current_value = (
+                self.ui.z_slider.value(),
+                self.ui.z_slider.value(),
+                self.ui.z_slider.value(),
+            )
             if btn == "up_z":
-                self.xps.moveRelative(self.xpsAxes[2], 0 -dist)
+                self.xps.moveRelative(self.xpsAxes[2], 0 - dist)
                 self.ui.log_window.append(f"Z Moved {-dist:.3f} mm to Down.")
                 new_value = max(
                     self.ui.z_slider.minimum(),
@@ -695,19 +721,24 @@ class TargetStage(QtWidgets.QMainWindow):
         """
         Enables or disables both selected actuators depending on its status.
         """
-        
+
         if (
             self.xps.getStageStatus(self.xpsAxes[0]).upper() == "Disabled state".upper()
-            or self.xps.getStageStatus(self.xpsAxes[1]).upper() == "Disabled state".upper() 
-            or self.xps.getStageStatus(self.xpsAxes[2]).upper() == "Disabled state".upper() 
+            or self.xps.getStageStatus(self.xpsAxes[1]).upper()
+            == "Disabled state".upper()
+            or self.xps.getStageStatus(self.xpsAxes[2]).upper()
+            == "Disabled state".upper()
         ):
             for axis in self.xpsAxes:
                 self.xps.enableGroup(axis)
                 self.update_status(self.xps.getStageStatus(axis))
         elif (
-            self.xps.getStageStatus(self.xpsAxes[0])[:11].upper() == "Ready state".upper()
-            or self.xps.getStageStatus(self.xpsAxes[1])[:11].upper() == "Ready state".upper()
-            or self.xps.getStageStatus(self.xpsAxes[2])[:11].upper() == "Ready state".upper()
+            self.xps.getStageStatus(self.xpsAxes[0])[:11].upper()
+            == "Ready state".upper()
+            or self.xps.getStageStatus(self.xpsAxes[1])[:11].upper()
+            == "Ready state".upper()
+            or self.xps.getStageStatus(self.xpsAxes[2])[:11].upper()
+            == "Ready state".upper()
         ):
             for axis in self.xpsAxes:
                 self.xps.disableGroup(axis)
@@ -718,13 +749,25 @@ class TargetStage(QtWidgets.QMainWindow):
         Prints the absolute and relative location of the 2 actuators. Also checks actuator
         status and enables/disables accordingly.
         """
-        self.ui.x_slider.setValue(int(round(self.xps.getStagePosition(self.xpsAxes[0]),2) * 10))
-        self.ui.y_slider.setValue(int(round(self.xps.getStagePosition(self.xpsAxes[1]),2) * 10))
-        self.ui.z_slider.setValue(int(round(self.xps.getStagePosition(self.xpsAxes[2]),2) * 10))
-        
-        self.ui.position_x.setText(f"Position X (abs.): {self.ui.x_slider.value()/ self.slider_factor:.2f} mm")
-        self.ui.position_y.setText(f"Position Y (abs.): {self.ui.y_slider.value()/ self.slider_factor:.2f} mm")
-        self.ui.position_z.setText(f"Position Z (abs.): {self.ui.z_slider.value()/ self.slider_factor:.2f} mm")
+        self.ui.x_slider.setValue(
+            int(round(self.xps.getStagePosition(self.xpsAxes[0]), 2) * 10)
+        )
+        self.ui.y_slider.setValue(
+            int(round(self.xps.getStagePosition(self.xpsAxes[1]), 2) * 10)
+        )
+        self.ui.z_slider.setValue(
+            int(round(self.xps.getStagePosition(self.xpsAxes[2]), 2) * 10)
+        )
+
+        self.ui.position_x.setText(
+            f"Position X (abs.): {self.ui.x_slider.value()/ self.slider_factor:.2f} mm"
+        )
+        self.ui.position_y.setText(
+            f"Position Y (abs.): {self.ui.y_slider.value()/ self.slider_factor:.2f} mm"
+        )
+        self.ui.position_z.setText(
+            f"Position Z (abs.): {self.ui.z_slider.value()/ self.slider_factor:.2f} mm"
+        )
         self.ui.position_x_ref.setText(
             f"Ref. X is: {self.ref[0]:.2f} mm"
             + ",  "
