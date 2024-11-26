@@ -22,7 +22,7 @@ cwd = os.path.sep.join(
 )
 sys.path.insert(0, cwd)
 
-from devices.TargetStage.targetStage_GUI import Ui_MainWindow
+from software.TargetStage.targetStage_GUI import Ui_MainWindow
 from devices.XPS.XPS import XPS
 
 
@@ -483,7 +483,7 @@ class TargetStage(QtWidgets.QMainWindow):
         Controls absolute movements of the stage. X and y-axes can move absolutely
         independantly of eachother.
         """
-        
+
         abs = [round(self.xps.getStagePosition(axis),2) for axis in self.xpsAxes]
 
         if self.ui.abs_x_line.text():
