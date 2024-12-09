@@ -66,7 +66,7 @@ class StepperMotorControl(QtWidgets.QMainWindow):
         try:
             distance_in_cm = float(self.ui.MovingDistance.value())  # User input in cm
             steps = round(distance_in_cm * microsteps_per_cm)  # Convert to steps
-            GPIO.output(DIR, CW)
+            GPIO.output(DIR, CCW)
 
             for _ in range(steps):
                 # Check if the left limit switch is pressed
@@ -86,7 +86,7 @@ class StepperMotorControl(QtWidgets.QMainWindow):
         try:
             distance_in_cm = float(self.ui.MovingDistance.value())  # User input in cm
             steps = round(distance_in_cm * microsteps_per_cm)  # Convert to steps
-            GPIO.output(DIR, CCW)
+            GPIO.output(DIR, CW)
 
             for _ in range(steps):
                 # Check if the right limit switch is pressed

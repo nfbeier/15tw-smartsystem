@@ -85,7 +85,7 @@ class StepperMotorControl(QtWidgets.QMainWindow):
         try:
             distance_in_cm = float(self.ui.MovingDistance.value())  # User input in cm
             steps = round(distance_in_cm * microsteps_per_cm)  # Convert to steps
-            GPIO.output(DIR, CW)
+            GPIO.output(DIR, CCW)
 
             for step in range(steps):
                 # Check if the left limit switch is pressed
@@ -112,7 +112,7 @@ class StepperMotorControl(QtWidgets.QMainWindow):
         try:
             distance_in_cm = float(self.ui.MovingDistance.value())  # User input in cm
             steps = round(distance_in_cm * microsteps_per_cm)  # Convert to steps
-            GPIO.output(DIR, CCW)
+            GPIO.output(DIR, CW)
 
             for _ in range(steps):
                 # Check if the right limit switch is pressed
@@ -127,6 +127,10 @@ class StepperMotorControl(QtWidgets.QMainWindow):
                 GPIO.output(STEP, GPIO.LOW)
                 sleep(0.001)  # Speed control
 
+            # Update position if the movement is completed without hitting the limit
+            if GPIO.input(LIMIT_SWITCH_RIGHT_PIN) != GPIO.LOW:
+                self.update_position(steps, "right")
+
         except ValueError:
             self.showErrorMessage("Invalid input. Please enter a valid number.")
 
@@ -134,7 +138,7 @@ class StepperMotorControl(QtWidgets.QMainWindow):
         """Homing logic using the right limit switch."""
         try:
             # Move towards the right limit switch
-            GPIO.output(DIR, CCW)  
+            GPIO.output(DIR, CW)  
             while GPIO.input(LIMIT_SWITCH_RIGHT_PIN) == GPIO.HIGH:  # While the switch is not pressed
                 GPIO.output(STEP, GPIO.HIGH)
                 sleep(0.001)  
@@ -142,7 +146,7 @@ class StepperMotorControl(QtWidgets.QMainWindow):
                 sleep(0.001)
 
             # Once the limit switch is pressed, reverse direction away from the switch slowly
-            GPIO.output(DIR, CW)  
+            GPIO.output(DIR, CCW)  
             while GPIO.input(LIMIT_SWITCH_RIGHT_PIN) == GPIO.LOW:  # wait until the switch is released
                 GPIO.output(STEP, GPIO.HIGH)
                 sleep(0.0015)  # Slow speed
