@@ -74,25 +74,6 @@
     <string>Distance in cm</string>
    </property>
   </widget>
-  <widget class="QSpinBox" name="MovingDistance">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>50</y>
-     <width>91</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>101</width>
-     <height>41</height>
-    </size>
-   </property>
-   <property name="maximum">
-    <number>100</number>
-   </property>
-  </widget>
   <widget class="QPushButton" name="HomeButton">
    <property name="geometry">
     <rect>
@@ -238,6 +219,16 @@
    </property>
    <property name="text">
     <string>Stopped</string>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="MovingDistance">
+   <property name="geometry">
+    <rect>
+     <x>171</x>
+     <y>50</y>
+     <width>91</width>
+     <height>41</height>
+    </rect>
    </property>
   </widget>
  </widget>
