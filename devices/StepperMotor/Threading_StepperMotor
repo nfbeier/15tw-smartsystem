@@ -52,6 +52,9 @@ log = 0
 LIMIT_SWITCH_LEFT_PIN = 12
 LIMIT_SWITCH_RIGHT_PIN = 16
 
+# Define the reference limit switch for homing the motor
+homing_limit_switch_pin = LIMIT_SWITCH_RIGHT_PIN  
+
 # Setup GPIO pins for limit switches
 GPIO.setup(LIMIT_SWITCH_LEFT_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Left limit switch
 GPIO.setup(LIMIT_SWITCH_RIGHT_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Right limit switch
@@ -137,7 +140,8 @@ class MotorMovement(QObject):
 
                 # Update position if the movement is completed without hitting the limit
                 if GPIO.input(LIMIT_SWITCH_RIGHT_PIN) != GPIO.LOW:
-                    self.update_position(steps, "move right")
+                    #self.update_position(steps, "move right")
+                    self.motor_status_signal.emit("Stopped")
 
             except ValueError:
                 self.error_signal.emit("Invalid input. Please enter a valid number.")
@@ -185,7 +189,8 @@ class MotorMovement(QObject):
 
                 # Update position if the movement is completed without hitting the limit
                 if GPIO.input(LIMIT_SWITCH_LEFT_PIN) != GPIO.LOW:
-                    self.update_position(steps, "move left")
+                    #self.update_position(steps, "move left")
+                    self.motor_status_signal.emit("Stopped")
 
             except ValueError:
                 self.error_signal.emit("Invalid input. Please enter a valid number.")
@@ -204,7 +209,7 @@ class MotorMovement(QObject):
             self.pushbutton_state_signal.emit(False)
             self.motor_status_signal.emit("Moving...")
 
-            while GPIO.input(LIMIT_SWITCH_RIGHT_PIN) == GPIO.HIGH:  # While the switch is not pressed
+            while GPIO.input(homing_limit_switch_pin) == GPIO.HIGH:  # While the switch is not pressed
                 # Check if the stop command is set
                 if self.stop_command:  
                     print("Movement interrupted.")
@@ -217,7 +222,7 @@ class MotorMovement(QObject):
 
             # Once the limit switch is pressed, reverse direction away from the switch slowly
             GPIO.output(DIR, CCW)  
-            while GPIO.input(LIMIT_SWITCH_RIGHT_PIN) == GPIO.LOW:  # wait until the switch is released
+            while GPIO.input(homing_limit_switch_pin) == GPIO.LOW:  # wait until the switch is released
                 # Check if the stop command is set
                 if self.stop_command:  
                     print("Movement interrupted.")
