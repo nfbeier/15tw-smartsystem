@@ -33,47 +33,6 @@
     <string>Left</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="LeftDirectionLabel">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>100</y>
-     <width>121</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Away from Motor</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="DistanceLabel">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>10</y>
-     <width>101</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-     <weight>50</weight>
-     <italic>false</italic>
-     <bold>false</bold>
-     <underline>false</underline>
-     <strikeout>false</strikeout>
-    </font>
-   </property>
-   <property name="text">
-    <string>Distance in cm</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="HomeButton">
    <property name="geometry">
     <rect>
@@ -112,24 +71,6 @@
    </property>
    <property name="text">
     <string>Right</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="RightDirectionLabel">
-   <property name="geometry">
-    <rect>
-     <x>290</x>
-     <y>100</y>
-     <width>111</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Towards Motor</string>
    </property>
   </widget>
   <widget class="QLCDNumber" name="DisplayCurrentDistance">
@@ -229,6 +170,60 @@
      <width>91</width>
      <height>41</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="LeftDirectionLabel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>100</y>
+     <width>121</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Away From Motor</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="RightDirectionLabel">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>100</y>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Towards Motor</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="DistanceLabel">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>20</y>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Distance in cm</string>
    </property>
   </widget>
  </widget>
