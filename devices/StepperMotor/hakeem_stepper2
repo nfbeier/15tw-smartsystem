@@ -13,7 +13,6 @@ if "15tw-smartsystem" not in cwd.split(os.path.sep):
 cwd = os.path.sep.join(
     cwd.split(os.path.sep)[: cwd.split(os.path.sep).index("15tw-smartsystem") + 1]
 )
-
 sys.path.insert(0, cwd)
 
 
@@ -159,7 +158,7 @@ class StepperMotorControl(QtWidgets.QMainWindow):
 
             for step in range(steps):
                 # Check if the stop command is set
-                if self.stop_command:  
+                if self.stop_command: 
                     print("Movement interrupted.")
                     break
 
