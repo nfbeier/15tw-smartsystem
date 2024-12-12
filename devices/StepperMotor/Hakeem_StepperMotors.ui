@@ -96,24 +96,6 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLineEdit" name="CurrentPositionLabel">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>160</y>
-     <width>161</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Current Distance (cm):</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="StopButton">
    <property name="geometry">
     <rect>
@@ -224,6 +206,24 @@
    </property>
    <property name="text">
     <string>Distance in cm</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="CurrentPositionLabel">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>160</y>
+     <width>151</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Current Distance (cm):</string>
    </property>
   </widget>
  </widget>
