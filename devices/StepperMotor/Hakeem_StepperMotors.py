@@ -77,7 +77,7 @@ class Ui_Form(object):
         self.MovingDistance.setGeometry(QtCore.QRect(171, 50, 91, 41))
         self.MovingDistance.setObjectName("MovingDistance")
         self.LeftDirectionLabel = QtWidgets.QLabel(Form)
-        self.LeftDirectionLabel.setGeometry(QtCore.QRect(20, 100, 121, 21))
+        self.LeftDirectionLabel.setGeometry(QtCore.QRect(50, 100, 121, 21))
         font = QtGui.QFont()
         font.setPointSize(9)
         self.LeftDirectionLabel.setFont(font)
