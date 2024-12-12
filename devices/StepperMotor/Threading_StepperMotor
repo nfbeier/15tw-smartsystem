@@ -7,6 +7,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+# TO DO:  the current position should update for every step  
+
 cwd = os.getcwd()
 print(cwd)
 # Check if '15tw-smartsystem' is in the components
@@ -67,6 +69,7 @@ class MotorMovement(QObject):
         super().__init__()
 
         #Create PyQt QTimer with 0.1 s time
+        self.current_position = 0.00
 
     #@pyqtSlot()
     def run(self, run_mode, input_distance):   # run_mode = "move right", "move left"
@@ -88,7 +91,7 @@ class MotorMovement(QObject):
     def update_position(self, steps, direction_command):
 
         """Update the current position based on steps and direction."""
-        self.current_position = 0.00
+        
         distance_moved = steps / microsteps_per_cm
         if direction_command == "move left":
             self.current_position += distance_moved
@@ -121,13 +124,16 @@ class MotorMovement(QObject):
                         print("Right limit reached!")
                         self.motor_status_signal.emit("Right End")
                         self.HomeMotorRun()  # Call the HomeMotor method to handle homing and reset position to 0
-                        self.update_position(steps, "move right")  # Update the position to the home position
+                        #self.update_position(steps, "move right")  # Update the position to the home position
                         break  # Stop if limit switch is pressed
 
                     GPIO.output(STEP, GPIO.HIGH)
                     sleep(0.001)  # Speed control
                     GPIO.output(STEP, GPIO.LOW)
                     sleep(0.001)  # Speed control
+
+                    # update position for each step
+                    self.update_position(1, "move right")
 
                 # Update position if the movement is completed without hitting the limit
                 if GPIO.input(LIMIT_SWITCH_RIGHT_PIN) != GPIO.LOW:
@@ -173,6 +179,9 @@ class MotorMovement(QObject):
                     sleep(0.001)  # Speed control
                     GPIO.output(STEP, GPIO.LOW)
                     sleep(0.001)  # Speed control
+
+                    #update position for each step
+                    self.update_position(1, "move left")
 
                 # Update position if the movement is completed without hitting the limit
                 if GPIO.input(LIMIT_SWITCH_LEFT_PIN) != GPIO.LOW:
@@ -251,10 +260,8 @@ class StepperMotorControl(QtWidgets.QMainWindow):
         self.ui.HomeButton.clicked.connect(self.HomeMotorRunGUI)
         self.ui.StopButton.clicked.connect(self.StopMotorRunGUI)
 
-        # Initialize current position (cm) and the stop_command
-        #self.stop_command = False
-        #self.current_position = 0.00 
-        #self.ui.DisplayCurrentDistance.display(self.current_position)
+        # Initialize the latest position
+        self.latest_position = 0.00
 
         # Initialize the MotorMovement worker and its thread
         self.motorWorker = MotorMovement()
@@ -268,13 +275,19 @@ class StepperMotorControl(QtWidgets.QMainWindow):
         self.homing_signal.connect(self.motorWorker.HomeMotorRun)
 
         # Connect worker signals to GUI methods
-        self.motorWorker.update_position_signal.connect(self.updatePositionDisplay)
+        #self.motorWorker.update_position_signal.connect(self.updatePositionDisplay)
+        self.motorWorker.update_position_signal.connect(self.handle_position_update)
         self.motorWorker.motor_status_signal.connect(self.updateMotorStatus)
         self.motorWorker.pushbutton_state_signal.connect(self.set_pushbutton_states)
         self.motorWorker.error_signal.connect(self.showErrorMessage)
 
         # start the worker thread
         self.motorWorker_thread.start()
+
+        # Set up QTimer for periodic display updates
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.refresh_position_display)
+        self.timer.start(100)  # Update every 100 milliseconds
 
         # show the window
         self.show()
@@ -288,14 +301,21 @@ class StepperMotorControl(QtWidgets.QMainWindow):
         self.motorRun_signals.emit("move right", distance_in_cm)
 
     def HomeMotorRunGUI(self):
-        #self.homing_signal.emit()  # is it needed? . homing does not emit any output to send to HomeMotorRun function (check this!!!)
-        self.motorWorker.HomeMotorRun()  # which is better? (test and see!!!)
+        self.homing_signal.emit()  
 
     def StopMotorRunGUI(self):
         self.motorWorker.StopMotorRun()
 
-    def updatePositionDisplay(self, position):
-        self.ui.DisplayCurrentDistance.display(position)  # Update the display
+    #def updatePositionDisplay(self, position):
+        #self.ui.DisplayCurrentDistance.display(position)  # Update the display
+
+    def handle_position_update(self, position):
+        """Handle position updates from the worker."""
+        self.latest_position = position
+
+    def refresh_position_display(self):
+        """Update the display with the latest position."""
+        self.ui.DisplayCurrentDistance.display(self.latest_position)
 
     def set_pushbutton_states(self, enabled):
         """
