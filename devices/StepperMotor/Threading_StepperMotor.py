@@ -49,7 +49,7 @@ GPIO.setup(STEP, GPIO.OUT)
 log = 0
 
 # Define GPIO pin numbers for limit switches
-LIMIT_SWITCH_LEFT_PIN = 12
+LIMIT_SWITCH_LEFT_PIN = 18
 LIMIT_SWITCH_RIGHT_PIN = 16
 
 # Define the reference limit switch for homing the motor
@@ -71,11 +71,9 @@ class MotorMovement(QObject):
     def __init__(self):
         super().__init__()
 
-        #Create PyQt QTimer with 0.1 s time
         self.current_position = 0.00
 
-    #@pyqtSlot()
-    def run(self, run_mode, input_distance):   # run_mode = "move right", "move left"
+    def run(self, run_mode, input_distance):   # run_mode == "move right" or "move left"
         
         if run_mode == "move left":
             self.MotorRun(run_mode, input_distance)  
@@ -127,7 +125,6 @@ class MotorMovement(QObject):
                         print("Right limit reached!")
                         self.motor_status_signal.emit("Right End")
                         self.HomeMotorRun()  # Call the HomeMotor method to handle homing and reset position to 0
-                        #self.update_position(steps, "move right")  # Update the position to the home position
                         break  # Stop if limit switch is pressed
 
                     GPIO.output(STEP, GPIO.HIGH)
@@ -140,7 +137,6 @@ class MotorMovement(QObject):
 
                 # Update position if the movement is completed without hitting the limit
                 if GPIO.input(LIMIT_SWITCH_RIGHT_PIN) != GPIO.LOW:
-                    #self.update_position(steps, "move right")
                     self.motor_status_signal.emit("Stopped")
 
             except ValueError:
@@ -189,7 +185,6 @@ class MotorMovement(QObject):
 
                 # Update position if the movement is completed without hitting the limit
                 if GPIO.input(LIMIT_SWITCH_LEFT_PIN) != GPIO.LOW:
-                    #self.update_position(steps, "move left")
                     self.motor_status_signal.emit("Stopped")
 
             except ValueError:
@@ -252,7 +247,7 @@ class MotorMovement(QObject):
 class StepperMotorControl(QtWidgets.QMainWindow):
 
     motorRun_signals = pyqtSignal(str, float) # Signals for "direction and input distance" for left and right motor run
-    homing_signal = pyqtSignal() # Signal for homing motor. is it needed?
+    homing_signal = pyqtSignal() # Signal for homing motor.
 
     def __init__(self):
         super(StepperMotorControl, self).__init__()
@@ -280,7 +275,6 @@ class StepperMotorControl(QtWidgets.QMainWindow):
         self.homing_signal.connect(self.motorWorker.HomeMotorRun)
 
         # Connect worker signals to GUI methods
-        #self.motorWorker.update_position_signal.connect(self.updatePositionDisplay)
         self.motorWorker.update_position_signal.connect(self.handle_position_update)
         self.motorWorker.motor_status_signal.connect(self.updateMotorStatus)
         self.motorWorker.pushbutton_state_signal.connect(self.set_pushbutton_states)
@@ -310,9 +304,6 @@ class StepperMotorControl(QtWidgets.QMainWindow):
 
     def StopMotorRunGUI(self):
         self.motorWorker.StopMotorRun()
-
-    #def updatePositionDisplay(self, position):
-        #self.ui.DisplayCurrentDistance.display(position)  # Update the display
 
     def handle_position_update(self, position):
         """Handle position updates from the worker."""
@@ -366,22 +357,18 @@ class StepperMotorControl(QtWidgets.QMainWindow):
             
         if status == "Moving...":
             self.ui.MotorStatusLabel.setText("Moving...")
-            #self.ui.MotorStatusLabel.setStyleSheet("color: green; font-weight: bold;")
             self.ui.MotorStatusLabel.setStyleSheet(motion_styleSheet)
 
         elif status == "Stopped":
             self.ui.MotorStatusLabel.setText("Stopped")
-            #self.ui.MotorStatusLabel.setStyleSheet("color: red; font-weight: bold;")
             self.ui.MotorStatusLabel.setStyleSheet(stop_styleSheet)
 
         elif status == "Left End":
             self.ui.MotorStatusLabel.setText("Left End")
-            #self.ui.MotorStatusLabel.setStyleSheet("color: red; font-weight: bold;")
             self.ui.MotorStatusLabel.setStyleSheet(stop_styleSheet)
 
         elif status == "Right End":
             self.ui.MotorStatusLabel.setText("Right End")
-            #self.ui.MotorStatusLabel.setStyleSheet("color: red; font-weight: bold;")
             self.ui.MotorStatusLabel.setStyleSheet(stop_styleSheet)
         
     def showErrorMessage(self, message):
