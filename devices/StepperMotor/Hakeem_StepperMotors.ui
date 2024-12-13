@@ -109,7 +109,7 @@
       <colorrole role="Text">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>255</red>
+         <red>0</red>
          <green>0</green>
          <blue>0</blue>
         </color>
@@ -118,7 +118,7 @@
       <colorrole role="ButtonText">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>255</red>
+         <red>0</red>
          <green>0</green>
          <blue>0</blue>
         </color>
@@ -136,7 +136,7 @@
       <colorrole role="PlaceholderText">
        <brush brushstyle="NoBrush">
         <color alpha="128">
-         <red>255</red>
+         <red>0</red>
          <green>0</green>
          <blue>0</blue>
         </color>
@@ -165,7 +165,7 @@
       <colorrole role="Text">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>255</red>
+         <red>0</red>
          <green>0</green>
          <blue>0</blue>
         </color>
@@ -174,7 +174,7 @@
       <colorrole role="ButtonText">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>255</red>
+         <red>0</red>
          <green>0</green>
          <blue>0</blue>
         </color>
@@ -192,7 +192,7 @@
       <colorrole role="PlaceholderText">
        <brush brushstyle="NoBrush">
         <color alpha="128">
-         <red>255</red>
+         <red>0</red>
          <green>0</green>
          <blue>0</blue>
         </color>
@@ -203,7 +203,7 @@
       <colorrole role="WindowText">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>255</red>
+         <red>0</red>
          <green>0</green>
          <blue>0</blue>
         </color>
@@ -221,7 +221,7 @@
       <colorrole role="Text">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>255</red>
+         <red>0</red>
          <green>0</green>
          <blue>0</blue>
         </color>
@@ -230,7 +230,7 @@
       <colorrole role="ButtonText">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
-         <red>255</red>
+         <red>0</red>
          <green>0</green>
          <blue>0</blue>
         </color>
@@ -248,7 +248,7 @@
       <colorrole role="PlaceholderText">
        <brush brushstyle="NoBrush">
         <color alpha="128">
-         <red>255</red>
+         <red>0</red>
          <green>0</green>
          <blue>0</blue>
         </color>
@@ -265,10 +265,13 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">color: rgb(0, 0, 0);</string>
    </property>
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
+   </property>
+   <property name="lineWidth">
+    <number>2</number>
    </property>
    <property name="smallDecimalPoint">
     <bool>true</bool>
