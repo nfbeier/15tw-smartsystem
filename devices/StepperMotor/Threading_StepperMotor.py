@@ -373,24 +373,7 @@ class StepperMotorControl(QtWidgets.QMainWindow):
         
     def showErrorMessage(self, message):
         QtWidgets.QMessageBox.critical(self, "Error", message)
-
-    def closeEvent(self, event):
-        """
-        Handle the close event to clean up resources.
-
-        Args:
-            event (QCloseEvent): The close event.
-        """
-        # Stop the motor if it's running
-        self.motorWorker.StopMotorRun()
-        # Terminate the worker thread
-        self.motorWorker_thread.quit()
-        self.motorWorker_thread.wait()
-        # Cleanup GPIO pins
-        GPIO.cleanup()
-        super().closeEvent(event)
-
-        
+ 
 # Initialize and run the application
 app = QtWidgets.QApplication(sys.argv)
 window = StepperMotorControl()
