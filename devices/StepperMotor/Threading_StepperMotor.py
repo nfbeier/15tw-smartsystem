@@ -49,7 +49,7 @@ GPIO.setup(STEP, GPIO.OUT)
 log = 0
 
 # Define GPIO pin numbers for limit switches
-LIMIT_SWITCH_LEFT_PIN = 12
+LIMIT_SWITCH_LEFT_PIN = 18
 LIMIT_SWITCH_RIGHT_PIN = 16
 
 # Define the reference limit switch for homing the motor
