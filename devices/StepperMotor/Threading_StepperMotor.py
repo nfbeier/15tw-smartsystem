@@ -100,6 +100,7 @@ class MotorMovement(QObject):
             self.current_position -= distance_moved
 
         self.update_position_signal.emit(self.current_position) 
+        print(f"Position Updated: {self.current_position}") 
         
 
     def MotorRun(self,direction_command,distance_in_cm):
@@ -308,6 +309,7 @@ class StepperMotorControl(QtWidgets.QMainWindow):
     def handle_position_update(self, position):
         """Handle position updates from the worker."""
         self.latest_position = position
+        print(f"GUI received position update: {position}")
 
     def refresh_position_display(self):
         """Update the display with the latest position."""
