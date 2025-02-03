@@ -41,6 +41,7 @@ number_of_revolution_per_cm = 1 / screw_pitch_in_cm  # revolutions per cm
 
 # Calibration factor
 microsteps_per_cm = total_microsteps_per_revolution * number_of_revolution_per_cm
+print(f"total microsteps: {microsteps_per_cm}")
 
 # Setup GPIO
 GPIO.setmode(GPIO.BOARD)
@@ -49,8 +50,8 @@ GPIO.setup(STEP, GPIO.OUT)
 log = 0
 
 # Define GPIO pin numbers for limit switches
-LIMIT_SWITCH_LEFT_PIN = 18
-LIMIT_SWITCH_RIGHT_PIN = 16
+LIMIT_SWITCH_LEFT_PIN = 22#37#18
+LIMIT_SWITCH_RIGHT_PIN = 29#32#16
 
 # Define the reference limit switch for homing the motor
 homing_limit_switch_pin = LIMIT_SWITCH_RIGHT_PIN  
@@ -74,6 +75,8 @@ class MotorMovement(QObject):
         self.current_position = 0.00
 
     def run(self, run_mode, input_distance):   # run_mode == "move right" or "move left"
+
+        print(f"MotorMovement.run() started: {run_mode}, {input_distance}")
         
         if run_mode == "move left":
             self.MotorRun(run_mode, input_distance)  
@@ -100,7 +103,7 @@ class MotorMovement(QObject):
             self.current_position -= distance_moved
 
         self.update_position_signal.emit(self.current_position) 
-        print(f"Position Updated: {self.current_position}") 
+        #print(f"Position Updated: {self.current_position}") 
         
 
     def MotorRun(self,direction_command,distance_in_cm):
@@ -116,6 +119,8 @@ class MotorMovement(QObject):
                 GPIO.output(DIR, CW)
                 for _ in range(steps):
                     # Check if the stop command is set
+                    switch_state_right =  GPIO.input(LIMIT_SWITCH_RIGHT_PIN)
+                    print(f"Limit Switch State {switch_state_right}")
                     if self.stop_command:  
                         print("Movement interrupted.")
                         self.motor_status_signal.emit("Stopped")
@@ -153,6 +158,8 @@ class MotorMovement(QObject):
             try:
                 GPIO.output(DIR, CCW)
                 for step in range(steps):
+                    switch_state_left =  GPIO.input(LIMIT_SWITCH_LEFT_PIN)
+                    print(f"Limit Switch State {switch_state_left}")
                     # Check if the stop command is set
                     if self.stop_command: 
                         print("Movement interrupted.")
@@ -272,6 +279,7 @@ class StepperMotorControl(QtWidgets.QMainWindow):
         self.motorWorker.moveToThread(self.motorWorker_thread)
 
         # Connect GUI signals to worker methods
+        print("connecting motorRun_signals to MotorMovement.run()")
         self.motorRun_signals.connect(self.motorWorker.run)
         self.homing_signal.connect(self.motorWorker.HomeMotorRun)
 
@@ -282,6 +290,7 @@ class StepperMotorControl(QtWidgets.QMainWindow):
         self.motorWorker.error_signal.connect(self.showErrorMessage)
 
         # start the worker thread
+        print("Starting motorWorker thread...")
         self.motorWorker_thread.start()
 
         # Set up QTimer for periodic display updates
@@ -294,10 +303,12 @@ class StepperMotorControl(QtWidgets.QMainWindow):
 
     def LeftMotorRunGUI(self):
         distance_in_cm = float(self.ui.MovingDistance.value())  # User input in cm
+        print(f"Emitting signals: move left {distance_in_cm} cm")
         self.motorRun_signals.emit("move left", distance_in_cm)
        
     def RightMotorRunGUI(self):
         distance_in_cm = float(self.ui.MovingDistance.value())  # User input in cm
+        print(f"Emitting signals: move right {distance_in_cm} cm")
         self.motorRun_signals.emit("move right", distance_in_cm)
 
     def HomeMotorRunGUI(self):
@@ -309,7 +320,7 @@ class StepperMotorControl(QtWidgets.QMainWindow):
     def handle_position_update(self, position):
         """Handle position updates from the worker."""
         self.latest_position = position
-        print(f"GUI received position update: {position}")
+        #print(f"GUI received position update: {position}")
 
     def refresh_position_display(self):
         """Update the display with the latest position."""
@@ -375,6 +386,16 @@ class StepperMotorControl(QtWidgets.QMainWindow):
         
     def showErrorMessage(self, message):
         QtWidgets.QMessageBox.critical(self, "Error", message)
+
+    def closeEvent(self,event):
+        print ("Cleaning up GPIO before exit...")
+        GPIO.cleanup()
+        event.accept() #Allow window to close
+
+    def __del__(self):
+        """Destructor to ensure cleanup when the object is deleted."""
+        print("Destructor called. Cleaning up GPIO...")
+        GPIO.cleanup()
  
 # Initialize and run the application
 app = QtWidgets.QApplication(sys.argv)
