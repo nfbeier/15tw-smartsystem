@@ -43,23 +43,12 @@ number_of_revolution_per_cm = 1 / screw_pitch_in_cm  # revolutions per cm
 microsteps_per_cm = total_microsteps_per_revolution * number_of_revolution_per_cm
 print(f"total microsteps: {microsteps_per_cm}")
 
-# Setup GPIO
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(DIR, GPIO.OUT)
-GPIO.setup(STEP, GPIO.OUT)
-log = 0
-
 # Define GPIO pin numbers for limit switches
-LIMIT_SWITCH_LEFT_PIN = 22#37#18
-LIMIT_SWITCH_RIGHT_PIN = 29#32#16
+LIMIT_SWITCH_LEFT_PIN = 15
+LIMIT_SWITCH_RIGHT_PIN = 31
 
 # Define the reference limit switch for homing the motor
 homing_limit_switch_pin = LIMIT_SWITCH_RIGHT_PIN  
-
-# Setup GPIO pins for limit switches
-GPIO.setup(LIMIT_SWITCH_LEFT_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Left limit switch
-GPIO.setup(LIMIT_SWITCH_RIGHT_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Right limit switch
-
 
 class MotorMovement(QObject):
         
@@ -72,6 +61,27 @@ class MotorMovement(QObject):
     def __init__(self):
         super().__init__()
 
+        GPIO.cleanup()
+
+        # Setup GPIO mode
+        GPIO.setmode(GPIO.BOARD)
+
+        # Setup GPIO pins for limit switches
+        GPIO.setup(LIMIT_SWITCH_LEFT_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Left limit switch
+        GPIO.setup(LIMIT_SWITCH_RIGHT_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Right limit switch
+
+        switch_state_right =  GPIO.input(LIMIT_SWITCH_RIGHT_PIN)
+        print(f"Right limit Switch State {switch_state_right}")
+
+        switch_state_left =  GPIO.input(LIMIT_SWITCH_LEFT_PIN)
+        print(f"Left limit Switch State {switch_state_left}")
+
+        # Setup GPIO pins
+        GPIO.setup(DIR, GPIO.OUT)
+        GPIO.setup(STEP, GPIO.OUT)
+
+
+        
         self.current_position = 0.00
 
     def run(self, run_mode, input_distance):   # run_mode == "move right" or "move left"
@@ -119,8 +129,8 @@ class MotorMovement(QObject):
                 GPIO.output(DIR, CW)
                 for _ in range(steps):
                     # Check if the stop command is set
-                    switch_state_right =  GPIO.input(LIMIT_SWITCH_RIGHT_PIN)
-                    print(f"Limit Switch State {switch_state_right}")
+                    #switch_state_right =  GPIO.input(LIMIT_SWITCH_RIGHT_PIN)
+                    #print(f"Limit Switch State {switch_state_right}")
                     if self.stop_command:  
                         print("Movement interrupted.")
                         self.motor_status_signal.emit("Stopped")
@@ -158,8 +168,8 @@ class MotorMovement(QObject):
             try:
                 GPIO.output(DIR, CCW)
                 for step in range(steps):
-                    switch_state_left =  GPIO.input(LIMIT_SWITCH_LEFT_PIN)
-                    print(f"Limit Switch State {switch_state_left}")
+                    #switch_state_left =  GPIO.input(LIMIT_SWITCH_LEFT_PIN)
+                    #print(f"Limit Switch State {switch_state_left}")
                     # Check if the stop command is set
                     if self.stop_command: 
                         print("Movement interrupted.")
@@ -391,14 +401,14 @@ class StepperMotorControl(QtWidgets.QMainWindow):
         print ("Cleaning up GPIO before exit...")
         GPIO.cleanup()
         event.accept() #Allow window to close
-
-    def __del__(self):
-        """Destructor to ensure cleanup when the object is deleted."""
-        print("Destructor called. Cleaning up GPIO...")
-        GPIO.cleanup()
  
 # Initialize and run the application
-app = QtWidgets.QApplication(sys.argv)
-window = StepperMotorControl()
-window.show()
-app.exec()
+if __name__ == "__main__":
+    try:
+        app = QtWidgets.QApplication(sys.argv)
+        window = StepperMotorControl()
+        window.show()
+        sys.exit(app.exec_())
+    finally:
+        print("Cleaning up GPIO before exiting...")
+        GPIO.cleanup()
