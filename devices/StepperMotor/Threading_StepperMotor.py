@@ -44,8 +44,8 @@ microsteps_per_cm = total_microsteps_per_revolution * number_of_revolution_per_c
 print(f"total microsteps: {microsteps_per_cm}")
 
 # Define GPIO pin numbers for limit switches
-LIMIT_SWITCH_LEFT_PIN = 15
-LIMIT_SWITCH_RIGHT_PIN = 31
+LIMIT_SWITCH_LEFT_PIN = 21
+LIMIT_SWITCH_RIGHT_PIN = 23
 
 # Define the reference limit switch for homing the motor
 homing_limit_switch_pin = LIMIT_SWITCH_RIGHT_PIN  
