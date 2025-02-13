@@ -379,29 +379,37 @@ class StepperMotorControl(QtWidgets.QMainWindow):
     def update_toggle_button(self):
 
         """Update the toggle button's text and color based on the motor state."""
-        EnableMotor_stylesheet = """QLabel {background-color: qlineargradient(
-                        spread:pad, x1:0, y1:0, x2:1, y2:1, 
-                        stop:0 #99FF99, stop:1 #33CC33);
-                    color: white;
-                    border-radius: 10px;
-                    font-style: italic;                               
-                    font-size: 12pt;
-                    font-weight: bold;
-                    padding: 5px;
-                    border: 2px solid #00AA00;
-                    text-align: center;}"""
-        
-        DisableMotor_stylesheet = """QLabel {background-color: qlineargradient(
-                        spread:pad, x1:0, y1:0, x2:1, y2:1, 
-                        stop:0 #FF6666, stop:1 #CC0000);
-                    color: white;
-                    border-radius: 10px;
-                    font-style: italic;                               
-                    font-size: 12pt;
-                    font-weight: bold;
-                    padding: 5px;
-                    border: 2px solid #AA0000;
-                    text-align: center;}"""
+        EnableMotor_stylesheet = """
+            QPushButton {
+                background-color: qlineargradient(
+                    spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                    stop:0 #99FF99, stop:1 #33CC33);
+                color: white;
+                border-radius: 10px;
+                font-style: italic;
+                font-size: 12pt;
+                font-weight: bold;
+                padding: 5px;
+                border: 2px solid #00AA00;
+                text-align: center;
+            }
+        """
+
+        DisableMotor_stylesheet = """
+            QPushButton {
+                background-color: qlineargradient(
+                    spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                    stop:0 #FF6666, stop:1 #CC0000);
+                color: white;
+                border-radius: 10px;
+                font-style: italic;
+                font-size: 12pt;
+                font-weight: bold;
+                padding: 5px;
+                border: 2px solid #AA0000;
+                text-align: center;
+            }
+        """
 
         if self.motor_enabled:
             self.ui.toggleMotorButton.setText("Disable")
