@@ -380,8 +380,8 @@ class StepperMotorControl(QtWidgets.QMainWindow):
     def update_toggle_button(self):
 
         """Update the toggle button's text and color based on the motor state."""
-        EnableMotor_stylesheet = """
-            QQPushButton {
+        DisableMotor_stylesheet = """
+            QPushButton {
                 background-color: qlineargradient(
                     spread:pad, x1:0, y1:0, x2:1, y2:1, 
                     stop:0 #99FF99, stop:1 #33CC33);
@@ -396,7 +396,7 @@ class StepperMotorControl(QtWidgets.QMainWindow):
             }
         """
 
-        DisableMotor_stylesheet = """
+        EnableMotor_stylesheet = """
             QPushButton {
                 background-color: qlineargradient(
                     spread:pad, x1:0, y1:0, x2:1, y2:1, 
