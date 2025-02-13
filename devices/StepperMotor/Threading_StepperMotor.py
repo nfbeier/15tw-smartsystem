@@ -47,9 +47,6 @@ print(f"total microsteps: {microsteps_per_cm}")
 LIMIT_SWITCH_LEFT_PIN = 21
 LIMIT_SWITCH_RIGHT_PIN = 23
 
-# GPIO pin number to enable/disable stepper motor
-ENA = 11  
-
 # Define the reference limit switch for homing the motor
 homing_limit_switch_pin = LIMIT_SWITCH_RIGHT_PIN  
 
@@ -59,7 +56,6 @@ class MotorMovement(QObject):
     motor_status_signal = pyqtSignal(str)  # Signal to update motor status
     error_signal = pyqtSignal(str) # Signal to display error message
     pushbutton_state_signal = pyqtSignal(bool)  # Signal to enable or disable buttons 
-    motor_enabled_signal = pyqtSignal(bool)  # signal for stepper motor enable/disable state
 
 
     def __init__(self):
@@ -83,35 +79,14 @@ class MotorMovement(QObject):
         # Setup GPIO pins
         GPIO.setup(DIR, GPIO.OUT)
         GPIO.setup(STEP, GPIO.OUT)
-        GPIO.setup(ENA, GPIO.OUT)
-
-        # Initialize the motor as OFF (ENA high to disable the driver)
-        GPIO.output(ENA, GPIO.HIGH)  # Disable motor driver
-        self.motor_enabled = False  # Track motor state
 
 
+        
         self.current_position = 0.00
-
-    def enable_motor(self):
-        """Enable the motor driver by setting ENA low."""
-        GPIO.output(ENA, GPIO.LOW)
-        self.motor_enabled = True
-        self.motor_enabled_signal.emit(True)
-        print("Motor enabled.")
-
-    def disable_motor(self):
-        """Disable the motor driver by setting ENA high."""
-        GPIO.output(ENA, GPIO.HIGH)
-        self.motor_enabled = False
-        self.motor_enabled_signal.emit(False)
-        print("Motor disabled.")
 
     def run(self, run_mode, input_distance):   # run_mode == "move right" or "move left"
 
-        #print(f"MotorMovement.run() started: {run_mode}, {input_distance}")
-
-        # Enable the motor before movement
-        self.enable_motor()
+        print(f"MotorMovement.run() started: {run_mode}, {input_distance}")
         
         if run_mode == "move left":
             self.MotorRun(run_mode, input_distance)  
@@ -184,9 +159,6 @@ class MotorMovement(QObject):
                 self.error_signal.emit("Invalid input. Please enter a valid number.")
 
             finally:
-                # Disable the motor only if the toggle button is in the "disabled" state
-                if not self.motor_enabled:
-                    self.disable_motor()
                 self.pushbutton_state_signal.emit(True) # Re-enable other push buttons
                 self.motor_status_signal.emit("Stopped")
 
@@ -237,9 +209,6 @@ class MotorMovement(QObject):
                 self.error_signal.emit("Invalid input. Please enter a valid number.")
 
             finally:
-                # Disable the motor only if the toggle button is in the "disabled" state
-                if not self.motor_enabled:
-                    self.disable_motor()
                 self.pushbutton_state_signal.emit(True) # Re-enable other push buttons
                 self.motor_status_signal.emit("Stopped")
 
@@ -247,9 +216,6 @@ class MotorMovement(QObject):
     def HomeMotorRun(self):
         """Homing logic using the right limit switch."""
         try:
-            # Enable the motor before homing
-            self.enable_motor()
-
             # Move towards the right limit switch
             GPIO.output(DIR, CW) 
             self.stop_command = False
@@ -291,10 +257,7 @@ class MotorMovement(QObject):
         except Exception as e:
             self.error_signal.emit(f"Error in homing: {str(e)}")
 
-        finally:             
-            # Disable the motor only if the toggle button is in the "disabled" state
-            if not self.motor_enabled:
-                self.disable_motor()
+        finally:
             self.pushbutton_state_signal.emit(True) # Re-enable other push buttons
             self.motor_status_signal.emit("Stopped")   
             
@@ -315,13 +278,6 @@ class StepperMotorControl(QtWidgets.QMainWindow):
         self.ui.HomeButton.clicked.connect(self.HomeMotorRunGUI)
         self.ui.StopButton.clicked.connect(self.StopMotorRunGUI)
 
-        # Connect the toggle button
-        self.ui.toggleMotorButton.clicked.connect(self.toggle_motor_GUI)
-
-        # Initialize the button state
-        self.motor_enabled = False  # Track motor state
-        self.update_toggle_button()  # Set initial button text and color
-
         # Initialize the latest position
         self.latest_position = 0.00
 
@@ -333,7 +289,7 @@ class StepperMotorControl(QtWidgets.QMainWindow):
         self.motorWorker.moveToThread(self.motorWorker_thread)
 
         # Connect GUI signals to worker methods
-        #print("connecting motorRun_signals to MotorMovement.run()")
+        print("connecting motorRun_signals to MotorMovement.run()")
         self.motorRun_signals.connect(self.motorWorker.run)
         self.homing_signal.connect(self.motorWorker.HomeMotorRun)
 
@@ -342,9 +298,6 @@ class StepperMotorControl(QtWidgets.QMainWindow):
         self.motorWorker.motor_status_signal.connect(self.updateMotorStatus)
         self.motorWorker.pushbutton_state_signal.connect(self.set_pushbutton_states)
         self.motorWorker.error_signal.connect(self.showErrorMessage)
-
-        # Connect the new motor_enabled_signal to update the toggle button
-        self.motorWorker.motor_enabled_signal.connect(self.update_toggle_button_from_signal)
 
         # start the worker thread
         print("Starting motorWorker thread...")
@@ -357,58 +310,6 @@ class StepperMotorControl(QtWidgets.QMainWindow):
 
         # show the window
         self.show()
-
-    def toggle_motor_GUI(self):
-        """Toggle the motor state between enabled and disabled."""
-        if self.motor_enabled:
-            # Emit a signal to disable the motor
-            self.motorWorker.disable_motor()
-        else:
-            # Emit a signal to enable the motor
-            self.motorWorker.enable_motor()
-
-
-    def update_toggle_button_from_signal(self, enabled):
-
-        """Update the toggle button's state based on the motor_enabled_signal."""
-
-        self.motor_enabled = enabled
-        self.update_toggle_button()
-
-
-    def update_toggle_button(self):
-
-        """Update the toggle button's text and color based on the motor state."""
-        EnableMotor_stylesheet = """QLabel {background-color: qlineargradient(
-                        spread:pad, x1:0, y1:0, x2:1, y2:1, 
-                        stop:0 #99FF99, stop:1 #33CC33);
-                    color: white;
-                    border-radius: 10px;
-                    font-style: italic;                               
-                    font-size: 12pt;
-                    font-weight: bold;
-                    padding: 5px;
-                    border: 2px solid #00AA00;
-                    text-align: center;}"""
-        
-        DisableMotor_stylesheet = """QLabel {background-color: qlineargradient(
-                        spread:pad, x1:0, y1:0, x2:1, y2:1, 
-                        stop:0 #FF6666, stop:1 #CC0000);
-                    color: white;
-                    border-radius: 10px;
-                    font-style: italic;                               
-                    font-size: 12pt;
-                    font-weight: bold;
-                    padding: 5px;
-                    border: 2px solid #AA0000;
-                    text-align: center;}"""
-
-        if self.motor_enabled:
-            self.ui.toggleMotorButton.setText("Disable")
-            self.ui.toggleMotorButton.setStyleSheet(EnableMotor_stylesheet)
-        else:
-            self.ui.toggleMotorButton.setText("Enable")
-            self.ui.toggleMotorButton.setStyleSheet(DisableMotor_stylesheet)
 
     def LeftMotorRunGUI(self):
         distance_in_cm = float(self.ui.MovingDistance.value())  # User input in cm
