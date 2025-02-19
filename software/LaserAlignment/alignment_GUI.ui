@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1346</width>
-    <height>897</height>
+    <width>1094</width>
+    <height>710</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,10 @@
 font-weight: bold</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,10,10">
+   <layout class="QVBoxLayout" name="verticalLayout" stretch="1,2,4">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <item>
      <layout class="QHBoxLayout" name="connection_layout">
       <property name="sizeConstraint">
@@ -128,7 +131,11 @@ border: 2px solid #333333;</string>
      </layout>
     </item>
     <item>
-     <widget class="IrisGUIWidget" name="irisWidget" native="true"/>
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <item>
+       <widget class="IrisGUIWidget" name="irisWidget" native="true"/>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -137,8 +144,8 @@ border: 2px solid #333333;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1346</width>
-     <height>32</height>
+     <width>1094</width>
+     <height>31</height>
     </rect>
    </property>
   </widget>

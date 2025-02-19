@@ -180,7 +180,7 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         connection_layout.setSpacing(
             20
         )  # set the spacing between LEDindicator and connectionStatusLabel
-        connection_layout.setContentsMargins(0, 80, 0, 0)
+        connection_layout.setContentsMargins(0, 0, 0, 0)
 
         # Layout for the safety controls
         safety_layout = QtWidgets.QHBoxLayout()
@@ -190,7 +190,7 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
         safety_layout.setSpacing(
             20
         )  # Set the spacing between the  safety_button and safety_status_label
-        safety_layout.setContentsMargins(0, 0, 0, 80)
+        safety_layout.setContentsMargins(0, 0, 0, 0)
 
         # Create a layout for the mirrors
         mirror_layout = QtWidgets.QHBoxLayout()
@@ -199,14 +199,13 @@ class MultiMirrorControl_App(QtWidgets.QWidget):
 
         # Layout of main window
         main_layout = QtWidgets.QVBoxLayout(self)
-        main_layout.addLayout(connection_layout)
-        main_layout.addLayout(mirror_layout)
-        main_layout.addLayout(safety_layout)
+        main_layout.addLayout(connection_layout,stretch=0)
+        main_layout.addLayout(mirror_layout,stretch = 4)
+        main_layout.addLayout(safety_layout,stretch=0)
 
         main_layout.setSizeConstraint(QtWidgets.QLayout.SetNoConstraint)
-
         self.setLayout(main_layout)
-        self.setFixedSize(1200, 600)  # Adjust the window size
+        #self.setFixedSize(1200, 600)  # Adjust the window size
 
         self.mirror_safe = True  # Initialize mirrors as safe (i.e motion is disabled)
 

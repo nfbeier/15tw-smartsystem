@@ -133,7 +133,7 @@ class MultiMirrorControl_App(QtWidgets.QMainWindow):
         self.ui.connectionStatusLabel.setText(
             f"Connected Controllers: {num_connected_stages}"
         )
-        self.ui.connectionStatusLabel.setStyleSheet("font-size: 14pt; font-weight: bold")
+        self.ui.connectionStatusLabel.setStyleSheet("font-size: 14pt")
 
         if num_connected_stages >= 2:
             self.ui.LEDindicator.setStyleSheet(
@@ -175,7 +175,6 @@ class MultiMirrorControl_App(QtWidgets.QMainWindow):
                     border-radius: 10px;
                     font-style: italic;                               
                     font-size: 12pt;
-                    font-weight: bold;
                     padding: 5px;
                     border: 2px solid #AA0000;
                     text-align: center;
@@ -196,7 +195,6 @@ class MultiMirrorControl_App(QtWidgets.QMainWindow):
                     border-radius: 10px;
                     font-style: italic;                               
                     font-size: 12pt;
-                    font-weight: bold;
                     padding: 5px;
                     border: 2px solid #00AA00;
                     text-align: center;
