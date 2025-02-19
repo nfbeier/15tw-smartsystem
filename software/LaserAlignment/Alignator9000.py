@@ -15,7 +15,7 @@ sys.path.insert(0, cwd)
 from software.LaserAlignment.alignment_GUI import Ui_MainWindow
 from devices.NewportPicomotor.MirrorControlWidget import MirrorControlWidget
 
-class Alignator9000(QtWidgets.QMainWindow):
+class MultiMirrorControl_App(QtWidgets.QMainWindow):
     """
     A QWidget subclass for controlling multiple mirrors using Newport Picomotor8742 stages.
 
@@ -49,7 +49,7 @@ class Alignator9000(QtWidgets.QMainWindow):
         """
         Initializes the MultiMirrorControl_App with the specified Picomotor stage controllers and the control widgets.
         """
-        super(Alignator9000, self).__init__()
+        super(MultiMirrorControl_App, self).__init__()
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -221,6 +221,6 @@ class Alignator9000(QtWidgets.QMainWindow):
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    mainApp = Alignator9000()
+    mainApp = MultiMirrorControl_App()
     mainApp.show()
     sys.exit(app.exec_())
