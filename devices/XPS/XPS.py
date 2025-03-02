@@ -474,7 +474,7 @@ class XPS(Actuator):
     
     def disableGroup(self, group):
         '''
-        Disables motion of an XPS group if in a disabled state
+        Disables motion of an XPS group if in an enabled state
         
         Parameters
         ----------
