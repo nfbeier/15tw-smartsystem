@@ -123,8 +123,8 @@
     <rect>
      <x>280</x>
      <y>90</y>
-     <width>73</width>
-     <height>22</height>
+     <width>121</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -175,6 +175,12 @@
      <width>71</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="decimals">
+    <number>3</number>
+   </property>
+   <property name="value">
+    <double>0.000000000000000</double>
    </property>
   </widget>
   <widget class="QPushButton" name="X_LeftRelativeMoveButton">
@@ -248,6 +254,12 @@
      <height>41</height>
     </rect>
    </property>
+   <property name="smallDecimalPoint">
+    <bool>false</bool>
+   </property>
+   <property name="value" stdset="0">
+    <double>0.000000000000000</double>
+   </property>
   </widget>
   <widget class="QLabel" name="MinTravelLabel">
    <property name="geometry">
@@ -267,7 +279,7 @@
     <rect>
      <x>310</x>
      <y>340</y>
-     <width>51</width>
+     <width>71</width>
      <height>22</height>
     </rect>
    </property>
@@ -290,7 +302,7 @@
     <rect>
      <x>310</x>
      <y>370</y>
-     <width>51</width>
+     <width>71</width>
      <height>22</height>
     </rect>
    </property>

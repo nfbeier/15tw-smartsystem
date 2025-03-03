@@ -79,7 +79,7 @@ class TargetStageControl(QtWidgets.QWidget):
 
     def initialize_xps(self):
         try:
-            self.xps = XPS()
+            self.xps = XPS(ipAddress='192.168.254.254',username = 'Administrator',password = 'Administrator')
             self.refreshGroups()
         except Exception as e:
             self.xps = None
@@ -236,6 +236,7 @@ class TargetStageControl(QtWidgets.QWidget):
     def closeEvent(self, event):
         print("Closing the application...")
         self.timer.stop()  # Stop the timer
+        #Add kill all command for all stages
         event.accept()  
 
     def show_error_message(self, title, message):
