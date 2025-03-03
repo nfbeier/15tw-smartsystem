@@ -60,7 +60,7 @@ class TargetStageControl(QtWidgets.QWidget):
 
         # Set up a timer to update the stage position periodically
         self.timer = QtCore.QTimer(self)
-        self.timer.setInterval(500)  # Update every 500 ms
+        self.timer.setInterval(5)  # Update every 200 ms
         self.timer.timeout.connect(self.updateStagePosition)
         self.timer.start()
 
@@ -89,12 +89,13 @@ class TargetStageControl(QtWidgets.QWidget):
         if self.xps:
             try:
                 self.xps_groups = self.xps.getXPSStatus()
+                print("Available groups:", self.xps_groups)
                 self.ui.X_GroupNames.clear()
                 self.ui.X_GroupNames.addItems(list(self.xps_groups.keys()))
                 self.ui.X_GroupNames.setCurrentIndex(0)  # Default to the first group
                 self.selected_group = str(self.ui.X_GroupNames.currentText())
                 self.xps.setGroup(self.selected_group)
-                self.updateGUIStatus()
+                self.updateGroup()
             except Exception as e:
                 self.show_error_message("Group Refresh Error", f"Failed to refresh groups: {e}")
         else:
@@ -237,6 +238,7 @@ class TargetStageControl(QtWidgets.QWidget):
         print("Closing the application...")
         self.timer.stop()  # Stop the timer
         #Add kill all command for all stages
+        self.kill_all()
         event.accept()  
 
     def show_error_message(self, title, message):
