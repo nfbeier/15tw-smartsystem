@@ -44,6 +44,7 @@ class TargetStageControl(QtWidgets.QWidget):
         updateTravelLimits: Updates the minimum or maximum travel limits for the selected group.
         motionButtons: Handles motion commands (absolute, forward, backward).
         statusButtons: Handles status-related commands (initialize, home, enable/disable).
+        closeEvent: Override the close event to stop the timer and clean up.
         show_error_message: Displays an error message in a QMessageBox.
 
     """
@@ -54,6 +55,7 @@ class TargetStageControl(QtWidgets.QWidget):
 
         # Initialize XPS controller
         self.xps = None
+        self.selected_group = None 
         self.initialize_xps()
 
         # Set up a timer to update the stage position periodically
@@ -79,7 +81,7 @@ class TargetStageControl(QtWidgets.QWidget):
         try:
             self.xps = XPS()
             self.refreshGroups()
-        except AttributeError as e:
+        except Exception as e:
             self.xps = None
             self.show_error_message("XPS Initialization Error", f"Failed to initialize XPS controller: {e}")
 
@@ -113,7 +115,7 @@ class TargetStageControl(QtWidgets.QWidget):
             self.ui.X_RightRelativeMoveButton.setEnabled(False)
             self.ui.X_LeftRelativeMoveButton.setEnabled(False)
             self.ui.XPSstatusLabel.setText("Not Initialized")
-            self.ui.XPSstatusLabel.setStyleSheet("color: black;")
+            self.ui.XPSstatusLabel.setStyleSheet("color: red;")
 
         elif self.stageStatus == "Not referenced state":
             self.ui.HomeXPS.setEnabled(True)
@@ -122,7 +124,7 @@ class TargetStageControl(QtWidgets.QWidget):
             self.ui.X_RightRelativeMoveButton.setEnabled(False)
             self.ui.X_LeftRelativeMoveButton.setEnabled(False)
             self.ui.XPSstatusLabel.setText("Not Homed")
-            self.ui.XPSstatusLabel.setStyleSheet("color: black;")
+            self.ui.XPSstatusLabel.setStyleSheet("color: red;")
 
         elif self.stageStatus == "Disabled state":
             self.ui.EnableDisableXPS.setEnabled(True)
@@ -131,7 +133,7 @@ class TargetStageControl(QtWidgets.QWidget):
             self.ui.X_RightRelativeMoveButton.setEnabled(False)
             self.ui.X_LeftRelativeMoveButton.setEnabled(False)
             self.ui.XPSstatusLabel.setText("Disabled")
-            self.ui.XPSstatusLabel.setStyleSheet("color: black;")
+            self.ui.XPSstatusLabel.setStyleSheet("color: red;")
 
         elif self.stageStatus[:11].upper() == "Ready state".upper():
             self.ui.EnableDisableXPS.setEnabled(True)
@@ -150,8 +152,16 @@ class TargetStageControl(QtWidgets.QWidget):
                 position = self.xps.getStagePosition(self.selected_group)
                 self.ui.PositionValue.display(position)
                 self.stageStatus = self.xps.getStageStatus(self.selected_group)
+                self.error_shown = False  # Reset the flag if the update succeeds
             except Exception as e:
-                self.show_error_message("Position Update Error", f"Failed to update stage position: {e}")
+                if not hasattr(self, "error_shown") or not self.error_shown:
+                    self.show_error_message("Position Update Error", f"Failed to update stage position: {e}")
+                    self.error_shown = True  # Set the flag to prevent repeated messages
+        else:
+            if not hasattr(self, "xps_error_shown"):
+                self.show_error_message("XPS Not Connected", "XPS controller is not initialized.")
+                self.xps_error_shown = True  # Set a flag to indicate the error has been shown
+
 
     def kill_all(self):
         if self.xps:
@@ -222,6 +232,11 @@ class TargetStageControl(QtWidgets.QWidget):
                 self.updateGUIStatus()
             except Exception as e:
                 self.show_error_message("Status Error", f"Failed to execute status command: {e}")
+
+    def closeEvent(self, event):
+        print("Closing the application...")
+        self.timer.stop()  # Stop the timer
+        event.accept()  
 
     def show_error_message(self, title, message):
         msg = QMessageBox()
