@@ -126,6 +126,7 @@ class TargetStageControl(QtWidgets.QWidget):
             self.ui.X_LeftRelativeMoveButton.setEnabled(False)
             self.ui.XPSstatusLabel.setText("Not Homed")
             self.ui.XPSstatusLabel.setStyleSheet("color: red;")
+            self.ui.EnableDisableXPS.setText("Enable XPS")
 
         elif self.stageStatus == "Disabled state":
             self.ui.EnableDisableXPS.setEnabled(True)
