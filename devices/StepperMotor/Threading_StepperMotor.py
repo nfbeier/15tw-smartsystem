@@ -323,7 +323,7 @@ class StepperMotorControl(QMainWindow):
 
         # Initialize the MotorMovement worker and its thread
         self.config = MotorConfig()  # Create MotorConfig instance
-        self.motorWorker = MotorMovement(self.config)
+        self.motorWorker = MotorMovement()
         self.motorWorker_thread = QThread()  
 
         # Move the worker to its thread
