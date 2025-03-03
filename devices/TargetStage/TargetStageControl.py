@@ -18,7 +18,7 @@ cwd = os.path.sep.join(
 sys.path.insert(0, cwd)
 
 from devices.XPS.XPS import XPS
-from devices.Target_Stage.XPSControlPanel_GUI import Ui_Form
+from devices.TargetStage.XPSControlPanel_GUI import Ui_Form
 
 class TargetStageControl(QtWidgets.QWidget):
     """
