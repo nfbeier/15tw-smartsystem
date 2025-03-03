@@ -89,7 +89,6 @@ class TargetStageControl(QtWidgets.QWidget):
         if self.xps:
             try:
                 self.xps_groups = self.xps.getXPSStatus()
-                print("Available groups:", self.xps_groups)
                 self.ui.X_GroupNames.clear()
                 self.ui.X_GroupNames.addItems(list(self.xps_groups.keys()))
                 self.ui.X_GroupNames.setCurrentIndex(0)  # Default to the first group
@@ -117,6 +116,7 @@ class TargetStageControl(QtWidgets.QWidget):
             self.ui.X_LeftRelativeMoveButton.setEnabled(False)
             self.ui.XPSstatusLabel.setText("Not Initialized")
             self.ui.XPSstatusLabel.setStyleSheet("color: red;")
+            self.ui.EnableDisableXPS.setText("Enable XPS")
 
         elif self.stageStatus == "Not referenced state":
             self.ui.HomeXPS.setEnabled(True)
@@ -135,6 +135,7 @@ class TargetStageControl(QtWidgets.QWidget):
             self.ui.X_LeftRelativeMoveButton.setEnabled(False)
             self.ui.XPSstatusLabel.setText("Disabled")
             self.ui.XPSstatusLabel.setStyleSheet("color: red;")
+            self.ui.EnableDisableXPS.setText("Enable XPS")
 
         elif self.stageStatus[:11].upper() == "Ready state".upper():
             self.ui.EnableDisableXPS.setEnabled(True)
@@ -144,6 +145,7 @@ class TargetStageControl(QtWidgets.QWidget):
             self.ui.X_LeftRelativeMoveButton.setEnabled(True)
             self.ui.XPSstatusLabel.setText("Enabled")
             self.ui.XPSstatusLabel.setStyleSheet("color: green;")
+            self.ui.EnableDisableXPS.setText("Disable XPS")
 
         self.updateStagePosition()
 

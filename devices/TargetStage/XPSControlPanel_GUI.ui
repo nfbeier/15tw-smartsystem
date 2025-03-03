@@ -218,6 +218,9 @@
      <height>31</height>
     </rect>
    </property>
+   <property name="decimals">
+    <number>3</number>
+   </property>
   </widget>
   <widget class="QPushButton" name="X_AbsoluteMoveButton">
    <property name="geometry">

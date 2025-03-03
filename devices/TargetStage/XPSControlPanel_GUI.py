@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\devices\Target_Stage\XPSControlPanel_GUI.ui'
+# Form implementation generated from reading ui file '.\devices\TargetStage\XPSControlPanel_GUI.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.11
 #
@@ -71,6 +71,7 @@ class Ui_Form(object):
         self.AbsoluteMoveLabel.setObjectName("AbsoluteMoveLabel")
         self.AbsoluteMoveValue = QtWidgets.QDoubleSpinBox(Form)
         self.AbsoluteMoveValue.setGeometry(QtCore.QRect(170, 240, 71, 31))
+        self.AbsoluteMoveValue.setDecimals(3)
         self.AbsoluteMoveValue.setObjectName("AbsoluteMoveValue")
         self.X_AbsoluteMoveButton = QtWidgets.QPushButton(Form)
         self.X_AbsoluteMoveButton.setGeometry(QtCore.QRect(270, 240, 71, 31))
