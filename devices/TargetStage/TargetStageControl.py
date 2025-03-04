@@ -60,7 +60,7 @@ class TargetStageControl(QtWidgets.QWidget):
 
         # Set up a timer to update the stage position periodically
         self.timer = QtCore.QTimer(self)
-        self.timer.setInterval(5)  # Update every 200 ms
+        self.timer.setInterval(200)  # Update every 200 ms
         self.timer.timeout.connect(self.updateStagePosition)
         self.timer.start()
 
@@ -212,7 +212,6 @@ class TargetStageControl(QtWidgets.QWidget):
                         self.xps.moveRelative(self.selected_group, pos)
                     elif btn == "Left":
                         self.xps.moveRelative(self.selected_group, -1 * pos)
-                    #self.updateStagePosition()  real-time update or update after motion????
                 else:
                     self.show_error_message("Stage Not Ready", "The stage is not ready to move.")
             except ValueError:
@@ -239,9 +238,9 @@ class TargetStageControl(QtWidgets.QWidget):
 
     def closeEvent(self, event):
         print("Closing the application...")
-        self.timer.stop()  # Stop the timer
         #Add kill all command for all stages
         self.kill_all()
+        self.timer.stop()  # Stop the timer
         event.accept()  
 
     def show_error_message(self, title, message):

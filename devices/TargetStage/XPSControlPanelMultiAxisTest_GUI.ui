@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>441</width>
-    <height>412</height>
+    <width>478</width>
+    <height>472</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -101,10 +101,10 @@
   <widget class="singleAxisControl" name="widget" native="true">
    <property name="geometry">
     <rect>
-     <x>160</x>
+     <x>169</x>
      <y>30</y>
-     <width>231</width>
-     <height>331</height>
+     <width>261</width>
+     <height>411</height>
     </rect>
    </property>
   </widget>
@@ -113,7 +113,7 @@
   <customwidget>
    <class>singleAxisControl</class>
    <extends>QWidget</extends>
-   <header>devices.Target_Stage.singleAxisControl</header>
+   <header>singleAxisControl</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

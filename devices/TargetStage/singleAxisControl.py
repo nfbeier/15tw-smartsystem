@@ -55,6 +55,7 @@ class Ui_Form(object):
         self.MinTravelValue.setObjectName("MinTravelValue")
         self.AbsoluteMoveValue = QtWidgets.QDoubleSpinBox(Form)
         self.AbsoluteMoveValue.setGeometry(QtCore.QRect(10, 230, 71, 31))
+        self.AbsoluteMoveValue.setDecimals(3)
         self.AbsoluteMoveValue.setObjectName("AbsoluteMoveValue")
         self.X_RightRelativeMoveButton = QtWidgets.QPushButton(Form)
         self.X_RightRelativeMoveButton.setGeometry(QtCore.QRect(170, 150, 71, 31))
@@ -103,3 +104,28 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
+
+
+from PyQt5 import QtWidgets
+import os, sys
+
+cwd = os.getcwd()
+print(cwd)
+# Check if '15tw-smartsystem' is in the components
+if "15tw-smartsystem" not in cwd.split(os.path.sep):
+    raise ValueError("The directory does not contain '15tw-smartsystem' folder.")
+
+# Rebuild the directory string up to and including '15tw-smartsystem', prevent import errors
+cwd = os.path.sep.join(
+    cwd.split(os.path.sep)[: cwd.split(os.path.sep).index("15tw-smartsystem") + 1]
+)
+
+sys.path.insert(0, cwd)
+
+from devices.TargetStage.singleAxisControl import Ui_Form  
+
+class singleAxisControl(QtWidgets.QWidget):  # Create a QWidget subclass
+    def __init__(self, parent=None):
+        super().__init__(parent)  # Initialize QWidget
+        self.ui = Ui_Form()  # Create an instance of Ui_Form
+        self.ui.setupUi(self)  # Set up the UI inside this widget

@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(441, 412)
+        Form.resize(478, 472)
         self.XPSstatus = QtWidgets.QGroupBox(Form)
         self.XPSstatus.setGeometry(QtCore.QRect(10, 20, 151, 71))
         font = QtGui.QFont()
@@ -39,7 +39,7 @@ class Ui_Form(object):
         self.KillAll.setGeometry(QtCore.QRect(30, 320, 93, 41))
         self.KillAll.setObjectName("KillAll")
         self.widget = singleAxisControl(Form)
-        self.widget.setGeometry(QtCore.QRect(160, 30, 231, 331))
+        self.widget.setGeometry(QtCore.QRect(169, 30, 261, 411))
         self.widget.setObjectName("widget")
 
         self.retranslateUi(Form)
@@ -54,7 +54,7 @@ class Ui_Form(object):
         self.HomeXPS.setText(_translate("Form", "Home XPS"))
         self.EnableDisableXPS.setText(_translate("Form", "Enable XPS"))
         self.KillAll.setText(_translate("Form", "Kill All"))
-from devices.Target_Stage.singleAxisControl import singleAxisControl
+from singleAxisControl import singleAxisControl
 
 
 if __name__ == "__main__":
