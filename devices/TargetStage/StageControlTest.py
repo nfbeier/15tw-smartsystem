@@ -78,10 +78,10 @@ class TargetStageControl(QtWidgets.QWidget):
         self.axis_controls["Z"].ui.XaxisLabel.setText("Z-Axis")
 
         # Set the correct labels for the Realtive move button on each axis
-        self.axis_controls["Y"].ui.X_LeftRelativeMoveButton.setText("Backward")
-        self.axis_controls["Y"].ui.X_RightRelativeMoveButton.setText("Forward")
-        self.axis_controls["Z"].ui.X_LeftRelativeMoveButton.setText("Down")
-        self.axis_controls["Z"].ui.X_RightRelativeMoveButton.setText("Up")
+        self.axis_controls["Z"].ui.X_LeftRelativeMoveButton.setText("Backward")
+        self.axis_controls["Z"].ui.X_RightRelativeMoveButton.setText("Forward")
+        self.axis_controls["Y"].ui.X_LeftRelativeMoveButton.setText("Down")
+        self.axis_controls["Y"].ui.X_RightRelativeMoveButton.setText("Up")
 
         # Set up a timer to update the stage position periodically
         self.timer = QtCore.QTimer(self)
@@ -111,7 +111,6 @@ class TargetStageControl(QtWidgets.QWidget):
 
             if self.xps:
                 for axis, control in self.axis_controls.items():
-                    #print(control)
                     self.refreshGroups(control, axis)
         except Exception as e:
             self.xps = None
@@ -122,12 +121,15 @@ class TargetStageControl(QtWidgets.QWidget):
             try:
                 self.xps_groups = self.xps.getXPSStatus()
                 group_names = list(self.xps_groups.keys())
-                print(group_names)
-                print(axis_control)
                 axis_control.ui.X_GroupNames.clear()
                 axis_control.ui.X_GroupNames.addItems(group_names)
-                axis_control.ui.X_GroupNames.setCurrentIndex(0)  # Default to the first group
-                self.selected_groups_by_axis = str(axis_control.ui.X_GroupNames.currentText())
+                if axis == "X":
+                    axis_control.ui.X_GroupNames.setCurrentIndex(0)  # Default to the first group for X-axis
+                elif axis == "Y":
+                    axis_control.ui.X_GroupNames.setCurrentIndex(1)  # Default to the second group for Y-axis
+                elif axis == "Z":
+                    axis_control.ui.X_GroupNames.setCurrentIndex(2)  # Default to the third group for Z-axis
+                self.selected_groups_by_axis[axis] = str(axis_control.ui.X_GroupNames.currentText())
                 self.xps.setGroup(self.selected_groups_by_axis[axis])
                 self.updateGroup(axis_control,axis)
             except Exception as e:
@@ -211,7 +213,8 @@ class TargetStageControl(QtWidgets.QWidget):
     def kill_all(self):
         if self.xps:
             try:
-                self.xps.killAll(self.selected_groups_by_axis)
+                for group_name in self.selected_groups_by_axis.values():
+                    self.xps.killAll(group_name)
                 for axis, control in self.axis_controls.items():
                     self.updateGUIStatus(control, axis)
 
