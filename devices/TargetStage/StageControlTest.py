@@ -91,13 +91,12 @@ class TargetStageControl(QtWidgets.QWidget):
 
         # Connect signals to slots for each axis control
         for axis, control in self.axis_controls.items():
-            control.ui.X_GroupNames.activated.connect(lambda _, c=control: self.updateGroup(c))
-            control.ui.X_AbsoluteMoveButton.clicked.connect(lambda _, c=control: self.motionButtons("Absolute", c))
-            control.ui.X_LeftRelativeMoveButton.clicked.connect(lambda _, c=control: self.motionButtons("Left", c))
-            control.ui.X_RightRelativeMoveButton.clicked.connect(lambda _, c=control: self.motionButtons("Right", c))
-            control.ui.MaxTravelValue.textChanged.connect(lambda _, c=control: self.updateTravelLimits("max", c))
-            control.ui.MinTravelValue.textChanged.connect(lambda _, c=control: self.updateTravelLimits("min", c))
-            # each axis has its own refresh button
+            control.ui.X_GroupNames.activated.connect(lambda _, c=control, a=axis: self.updateGroup(c,a))
+            control.ui.X_AbsoluteMoveButton.clicked.connect(lambda _, c=control,a=axis: self.motionButtons("Absolute", c,a))
+            control.ui.X_LeftRelativeMoveButton.clicked.connect(lambda _, c=control,a=axis: self.motionButtons("Left", c,a))
+            control.ui.X_RightRelativeMoveButton.clicked.connect(lambda _, c=control,a=axis: self.motionButtons("Right", c,a))
+            control.ui.MaxTravelValue.textChanged.connect(lambda _, c=control,a=axis: self.updateTravelLimits("max", c,a))
+            control.ui.MinTravelValue.textChanged.connect(lambda _, c=control,a=axis: self.updateTravelLimits("min", c,a))
             control.ui.RefreshGroupsButton.clicked.connect(lambda _, c=control, a=axis: self.refreshGroups(c, a))
 
         self.ui.InitializeXPS.clicked.connect(lambda: self.statusButtons("Initialize"))
@@ -112,6 +111,7 @@ class TargetStageControl(QtWidgets.QWidget):
 
             if self.xps:
                 for axis, control in self.axis_controls.items():
+                    #print(control)
                     self.refreshGroups(control, axis)
         except Exception as e:
             self.xps = None
@@ -122,10 +122,12 @@ class TargetStageControl(QtWidgets.QWidget):
             try:
                 self.xps_groups = self.xps.getXPSStatus()
                 group_names = list(self.xps_groups.keys())
+                print(group_names)
+                print(axis_control)
                 axis_control.ui.X_GroupNames.clear()
                 axis_control.ui.X_GroupNames.addItems(group_names)
                 axis_control.ui.X_GroupNames.setCurrentIndex(0)  # Default to the first group
-                self.selected_group = str(axis_control.ui.X_GroupNames.currentText())
+                self.selected_groups_by_axis = str(axis_control.ui.X_GroupNames.currentText())
                 self.xps.setGroup(self.selected_groups_by_axis[axis])
                 self.updateGroup(axis_control,axis)
             except Exception as e:
