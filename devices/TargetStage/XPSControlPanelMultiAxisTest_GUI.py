@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(478, 472)
+        Form.resize(1007, 472)
         self.XPSstatus = QtWidgets.QGroupBox(Form)
         self.XPSstatus.setGeometry(QtCore.QRect(10, 20, 151, 71))
         font = QtGui.QFont()
@@ -38,9 +38,15 @@ class Ui_Form(object):
         self.KillAll = QtWidgets.QPushButton(Form)
         self.KillAll.setGeometry(QtCore.QRect(30, 320, 93, 41))
         self.KillAll.setObjectName("KillAll")
-        self.widget = singleAxisControl(Form)
-        self.widget.setGeometry(QtCore.QRect(169, 30, 261, 411))
-        self.widget.setObjectName("widget")
+        self.widget_X = singleAxisControl(Form)
+        self.widget_X.setGeometry(QtCore.QRect(169, 30, 261, 411))
+        self.widget_X.setObjectName("widget_X")
+        self.widget_Y = singleAxisControl(Form)
+        self.widget_Y.setGeometry(QtCore.QRect(440, 30, 261, 411))
+        self.widget_Y.setObjectName("widget_Y")
+        self.widget_Z = singleAxisControl(Form)
+        self.widget_Z.setGeometry(QtCore.QRect(710, 30, 261, 411))
+        self.widget_Z.setObjectName("widget_Z")
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)

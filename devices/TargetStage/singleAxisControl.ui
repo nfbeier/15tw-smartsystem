@@ -108,7 +108,7 @@
     </font>
    </property>
    <property name="text">
-    <string>X-Axis</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="RelativeMoveLabel">

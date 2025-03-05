@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>478</width>
+    <width>1007</width>
     <height>472</height>
    </rect>
   </property>
@@ -98,10 +98,30 @@
     <string>Kill All</string>
    </property>
   </widget>
-  <widget class="singleAxisControl" name="widget" native="true">
+  <widget class="singleAxisControl" name="widget_X" native="true">
    <property name="geometry">
     <rect>
      <x>169</x>
+     <y>30</y>
+     <width>261</width>
+     <height>411</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="singleAxisControl" name="widget_Y" native="true">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>30</y>
+     <width>261</width>
+     <height>411</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="singleAxisControl" name="widget_Z" native="true">
+   <property name="geometry">
+    <rect>
+     <x>710</x>
      <y>30</y>
      <width>261</width>
      <height>411</height>
