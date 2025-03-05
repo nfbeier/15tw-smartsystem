@@ -22,39 +22,6 @@ from devices.XPS.XPS import XPS
 from devices.TargetStage.singleAxisControl import singleAxisControl
 from devices.TargetStage.XPSControlPanelMultiAxisTest_GUI import Ui_Form
 
-from PyQt5.QtCore import QThread, pyqtSignal
-
-class StagePositionWorker(QThread):
-    # Define signals to communicate with the main thread
-    position_updated = pyqtSignal(float)  # Signal to emit the updated position
-    status_updated = pyqtSignal(str)      # Signal to emit the updated status
-    error_occurred = pyqtSignal(str)      # Signal to emit any errors
-
-    def __init__(self, xps, group_name):
-        super().__init__()
-        self.xps = xps
-        self.group_name = group_name
-        self.running = True
-
-    def run(self):
-        try:
-            while self.running:
-                # Get the stage position and status
-                position = self.xps.getStagePosition(self.group_name)
-                status = self.xps.getStageStatus(self.group_name)
-
-                # Emit the updated position and status
-                self.position_updated.emit(position)
-                self.status_updated.emit(status)
-
-                # Sleep for a short time to avoid excessive CPU usage
-                self.msleep(200)  # Adjust the sleep time as needed
-        except Exception as e:
-            self.error_occurred.emit(f"Failed to update stage position: {e}")
-
-    def stop(self):
-        self.running = False
-
 class TargetStageControl(QtWidgets.QWidget):
     """
     This class provides functionality to initialize, home, enable/disable, and move stages, 
@@ -115,6 +82,12 @@ class TargetStageControl(QtWidgets.QWidget):
         self.axis_controls["Z"].ui.X_RightRelativeMoveButton.setText("Forward")
         self.axis_controls["Y"].ui.X_LeftRelativeMoveButton.setText("Down")
         self.axis_controls["Y"].ui.X_RightRelativeMoveButton.setText("Up")
+
+        # Set up a timer to update the stage position periodically
+        self.timer = QtCore.QTimer(self)
+        self.timer.setInterval(200)  # Update every 200 ms
+        self.timer.timeout.connect(self.updateAllStagePositions)
+        self.timer.start()
 
         # Connect signals to slots for each axis control
         for axis, control in self.axis_controls.items():
@@ -217,28 +190,18 @@ class TargetStageControl(QtWidgets.QWidget):
     def updateStagePosition(self, axis_control, axis):
         if self.xps:
             try:
-                # Check if a worker already exists for this axis
-                if not hasattr(axis_control, "worker"):
-                    # Create a new worker for this axis
-                    axis_control.worker = StagePositionWorker(self.xps, self.selected_groups_by_axis[axis])
-
-                    # Connect worker signals to slots
-                    axis_control.worker.position_updated.connect(axis_control.ui.PositionValue.display)
-                    axis_control.worker.status_updated.connect(lambda status: setattr(self, "stageStatus", status))
-                    axis_control.worker.error_occurred.connect(
-                        lambda error: self.show_error_message("Position Update Error", error)
-                    )
-
-                    # Start the worker thread
-                    axis_control.worker.start()
+                position = self.xps.getStagePosition(self.selected_groups_by_axis[axis])
+                axis_control.ui.PositionValue.display(position)
+                self.stageStatus = self.xps.getStageStatus(self.selected_groups_by_axis[axis])
+                self.error_shown = False  # Reset the flag if the update succeeds
             except Exception as e:
                 if not hasattr(self, "error_shown") or not self.error_shown:
                     self.show_error_message("Position Update Error", f"Failed to update stage position: {e}")
-                    self.error_shown = True
+                    self.error_shown = True  # Set the flag to prevent repeated messages
         else:
             if not hasattr(self, "xps_error_shown"):
                 self.show_error_message("XPS Not Connected", "XPS controller is not initialized.")
-                self.xps_error_shown = True
+                self.xps_error_shown = True  # Set a flag to indicate the error has been shown
 
 
     def updateAllStagePositions(self):
@@ -323,13 +286,10 @@ class TargetStageControl(QtWidgets.QWidget):
 
     def closeEvent(self, event):
         print("Closing the application...")
-        # Stop all worker threads
-        for axis, control in self.axis_controls.items():
-            if hasattr(control, "worker"):
-                control.worker.stop()
-                control.worker.wait()  # Wait for the thread to finish
+        #Add kill all command for all stages
+        self.kill_all()
         self.timer.stop()  # Stop the timer
-        event.accept()
+        event.accept()  
 
     def show_error_message(self, title, message):
         msg = QMessageBox()
