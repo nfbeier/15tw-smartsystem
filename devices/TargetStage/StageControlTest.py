@@ -22,6 +22,33 @@ from devices.XPS.XPS import XPS
 from devices.TargetStage.singleAxisControl import singleAxisControl
 from devices.TargetStage.XPSControlPanelMultiAxisTest_GUI import Ui_Form
 
+class StagePositionThread(QtCore.QThread):
+    position_updated = QtCore.pyqtSignal(str, float)  # Signal to update GUI
+
+    def __init__(self, xps, axis, selected_group):
+        super().__init__()
+        self.xps = xps
+        self.axis = axis
+        self.selected_group = selected_group 
+        self.running = True
+
+    def run(self):
+        print(f"Thread for {self.axis} started")
+        while self.running:
+            if self.xps and self.selected_group:
+                try:
+                    position = self.xps.getStagePosition(self.selected_group)
+                    print(f"Emitting position for {self.axis}: {position}")
+                    sys.stdout.flush()
+                    self.position_updated.emit(self.axis, position)
+                except Exception as e:
+                    print(f"Error updating position for {self.axis}: {e}")
+            self.msleep(200)  # Sleep for 200ms (same as original timer)
+
+    def stop(self):
+        self.running = False
+        self.quit()
+        self.wait()
 
 class TargetStageControl(QtWidgets.QWidget):
     """
@@ -66,7 +93,22 @@ class TargetStageControl(QtWidgets.QWidget):
         # Initialize XPS controller
         self.xps = None
         self.selected_groups_by_axis = {"X": None, "Y": None, "Z": None}  # Store selected groups for each axis 
+        self.position_threads = {
+            "X": StagePositionThread(self.xps, "X", self.selected_groups_by_axis["X"]), 
+            "Y": StagePositionThread(self.xps, "Y", self.selected_groups_by_axis["Y"]),
+            "Z": StagePositionThread(self.xps, "Z", self.selected_groups_by_axis["Z"])}
+
+        for thread in self.position_threads.values():
+            thread.start()
+            print(f"Thread for {thread.axis} started")
+
+        for axis, thread in self.position_threads.items():
+            thread.position_updated.connect(self.updateAllStagePositions)
+            print(f"Thread for {axis} is running: {thread.isRunning()}")
+
         self.initialize_xps()
+
+        print(self.axis_controls["X"].ui.PositionValue)
 
         # Set geometry for each axis control
         self.axis_controls["X"].setGeometry(QtCore.QRect(169, 30, 261, 411))
@@ -84,11 +126,7 @@ class TargetStageControl(QtWidgets.QWidget):
         self.axis_controls["Y"].ui.X_LeftRelativeMoveButton.setText("Down")
         self.axis_controls["Y"].ui.X_RightRelativeMoveButton.setText("Up")
 
-        # Set up a timer to update the stage position periodically
-        self.timer = QtCore.QTimer(self)
-        self.timer.setInterval(200)  # Update every 200 ms
-        self.timer.timeout.connect(self.updateAllStagePositions)
-        self.timer.start()
+
 
         # Connect signals to slots for each axis control
         for axis, control in self.axis_controls.items():
@@ -144,6 +182,7 @@ class TargetStageControl(QtWidgets.QWidget):
             self.xps.setGroup(self.selected_groups_by_axis[axis])
             self.stageStatus = self.xps.getStageStatus(self.selected_groups_by_axis[axis])
             self.updateGUIStatus(axis_control, axis)
+            self.position_threads[axis].selected_group = self.selected_groups_by_axis[axis]
 
     def updateGUIStatus(self, axis_control, axis):
         if self.stageStatus == "Not initialized state" or self.stageStatus == "Not initialized state due to a GroupKill or KillAll command":
@@ -186,7 +225,7 @@ class TargetStageControl(QtWidgets.QWidget):
             self.ui.XPSstatusLabel.setStyleSheet("color: green;")
             self.ui.EnableDisableXPS.setText("Disable XPS")
 
-        self.updateStagePosition(axis_control, axis)
+        #self.updateStagePosition(axis_control, axis)
 
     def updateStagePosition(self, axis_control, axis):
         if self.xps:
@@ -205,10 +244,12 @@ class TargetStageControl(QtWidgets.QWidget):
                 self.xps_error_shown = True  # Set a flag to indicate the error has been shown
 
 
-    def updateAllStagePositions(self):
+    def updateAllStagePositions(self, axis, position):
         """Update the stage position for all axes."""
-        for axis, control in self.axis_controls.items():
-            self.updateStagePosition(control, axis)
+        print(f"updating position for {axis}: {position}")
+        if axis in self.axis_controls:
+            self.axis_controls[axis].ui.PositionValue.display(position)
+            print(position)
 
 
     def kill_all(self):
@@ -287,9 +328,11 @@ class TargetStageControl(QtWidgets.QWidget):
 
     def closeEvent(self, event):
         print("Closing the application...")
+        for thread in self.position_threads.values():
+            thread.stop()
         #Add kill all command for all stages
         self.kill_all()
-        self.timer.stop()  # Stop the timer
+        #self.timer.stop()  # Stop the timer
         event.accept()  
 
     def show_error_message(self, title, message):
