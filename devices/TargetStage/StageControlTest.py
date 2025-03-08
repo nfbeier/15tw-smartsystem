@@ -65,6 +65,7 @@ class TargetStageControl(QtWidgets.QWidget):
         # Initialize XPS controller
         self.xps = None
         self.selected_groups_by_axis = {"X": None, "Y": None, "Z": None}  # Store selected groups for each axis 
+        self.position = {"X": 0.000, "Y": 0.000, "Z": 0.000}
         self.initialize_xps()
 
         # Set geometry for each axis control
@@ -190,9 +191,11 @@ class TargetStageControl(QtWidgets.QWidget):
     def updateStagePosition(self, axis_control, axis):
         if self.xps:
             try:
-                position = self.xps.getStagePosition(self.selected_groups_by_axis[axis])
-                axis_control.ui.PositionValue.display(position)
+                self.position[axis] = self.xps.getStagePosition(self.selected_groups_by_axis[axis])
+                print(self.position[axis])
+                axis_control.ui.PositionValue.display(self.position[axis])
                 self.stageStatus = self.xps.getStageStatus(self.selected_groups_by_axis[axis])
+                #print(self.stageStatus)
                 self.error_shown = False  # Reset the flag if the update succeeds
             except Exception as e:
                 if not hasattr(self, "error_shown") or not self.error_shown:
