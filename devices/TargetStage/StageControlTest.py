@@ -22,30 +22,6 @@ from devices.XPS.XPS import XPS
 from devices.TargetStage.singleAxisControl import singleAxisControl
 from devices.TargetStage.XPSControlPanelMultiAxisTest_GUI import Ui_Form
 
-class StagePositionThread(QtCore.QThread):
-    position_updated = QtCore.pyqtSignal(str, float)  # Signal to update GUI
-
-    def __init__(self, xps, axis):
-        super().__init__()
-        self.xps = xps
-        self.axis = axis
-        self.selected_group = None
-        self.running = True
-
-    def run(self):
-        while self.running:
-            if self.xps and self.selected_group:
-                try:
-                    position = self.xps.getStagePosition(self.selected_group)
-                    self.position_updated.emit(self.axis, position)
-                except Exception as e:
-                    print(f"Error updating position for {self.axis}: {e}")
-            self.msleep(200)  # Sleep for 200ms (same as original timer)
-
-    def stop(self):
-        self.running = False
-        self.quit()
-        self.wait()
 
 class TargetStageControl(QtWidgets.QWidget):
     """
